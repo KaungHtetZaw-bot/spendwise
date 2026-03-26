@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  /* Minimalist Color Palette */
+  --color-primary: var(--spacing-indigo-600);
+  --color-bg-light: var(--spacing-slate-50);
+  --color-bg-dark: var(--spacing-slate-950);
+  --color-surface-light: #ffffff;
+  --color-surface-dark: var(--spacing-slate-900);
+  
+  /* Border & Text */
+  --color-border-light: var(--spacing-slate-200);
+  --color-border-dark: var(--spacing-slate-800);
+}
+
+/* Dark Mode Logic */
+@variant dark (&:where(.dark, .dark *));
+
+/* Base Body Styles */
+@layer base {
+  html {
+    /* System Default အတွက် dark mode support ပေးထားတာပါ */
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply antialiased min-h-screen transition-colors duration-300;
+    
+    /* Light Mode Default */
+    background-color: var(--color-bg-light);
+    color: var(--spacing-slate-900);
+  }
+
+  /* Dark Mode Styles */
+  .dark body {
+    background-color: var(--color-bg-dark);
+    color: var(--spacing-slate-100);
+  }
+}
+
+/* Scrollbar Styling (Minimalist look) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+}
