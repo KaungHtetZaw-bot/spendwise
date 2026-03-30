@@ -1,46 +1,44 @@
 @import "tailwindcss";
 
 @theme {
-  /* Minimalist Color Palette */
   --color-primary: var(--spacing-indigo-600);
   --color-bg-light: var(--spacing-slate-50);
   --color-bg-dark: var(--spacing-slate-950);
   --color-surface-light: #ffffff;
   --color-surface-dark: var(--spacing-slate-900);
   
-  /* Border & Text */
   --color-border-light: var(--spacing-slate-200);
   --color-border-dark: var(--spacing-slate-800);
 }
 
-/* Dark Mode Logic */
 @variant dark (&:where(.dark, .dark *));
 
-/* Base Body Styles */
 @layer base {
   html {
-    /* System Default အတွက် dark mode support ပေးထားတာပါ */
     color-scheme: light dark;
   }
 
   body {
     @apply antialiased min-h-screen transition-colors duration-300;
     
-    /* Light Mode Default */
     background-color: var(--color-bg-light);
     color: var(--spacing-slate-900);
   }
 
-  /* Dark Mode Styles */
   .dark body {
     background-color: var(--color-bg-dark);
     color: var(--spacing-slate-100);
   }
+  .form-input {
+    @apply w-full bg-slate-50 dark:bg-slate-950 border-2 border-transparent focus:border-indigo-500/20 rounded-2xl md:py-4 py-2 pl-12 pr-4 font-bold text-slate-700 dark:text-white outline-none transition-all
+  }
+  .btn-for-login-method {
+    @apply flex items-center justify-center gap-2 md:py-4 py-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95
+  }
 }
 
-/* Scrollbar Styling (Minimalist look) */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 3px;
 }
 
 ::-webkit-scrollbar-track {
