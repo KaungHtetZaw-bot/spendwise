@@ -30,7 +30,7 @@ const ThemeDropdown = ({ theme, setTheme }: { theme: string, setTheme: (t: strin
         className="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium transition-all hover:bg-slate-200 dark:hover:bg-slate-800"
       >
         <span className="text-slate-600 dark:text-slate-400">{currentOption.icon}</span>
-        <span className="capitalize">{currentOption.value}</span>
+        {/* <span className="capitalize">{currentOption.value}</span> */}
         <ChevronDown size={14} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 

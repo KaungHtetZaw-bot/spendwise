@@ -1,5 +1,18 @@
 import { Home, History, PieChart, Settings, Plus } from 'lucide-react';
+import { NavLink as RouterNavLink } from 'react-router-dom';
+
+const routeItems = [
+  { name: 'Home', href: '/', icon: Home },
+  { name: 'History', href: '/history', icon: History },
+  { name: 'Stats', href: '/stats', icon: PieChart },
+  { name: 'Settings', href: '/settings', icon: Settings },
+];
+
 const BottomNav = ({ onAddClick }: { onAddClick: () => void }) => {
+  const mid = Math.ceil(routeItems.length / 2);
+  const firstHalf = routeItems.slice(0, mid);
+  const secondHalf = routeItems.slice(mid);
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:bottom-auto md:top-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg border-t md:border-t-0 md:border-b border-slate-200 dark:border-slate-800 px-6 py-2 md:py-4">
       <div className="max-w-4xl mx-auto flex justify-between items-center">
@@ -9,8 +22,14 @@ const BottomNav = ({ onAddClick }: { onAddClick: () => void }) => {
         </h1>
 
         <div className="flex justify-between w-full md:w-auto md:gap-12 items-center">
-          <NavLink icon={<Home size={22} />} label="Home" active />
-          <NavLink icon={<History size={22} />} label="History" />
+          {firstHalf.map((item, idx) => (
+            <NavLink
+              key={idx}
+              icon={<item.icon size={22} />}
+              label={item.name}
+              to={item.href}
+            />
+          ))}
           
           <div className="relative md:hidden">
             <button 
@@ -21,8 +40,14 @@ const BottomNav = ({ onAddClick }: { onAddClick: () => void }) => {
             </button>
           </div>
 
-          <NavLink icon={<PieChart size={22} />} label="Stats" />
-          <NavLink icon={<Settings size={22} />} label="Settings" />
+          {secondHalf.map((item, idx) => (
+            <NavLink
+              key={idx}
+              icon={<item.icon size={22} />}
+              label={item.name}
+              to={item.href}
+            />
+          ))}
         </div>
 
         <div className="hidden md:block w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800" />
@@ -31,11 +56,18 @@ const BottomNav = ({ onAddClick }: { onAddClick: () => void }) => {
   );
 };
 
-const NavLink = ({ icon, label, active = false }: { icon: React.ReactNode, label: string, active?: boolean }) => (
-  <button className={`flex flex-col md:flex-row items-center gap-1 md:gap-2 transition-colors ${active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 hover:text-slate-600'}`}>
+const NavLink = ({ icon, label, to }: { icon: React.ReactNode; label: string; to: string }) => (
+  <RouterNavLink
+    to={to}
+    className={({ isActive }) =>
+      `flex flex-col md:flex-row items-center gap-1 md:gap-2 transition-colors ${
+        isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 hover:text-slate-600'
+      }`
+    }
+  >
     {icon}
     <span className="text-[10px] md:text-sm font-medium">{label}</span>
-  </button>
+  </RouterNavLink>
 );
 
 export default BottomNav;
