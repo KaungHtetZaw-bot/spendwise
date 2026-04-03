@@ -1,11 +1,84 @@
 import { useState } from 'react';
 import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { supabase } from '../lib/supabase.ts';
+import { useNavigate } from 'react-router-dom';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const navigate = useNavigate()
+
+  const handleAuth = async (e:any) => {
+    e.preventDefault();
+    setLoading(true);
+    const { data, error } = await supabase.auth.getSession();
+    console.log(data, error);
+
+    try {
+      if (isLogin) {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) throw error;
+
+        const { error: userError } = await supabase
+        .from('users')
+        .select('language, currency, monthly_income, theme, name')
+        .eq('user_id', data.user.id)
+        .single();
+
+      if (userError) {
+        console.log(userError)
+        console.warn("User profile not found in 'users' table");
+      } else {
+        navigate('/')
+      }
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+
+        if (error) throw error;
+        const user = data.user;
+        if (user) {
+          await supabase.from('users').insert([
+            {
+              user_id: user.id,
+              name: fullName,
+              monthly_income: 0,
+              currency: 'MMK',
+              language: 'EN',
+              theme: 'Light',
+            }
+          ]);
+        }
+      }
+
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        alert(error.message);
+      } else {
+        console.error("Unknown error", error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSocialLogin = (social:string) => {
+    console.log('clicked'+ social)
+  }
 
   return (
-    <div className="min-h-screen bg-[#F8F9FD] dark:bg-slate-950 flex items-center justify-center md:p-6 p-3">
+    <div className="min-h-screen bg-[#F8F9FD] dark:bg-slate-950 flex items-center justify-center md:p-6 p-3 font-sans">
       <div className="w-full max-w-md md:space-y-8 space-y-4">
         
         <div className="text-center md:space-y-2 space-y-1">
@@ -32,8 +105,8 @@ const AuthPage = () => {
           </button>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 md:rounded-[2.5rem] rounded-[1.25rem] md:p-8 p-4 shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in duration-300">
-          <form className="md:space-y-5 space-y-2.5" onSubmit={(e) => e.preventDefault()}>
+        <div className="bg-white dark:bg-slate-900 md:rounded-[2.5rem] rounded-[1.25rem] md:p-8 p-6 shadow-2xl border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in duration-300">
+          <form className="md:space-y-5 space-y-3" onSubmit={handleAuth}>
             
             {!isLogin && (
               <div className="md:space-y-2 space-y-1">
@@ -43,7 +116,8 @@ const AuthPage = () => {
                   <input 
                     type="text" 
                     placeholder="Kaung Htet Zaw"
-                    className="form-input"
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-transparent focus:border-indigo-500/20 rounded-2xl py-3.5 pl-12 pr-4 font-bold text-slate-700 dark:text-white outline-none transition-all"
                   />
                 </div>
               </div>
@@ -56,7 +130,8 @@ const AuthPage = () => {
                 <input 
                   type="email" 
                   placeholder="khz@dev.com"
-                  className="form-input"
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-transparent focus:border-indigo-500/20 rounded-2xl py-3.5 pl-12 pr-4 font-bold text-slate-700 dark:text-white outline-none transition-all"
                 />
               </div>
             </div>
@@ -68,21 +143,25 @@ const AuthPage = () => {
                 <input 
                   type="password" 
                   placeholder="••••••••"
-                  className="form-input"
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-transparent focus:border-indigo-500/20 rounded-2xl py-3.5 pl-12 pr-4 font-bold text-slate-700 dark:text-white outline-none transition-all"
                 />
               </div>
             </div>
 
             {isLogin && (
               <div className="text-right px-2">
-                <button className="text-[10px] font-black text-indigo-500 uppercase tracking-widest hover:underline">
+                <button type="button" className="text-[10px] font-black text-indigo-500 uppercase tracking-widest hover:underline">
                   Forgot Password?
                 </button>
               </div>
             )}
 
-            <button className="w-full md:py-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white md:rounded-2xl rounded-xl font-black text-[11px] uppercase tracking-[0.3em] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4">
-              {isLogin ? 'Sign In' : 'Create Account'}
+            <button 
+              disabled={loading}
+              className="w-full md:py-5 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white md:rounded-2xl rounded-xl font-black text-[11px] uppercase tracking-[0.3em] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4 disabled:opacity-50"
+            >
+              {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
               <ArrowRight size={16} />
             </button>
           </form>
@@ -94,11 +173,17 @@ const AuthPage = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <button className="btn-for-login-method">
+              <button 
+                onClick={() => handleSocialLogin('google')}
+                className="flex items-center justify-center gap-2 py-3.5 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-2xl transition-all active:scale-95 hover:bg-slate-50 dark:hover:bg-slate-700"
+              >
                 <Lock size={18} className="text-rose-500" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">Google</span>
               </button>
-              <button className="btn-for-login-method">
+              <button 
+                onClick={() => handleSocialLogin('github')}
+                className="flex items-center justify-center gap-2 py-3.5 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-2xl transition-all active:scale-95 hover:bg-slate-50 dark:hover:bg-slate-700"
+              >
                 <Lock size={18} className="text-slate-900 dark:text-white" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">Github</span>
               </button>
@@ -110,7 +195,7 @@ const AuthPage = () => {
           {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
           <button 
             onClick={() => setIsLogin(!isLogin)}
-            className="text-indigo-600 dark:text-indigo-400 hover:underline"
+            className="text-indigo-600 dark:text-indigo-400 hover:underline font-black"
           >
             {isLogin ? 'Register Now' : 'Login Here'}
           </button>

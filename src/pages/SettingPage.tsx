@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   User, 
   Globe, 
@@ -10,11 +10,13 @@ import {
   Bell,
   ShieldCheck,Plus
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase.ts';
 
 const SettingPage = () => {
   const [darkMode, setDarkMode] = useState(true);
+  const navigate = useNavigate();
 
-  // Profile Menu Items
   const settingsGroups = [
     {
       title: "Personal Preference",
@@ -32,6 +34,15 @@ const SettingPage = () => {
       ]
     }
   ];
+
+  const logout = async() => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Error logging out:', error.message);
+    } else {
+      navigate('/auth');
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#F8F9FD] dark:bg-slate-950 pb-24">
@@ -111,7 +122,7 @@ const SettingPage = () => {
           </button>
         </div> */}
 
-        <button className="w-full py-5 bg-rose-50 dark:bg-rose-900/10 text-rose-500 rounded-[2rem] font-black text-[11px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 active:scale-95 transition-all mt-4 mb-10">
+        <button onClick={()=>logout()} className="w-full py-5 bg-rose-50 dark:bg-rose-900/10 text-rose-500 rounded-[2rem] font-black text-[11px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 active:scale-95 transition-all mt-4 mb-10">
           <LogOut size={18} />
           Sign Out Account
         </button>
