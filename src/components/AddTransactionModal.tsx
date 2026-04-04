@@ -50,20 +50,47 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const filteredCategories = allCategories.filter(cat => cat.type === formData.type);
 
   const handleSubmit = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      await addTransaction(formData, user.id);
+  if (!formData.date || isNaN(formData.amount) || !formData.category_id || !formData.note) {
+    alert("Please fill all required fields");
+    return;
+  }
+
+  if (formData.date > new Date()) {
+    alert("Cannot select a future date");
+    return;
+  }
+
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (user) {
+    const selectedCategory = allCategories.find(c => c.category_id === formData.category_id);
+
+    const payload = {
+      amount: formData.amount,
+      type: formData.type,
+      category: selectedCategory?.name || 'General',
+      category_id: formData.category_id,
+      date: formData.date.toISOString().split('T')[0],
+      note: formData.note,
+    };
+
+    try {
+      await addTransaction(payload as any, user.id);
+      
       setFormData({
-        ...formData,
         type: 'expense',
         amount: Number.NaN,
-        date: null,
+        date: new Date(),
         category_id: '',
-        note: ''
+        note: '',
       });
+      setCategoryId('');
       // onClose();
+    } catch (error) {
+      console.error("Submission failed:", error);
     }
-  };
+  }
+};
 
   if (!isOpen) return null;
 
