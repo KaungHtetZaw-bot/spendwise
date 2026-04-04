@@ -1,18 +1,20 @@
 import ThemeDropdown from "./ThemeDropdown";
 import { useTheme } from "../providers/ThemeProvider";
+import { useUserStore } from "../storage/useUserStore";
 
 const MobileHeader = () => {
+  const { profile } = useUserStore();
   const { theme, setTheme } = useTheme()!;
 
   return (
     <div className="flex items-center justify-between px-4 py-4 md:hidden bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm sticky top-0 z-30">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold shadow-sm">
-          K
+          {profile?.name ? profile.name.charAt(0) : "K"}
         </div>
         <div>
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Welcome back,</p>
-          <h2 className="text-sm font-black text-slate-900 dark:text-slate-100 mt-1">Kaung Htet</h2>
+          <h2 className="text-sm font-black text-slate-900 dark:text-slate-100 mt-1">{profile?.name || "Kaung Htet"}</h2>
         </div>
       </div>
 
