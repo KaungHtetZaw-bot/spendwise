@@ -1,29 +1,69 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { ChevronLeft, Plus, DollarSign, PenLine, Calendar as CalendarIcon, Check } from 'lucide-react';
 import { DatePicker } from '@mantine/dates';
+import { useTransactionStore } from '../storage/useTransactionStore';
+import { useUserStore } from '../storage/useUserStore';
+import { supabase } from '../lib/supabase';
 
 interface Category {
-  id: string;
-  name: string;
+  category_id: string;
+  user_id: string;
   type: 'income' | 'expense';
+  name: string;
+}
+
+interface FormData {
+  type: 'income' | 'expense';
+  amount: number;
+  date: Date | null;
+  category_id: string;
+  note: string;
 }
 
 const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const [type, setType] = useState<'income' | 'expense'>('expense');
-  const [amount, setAmount] = useState('');
-  const [title, setTitle] = useState('');
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
+  const { addTransaction,fetchCategories,categories } = useTransactionStore();
+  const { profile } = useUserStore();
   const [categoryId, setCategoryId] = useState('');
 
-  const allCategories: Category[] = [
-    { id: '1', name: 'Salary', type: 'income' },
-    { id: '2', name: 'Rewards', type: 'income' },
-    { id: '3', name: 'Food', type: 'expense' },
-    { id: '4', name: 'Transport', type: 'expense' },
-    { id: '5', name: 'Shopping', type: 'expense' },
-  ];
+  const [formData, setFormData] = useState<FormData>({
+    type: 'expense' as 'income' | 'expense',
+    amount: Number.NaN,
+    date: new Date() as Date | null,
+    category_id: '',
+    note: '',
+  });
 
-  const filteredCategories = allCategories.filter(cat => cat.type === type);
+  useEffect(() => {
+    if(profile) {
+      console.log("Fetching categories for user:", profile.user_id);
+      fetchCategories(profile.user_id);
+    }
+    if (formData.category_id) {
+      console.log("Selected category ID:", formData.category_id);
+    }
+  }, [formData.category_id]);
+
+
+  const allCategories: Category[] = categories || [];
+
+  const filteredCategories = allCategories.filter(cat => cat.type === formData.type);
+
+  const handleSubmit = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await addTransaction(formData, user.id);
+      setFormData({
+        ...formData,
+        type: 'expense',
+        amount: Number.NaN,
+        date: null,
+        category_id: '',
+        note: ''
+      });
+      // onClose();
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -40,14 +80,14 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           
           <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl">
             <button 
-              onClick={() => setType('income')}
-              className={`md:px-6 px-3 md:py-2 py-1 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${type === 'income' ? 'bg-white dark:bg-slate-700 text-blue-600 shadow-sm' : 'text-slate-400'}`}
+              onClick={() => setFormData({ ...formData, type: 'income' })}
+              className={`md:px-6 px-3 md:py-2 py-1 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${formData.type === 'income' ? 'bg-white dark:bg-slate-700 text-blue-600 shadow-sm' : 'text-slate-400'}`}
             >
               Income
             </button>
             <button 
-              onClick={() => setType('expense')}
-              className={`md:px-6 px-3 md:py-2 py-1 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${type === 'expense' ? 'bg-white dark:bg-slate-700 text-rose-500 shadow-sm' : 'text-slate-400'}`}
+              onClick={() => setFormData({ ...formData, type: 'expense' })}
+              className={`md:px-6 px-3 md:py-2 py-1 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${formData.type === 'expense' ? 'bg-white dark:bg-slate-700 text-rose-500 shadow-sm' : 'text-slate-400'}`}
             >
               Expense
             </button>
@@ -63,34 +103,46 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                 <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Select Date</span>
              </div>
             <DatePicker 
-              value={selectedDate} 
-              onChange={setSelectedDate}
+              value={formData.date ? new Date(formData.date) : null} 
+              
+              onChange={(date) => {
+                if (date) {
+                  setFormData({ ...formData, date: new Date(date as any) });
+                }
+              }}
+              maxDate={new Date()}
               size="md"
-              fullWidth
-              className="mx-auto"
-              getDayProps={(date) => ({
-                selected: selectedDate && date.toString() === selectedDate.toDateString(),
-                style: {
+              className="w-full mx-auto"
+              getDayProps={(date: any) => {
+                const calendarDate = new Date(date);
+                
+                const isSelected = formData.date instanceof Date && 
+                                  calendarDate.toDateString() === formData.date.toDateString();
+
+                return {
+                  selected: !!isSelected,
+                  style: {
                     borderRadius: '12px',
                     fontWeight: 700,
-                    ...(selectedDate && date.toString() === selectedDate.toDateString() && {
-                        backgroundColor: type === 'income' ? '#2563eb' : '#e11d48',
-                        color: 'white'
+                    ...(isSelected && {
+                      backgroundColor: formData.type === 'income' ? '#2563eb' : '#e11d48',
+                      color: 'white',
                     }),
-                    paddingBottom: 0
-                }
-              })}
+                  }
+                };
+              }}
             />
           </div>
 
           <div className="space-y-2">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2 flex items-center gap-2">
-              <PenLine size={12} /> {type === 'income' ? 'Income' : 'Expense'} Note
+              <PenLine size={12} /> Title
             </label>
             <input 
+              required
               type="text" 
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={formData.note}
+              onChange={(e) => setFormData({ ...formData, note: e.target.value })}
               placeholder="What was this for?"
               className="w-full bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-xl md:p-4 p-2 font-bold text-slate-700 dark:text-white focus:border-blue-400 outline-none transition-all shadow-sm"
             />
@@ -103,9 +155,10 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
             <div className="relative">
               <input 
                 type="number" 
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                value={formData.amount}
+                onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) || 0 })}
                 placeholder="0.00"
+                required
                 className="w-full bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-xl md:p-4 p-2 font-black text-2xl text-slate-700 dark:text-white focus:border-blue-400 outline-none transition-all shadow-sm"
               />
               <span className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 font-bold tracking-tighter">Ks.</span>
@@ -121,11 +174,11 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               
               {filteredCategories.map((cat) => (
                 <button
-                  key={cat.id}
-                  onClick={() => setCategoryId(cat.id)}
-                  className={`md:px-6 md:py-4 px-2 py-1 rounded-lg font-black uppercase transition-all flex items-center shadow-sm gap-2 ${
-                    categoryId === cat.id 
-                    ? (type === 'income' ? 'bg-blue-600 text-white' : 'bg-rose-500 text-white') + ' scale-105 shadow-lg'
+                  key={cat.category_id}
+                  onClick={() => {setCategoryId(cat.category_id); setFormData({ ...formData, category_id: cat.category_id });}}
+                  className={`md:px-6 md:py-4 px-2 py-1 rounded-lg font-black uppercase transition-all flex items-center active:text-white ${
+                    categoryId === cat.category_id
+                    ? (formData.type === 'income' ? 'bg-blue-600 text-white' : 'bg-rose-500 text-white') + ' shadow-lg'
                     : 'bg-white dark:bg-slate-900 text-slate-400 border border-slate-100 dark:border-slate-800'
                   }`}
                 >
@@ -134,11 +187,11 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               ))}
             </div>
             <div className='flex justify-center'>
-              <button className={`md:w-full w-1/2 px-2 md:py-5 py-3 mt-5 rounded-2xl font-black text-[11px] uppercase text-white shadow-xl transition-all active:scale-95 ${
-              type === 'income' ? 'bg-blue-600' : 'bg-rose-500'
-            }`}>
-              Save {type}
-            </button>
+              <button onClick={()=>{handleSubmit()}} className={`md:w-full w-1/2 px-2 md:py-5 py-3 mt-5 rounded-2xl font-black text-[11px] uppercase text-white shadow-xl transition-all active:scale-95 ${
+                formData.type === 'income' ? 'bg-blue-600' : 'bg-rose-500'
+              }`}>
+                Save {formData.type}
+              </button>
             </div>
           </div>
         </div>
