@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { 
   User, 
   Globe, 
-  Coins, 
-  Moon, 
-  Sun, 
+  Coins,  
   ChevronRight, 
   LogOut, 
   Bell,
@@ -35,14 +33,10 @@ const SettingPage = () => {
     }
   ];
 
-  const logout = async() => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Error logging out:', error.message);
-    } else {
-      navigate('/auth');
-    }
-  }
+  const logout = async() => { 
+    await supabase.auth.signOut();
+    window.location.href = '/auth'; 
+  };
 
   return (
     <div className="min-h-screen bg-[#F8F9FD] dark:bg-slate-950 pb-24">
