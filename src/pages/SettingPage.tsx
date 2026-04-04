@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { 
   User, 
   Globe, 
@@ -8,13 +7,9 @@ import {
   Bell,
   ShieldCheck,Plus
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase.ts';
 
 const SettingPage = () => {
-  const [darkMode, setDarkMode] = useState(true);
-  const navigate = useNavigate();
-
   const settingsGroups = [
     {
       title: "Personal Preference",

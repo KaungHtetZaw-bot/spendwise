@@ -3,16 +3,6 @@ import { getChartData } from '../../lib/helper';
 import { useTransactionStore } from '../../storage/useTransactionStore.ts';
 import { useUserStore } from '../../storage/useUserStore.ts';
 
-const MOCK_CHART_DATA = [
-  { name: 'Mon', income: 4000, expense: 2400 },
-  { name: 'Tue', income: 3000, expense: 1398 },
-  { name: 'Wed', income: 2000, expense: 9800 },
-  { name: 'Thu', income: 2780, expense: 3908 },
-  { name: 'Fri', income: 1890, expense: 4800 },
-  { name: 'Sat', income: 2390, expense: 3800 },
-  { name: 'Sun', income: 3490, expense: 4300 },
-];
-
 const OverviewChart = () => {
   const { transactions: allTransactions } = useTransactionStore();
   const { profile } = useUserStore();

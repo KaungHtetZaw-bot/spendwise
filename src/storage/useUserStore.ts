@@ -25,7 +25,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   fetchProfile: async (userId) => {
     if (get().profile) return;
     set({ loading: true });
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('users')
       .select('*')
       .eq('user_id', userId)

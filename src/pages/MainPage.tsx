@@ -6,7 +6,7 @@ import { useUserStore } from '../storage/useUserStore';
 import { useEffect } from 'react';
 
 const MainPage = () => {
-  const { transactions, fetchTransactions,loading } = useTransactionStore();
+  const { transactions, fetchTransactions } = useTransactionStore();
   const { profile } = useUserStore();
   
     const income = transactions
