@@ -15,7 +15,7 @@ interface UserState {
   loading: boolean;
   fetchProfile: (userId: string) => Promise<void>;
   updateProfile: (updates: Profile) => Promise<void>;
-  setTheme: (theme: string) => void;
+  setTheme: (theme: string) => Promise<void>;
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
@@ -57,10 +57,15 @@ export const useUserStore = create<UserState>((set, get) => ({
     }
   },
 
-  setTheme: (theme) => {
+  setTheme: async (theme: string) => {
     set((state) => ({
       profile: state.profile ? { ...state.profile, theme } : null
     }));
-    document.documentElement.classList.toggle('dark', theme === 'Dark');
+    if (theme === "Dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    await get().updateProfile({ ...get().profile, theme } as Profile);
   }
 }));
