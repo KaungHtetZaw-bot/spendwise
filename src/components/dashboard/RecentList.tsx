@@ -2,20 +2,20 @@ const RecentList = ({transactions}: {transactions: any[]}) => {
     const transactionsToShow = transactions.slice(0, 5);
   return (
     <>
-    <section className="space-y-4">
+    <section className="space-y-4 ">
         <div className="flex justify-between items-center px-1">
           <h3 className="text-lg font-bold">Recent History</h3>
           <button className="text-xs font-semibold text-indigo-500 uppercase tracking-tighter">View All</button>
         </div>
 
-        <div className="space-y-3">
+        <div className="md:space-y-3 space-y-1.5 pb-30">
           {transactions.length==0 ? 
             <div className="text-center py-10 text-slate-400 text-sm font-medium bg-slate-50 dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-100 dark:border-slate-800">
               No transactions yet.
             </div> : transactionsToShow.map((item) => (
             <div 
               key={item.id} 
-              className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800"
+              className="flex items-center justify-between md:p-4 p-2 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800"
             >
               <div className="flex gap-3 items-center">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${

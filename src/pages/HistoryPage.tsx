@@ -36,13 +36,13 @@ const HistoryPage = () => {
         </h1>
 
         <div className="flex items-center gap-2 relative">
-          <div className={`relative flex items-center transition-all duration-500 ease-in-out ${isSearchOpen ? 'md:w-64 w-40' : 'w-0'}`}>
+          <div className={`relative flex items-center transition-all duration-500 ease-in-out ${isSearchOpen ? 'md:w-64 w-50' : 'w-0'}`}>
             <input 
               type="text"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 md:rounded-2xl rounded-xl md:py-2 py-1 pl-4 pr-10 text-sm font-bold outline-none transition-all duration-500 ${
+              className={`w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 md:rounded-2xl rounded-xl py-2 pl-4 pr-10 text-sm font-bold outline-none transition-all duration-500 ${
                 isSearchOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
               }`}
             />
@@ -60,7 +60,7 @@ const HistoryPage = () => {
           <div className="relative">
             <button 
               onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
-              className={`flex items-center gap-2 px-4 md:py-2 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
                 isDropdownOpen 
                 ? 'bg-indigo-600 border-indigo-600 text-white' 
                 : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400'
