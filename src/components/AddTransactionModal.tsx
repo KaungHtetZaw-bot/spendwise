@@ -63,12 +63,9 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const { data: { user } } = await supabase.auth.getUser();
   
   if (user) {
-    const selectedCategory = allCategories.find(c => c.category_id === formData.category_id);
-
     const payload = {
       amount: formData.amount,
       type: formData.type,
-      category: selectedCategory?.name || 'General',
       category_id: formData.category_id,
       date: formData.date.toISOString().split('T')[0],
       note: formData.note,
@@ -85,7 +82,7 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
         note: '',
       });
       setCategoryId('');
-      // onClose();
+      onClose();
     } catch (error) {
       console.error("Submission failed:", error);
     }
@@ -98,7 +95,7 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <div className="absolute inset-0 bg-slate-900/10 dark:bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative w-full max-w-lg h-screen bg-[#F8F9FD] dark:bg-slate-950 shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom duration-500">
+      <div className="relative w-full max-w-lg h-[100dvh] bg-[#F8F9FD] dark:bg-slate-950 shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom duration-500">
         
         <div className="bg-white dark:bg-slate-900 px-6 py-4 flex items-center justify-between border-b border-slate-50 dark:border-slate-800">
           <button onClick={onClose} className="p-2 border border-slate-100 dark:border-slate-800 rounded-full text-slate-400">
@@ -122,9 +119,9 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           <div className="w-10" />
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 space-y-8 pb-32">
+        <div className="flex-1 overflow-y-auto p-6 pb-[calc(8rem+env(safe-area-inset-bottom))] space-y-8 pb-32">
           
-          <div className="bg-white dark:bg-slate-900 rounded-[1rem] md:p-4 p-2 shadow-sm border border-slate-100 dark:border-slate-800">
+          <div className="bg-white dark:bg-slate-900 rounded-[1rem] md:p-4 p-2 pt-[calc(1rem+env(safe-area-inset-top))] shadow-sm border border-slate-100 dark:border-slate-800">
              <div className="flex items-center gap-2 mb-4 ml-2">
                 <CalendarIcon size={14} className="text-blue-500" />
                 <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Select Date</span>

@@ -3,7 +3,7 @@ interface Transaction {
   user_id: string;
   amount: number;
   type: 'income' | 'expense';
-  category: string;
+  category_id: string;
   date: string;
   note: string;
 }
