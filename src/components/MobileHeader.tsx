@@ -21,7 +21,7 @@ const MobileHeader = () => {
 
   return (
     <div className="relative">
-      <div className="flex items-center justify-between px-4 py-4 md:hidden bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm sticky top-0 z-30 border-b border-slate-100 dark:border-slate-900">
+      <div className="flex items-center justify-between px-4 md:py-4 py-2 md:hidden bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm sticky top-0 z-30 border-b border-slate-100 dark:border-slate-900">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-black shadow-sm">
             {profile?.name ? profile.name.charAt(0).toUpperCase() : "K"}

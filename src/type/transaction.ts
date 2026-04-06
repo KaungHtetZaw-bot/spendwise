@@ -16,4 +16,12 @@ interface Category {
   name: string;
 }
 
-export type { Transaction, Category };
+interface FormData {
+  type: 'income' | 'expense';
+  amount: number;
+  date: Date | null;
+  category_id: string;
+  note: string;
+}
+
+export type { Transaction, Category, FormData };
