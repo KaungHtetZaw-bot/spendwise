@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
-import { ArrowUpRight, ArrowDownRight, Calendar, ChevronDown, BarChart3, Check } from 'lucide-react';
+import { useState,useMemo } from 'react';
+import { ArrowUpRight, ArrowDownRight, Calendar, ChevronDown, BarChart3, Check,PiIcon } from 'lucide-react';
+import { 
+  PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { useTransactionStore } from '../storage/useTransactionStore';
 
 const StatsPage = () => {
   const [timeRange, setTimeRange] = useState('This Month');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const { transactions } = useTransactionStore();
 
-  // Calendar Options
   const timeOptions = ['Today', 'This Week', 'This Month', 'This Year', 'Custom Range'];
+
+  const colorPalette = [
+    '#f43f5e',
+    '#f59e0b',
+    '#6366f1',
+    '#94a3b8',
+    '#e2e8f0',
+  ];
 
   const categoryStats = [
     { name: 'Food & Drinks', amount: 450000, percentage: 45, color: 'bg-rose-500' },
@@ -14,6 +25,37 @@ const StatsPage = () => {
     { name: 'Transportation', amount: 150000, percentage: 15, color: 'bg-indigo-500' },
     { name: 'Others', amount: 150000, percentage: 15, color: 'bg-slate-400' },
   ];
+
+  const { statsData, totalIncome, totalExpense } = useMemo(() => {
+    const breakdown: Record<string, number> = {};
+    let income = 0;
+    let expense = 0;
+
+    transactions.forEach(t => {
+      const amount = Number(t.amount);
+      if (t.type === 'income') {
+        income += amount;
+      } else {
+        expense += amount;
+        const catName = t.category || 'General';
+        breakdown[catName] = (breakdown[catName] || 0) + amount;
+        console.log("breakdown",(breakdown[catName] || 0) + amount)
+        console.log(breakdown[catName])
+      }
+    });
+
+    const chartData = Object.entries(breakdown)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .map((item, index) => ({
+        ...item,
+        color: colorPalette[index] || '#94a3b8' 
+      }));
+
+    return { statsData: chartData, totalIncome: income, totalExpense: expense };
+  }, [transactions]);
+
+  const expensePercentage = totalIncome > 0 ? Math.min(Math.round((totalExpense / totalIncome) * 100), 100) : 0;
 
   return (
     <div className="min-h-screen dark:bg-slate-950 md:pt-5 pt-2.5 pb-24">
@@ -64,7 +106,7 @@ const StatsPage = () => {
               <ArrowUpRight size={20} />
             </div>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Income</p>
-            <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">1.5M <span className="text-[10px] font-medium opacity-50">Ks</span></h3>
+            <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">{totalIncome} <span className="text-[10px] font-medium opacity-50">Ks</span></h3>
           </div>
 
           <div className="bg-white dark:bg-slate-900 md:p-6 p-3 md:rounded-[2rem] rounded-[1rem] border border-slate-100 dark:border-slate-800 shadow-sm">
@@ -72,49 +114,74 @@ const StatsPage = () => {
               <ArrowDownRight size={20} />
             </div>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Expense</p>
-            <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">1.0M <span className="text-[10px] font-medium opacity-50">Ks</span></h3>
+            <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">{totalExpense} <span className="text-[10px] font-medium opacity-50">Ks</span></h3>
           </div>
         </div>
 
         <div className="bg-white dark:bg-slate-900 md:p-8 p-6 md:rounded-[2.5rem] rounded-[1.25rem] border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center">
-          <div className="relative w-44 h-44 flex items-center justify-center">
-             <div className="absolute inset-0 border-[16px] border-slate-100 dark:border-slate-800 rounded-full"></div>
-             <div className="absolute inset-0 border-[16px] border-indigo-500 rounded-full border-t-transparent border-r-transparent rotate-45"></div>
-             <div className="text-center">
-                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Expenses</p>
-                <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">65%</h2>
-             </div>
+          <div className="w-full h-64 relative">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={statsData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={8}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {statsData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  contentStyle={{ borderRadius: '12px', border: 'none', fontWeight: 'bold' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            
+            {/* Chart အလယ်က စာသား */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total</p>
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white">{expensePercentage}%</h2>
+            </div>
           </div>
-          <p className="mt-8 text-xs font-bold text-slate-400 text-center leading-relaxed">
-            You spent <span className="text-indigo-600 font-black">15% more</span> than last month. 
-          </p>
         </div>
 
         {/* Breakdown List */}
-        <div className="md:space-y-4 space-y-3">
+        <div className="md:space-y-4 space-y-2">
           <div className="flex justify-between items-center px-2">
             <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Spending Breakdown</h3>
             <BarChart3 size={16} className="text-slate-300" />
           </div>
 
-          <div className="bg-white dark:bg-slate-900 md:rounded-[2.5rem] rounded-[1.8rem] p-5 md:p-8 border border-slate-100 dark:border-slate-800 shadow-sm space-y-6">
-            {categoryStats.map((cat, index) => (
+          <div className="bg-white dark:bg-slate-900 md:rounded-[2.5rem] rounded-[1.25rem] p-4 md:p-8 border border-slate-100 dark:border-slate-800 shadow-sm md:space-y-6 space-y-3">
+            {statsData.length > 0 ? statsData.map((cat, index) => (
               <div key={index} className="space-y-2.5">
                 <div className="flex justify-between items-center px-1">
                   <div className="flex items-center gap-3">
-                    <div className={`w-2.5 h-2.5 rounded-full ${cat.color} shadow-sm`}></div>
+                    <div className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ backgroundColor: cat.color }}></div>
                     <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{cat.name}</span>
                   </div>
-                  <span className="text-[11px] font-black text-slate-900 dark:text-white">{cat.amount.toLocaleString()} Ks</span>
+                  <span className="text-[11px] font-black text-slate-900 dark:text-white">
+                    {cat.value.toLocaleString()} Ks
+                  </span>
                 </div>
-                <div className="w-full h-2 bg-slate-50 dark:bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                <div className="w-full h-2 bg-slate-50 dark:bg-slate-800 rounded-full overflow-hidden">
                   <div 
-                    className={`h-full ${cat.color} rounded-full transition-all duration-1000 ease-out`} 
-                    style={{ width: `${cat.percentage}%` }}
+                    className="h-full rounded-full transition-all duration-1000 ease-out" 
+                    style={{ width: `${(cat.value / totalExpense) * 100}%`, backgroundColor: cat.color }}
                   ></div>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="py-10 text-center opacity-30">
+                 <PiIcon size={40} className="mx-auto mb-2" />
+                 <p className="text-[10px] font-black uppercase tracking-widest">No data available</p>
+              </div>
+            )}
           </div>
         </div>
 
