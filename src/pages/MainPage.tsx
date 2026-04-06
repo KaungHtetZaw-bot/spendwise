@@ -30,7 +30,7 @@ const MainPage = () => {
     }, [ fetchTransactions, profile]);
   return (
     <div className="space-y-8">
-      <section className="grid grid-cols-3 md:gap-4 gap-2">
+      <section className="grid grid-cols-3 md:gap-4 gap-2 pt-2.5">
         <StatCard title="Total Income" amount={income} variant="income" />
         <StatCard title="Total Expense" amount={expense} variant="expense" />
         <StatCard title="Net Balance" amount={balance} variant="neutral" />

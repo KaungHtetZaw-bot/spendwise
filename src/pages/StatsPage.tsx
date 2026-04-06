@@ -16,7 +16,7 @@ const StatsPage = () => {
   ];
 
   return (
-    <div className="min-h-screen dark:bg-slate-950 pb-24">
+    <div className="min-h-screen dark:bg-slate-950 md:pt-5 pt-2.5 pb-24">
       <div className="max-w-xl mx-auto md:space-y-8 space-y-4">
         <div className="flex justify-between items-center md:pt-6 relative">
           <h1 className="md:text-2xl text-xl font-black text-slate-900 dark:text-white">Statistics</h1>

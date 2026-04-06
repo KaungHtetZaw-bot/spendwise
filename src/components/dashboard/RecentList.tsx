@@ -1,11 +1,14 @@
+import { useNavigate } from "react-router-dom";
+
 const RecentList = ({transactions}: {transactions: any[]}) => {
     const transactionsToShow = transactions.slice(0, 5);
+    const navigate = useNavigate();
   return (
     <>
     <section className="space-y-4 ">
         <div className="flex justify-between items-center px-1">
           <h3 className="text-lg font-bold">Recent History</h3>
-          <button className="text-xs font-semibold text-indigo-500 uppercase tracking-tighter">View All</button>
+          <button onClick={() => navigate('/history')} className="text-xs font-semibold text-indigo-500 uppercase tracking-tighter">View All</button>
         </div>
 
         <div className="md:space-y-3 space-y-1.5 pb-30">
