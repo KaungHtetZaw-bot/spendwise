@@ -1,14 +1,15 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import type { Transaction, Category } from '../type/transaction';
+import { useUserStore } from './useUserStore';
 
 interface TransactionState {
   transactions: Transaction[];
   categories: Category[];
   loading: boolean;
-  fetchTransactions: (userId: string) => Promise<void>;
-  addTransaction: (transaction: Omit<Transaction, 'id'>, userId: string) => Promise<void>;
-  fetchCategories: (userId: string) => Promise<void>;
+  fetchTransactions: () => Promise<void>;
+  addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void>;
+  fetchCategories: () => Promise<void>;
 }
 
 export const useTransactionStore = create<TransactionState>((set, get) => ({
@@ -16,7 +17,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   categories: [],
   loading: false,
 
-  fetchTransactions: async (userId) => {
+  fetchTransactions: async () => {
     set({ loading: true });
     const { data, error } = await supabase
       .from('transactions')
@@ -26,7 +27,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
           name
         )
       `)
-      .eq('user_id', userId)
+      .eq('user_id', useUserStore.getState().profile?.user_id)
       .order('date', { ascending: true });
 
     if (!error && data) {
@@ -41,10 +42,10 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     }
   },
 
-  addTransaction: async (newTx, userId) => {
+  addTransaction: async (newTx) => {
     const { data, error } = await supabase
       .from('transactions')
-      .insert([{ ...newTx, user_id: userId }])
+      .insert([{ ...newTx, user_id: useUserStore.getState().profile?.user_id }])
       .select()
       .single();
 
@@ -53,13 +54,14 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     }
   },
 
-  fetchCategories: async (userId: string) => {
+  fetchCategories: async () => {
     const { data, error } = await supabase
         .from('categories')
         .select('*')
-        .eq('user_id', userId);
+        .eq('user_id', useUserStore.getState().profile?.user_id);
         
     if (data) set({ categories: data });
     console.log("Fetched categories:", data, "Error:", error);
     },
 }));
+
