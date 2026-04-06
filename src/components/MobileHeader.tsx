@@ -7,9 +7,10 @@ const MobileHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleTheme = () => {
-    const newTheme = profile?.theme === "Dark" ? "Light" : "Dark";
-    setTheme(newTheme);
-    setIsOpen(false);
+    if (!profile) return;
+    const nextTheme = profile.theme?.toLowerCase() === "night" ? "day" : "night";
+  
+  setTheme(nextTheme);
   };
 
   const toggleLanguage = () => {
@@ -51,7 +52,7 @@ const MobileHeader = () => {
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-4 top-14 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200 origin-top-right">
+          <div className="absolute right-4 top-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200 origin-top-right">
             <div className="p-2 space-y-1">
               
               {/* Dark Mode Toggle */}
@@ -60,10 +61,16 @@ const MobileHeader = () => {
                 className="w-full flex items-center justify-between p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors active:bg-slate-100 dark:active:bg-slate-700"
               >
                 <div className="flex items-center gap-3">
-                  {profile?.theme === "Dark" ? <Sun size={18} className="text-amber-500" /> : <Moon size={18} className="text-indigo-500" />}
+                  {profile?.theme?.toLowerCase() === "day" ? (
+                    <Moon size={18} className="text-indigo-400" />
+                  ) : (
+                    <Sun size={18} className="text-amber-500" />
+                  )}
                   {/* <span className="text-sm font-bold">Appearance</span> */}
+                  <span className="text-sm font-black uppercase opacity-50">
+                    {profile?.theme?.toLowerCase() === "day" ? "Night Mode" : "Day Mode"}
+                  </span>              
                 </div>
-                <span className="text-sm font-black uppercase opacity-50">{profile?.theme || 'Light'}</span>
               </button>
 
               {/* Language Switch */}

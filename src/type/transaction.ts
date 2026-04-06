@@ -4,6 +4,7 @@ interface Transaction {
   amount: number;
   type: 'income' | 'expense';
   category_id: string;
+  category: string;
   date: string;
   note: string;
 }

@@ -1,21 +1,13 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-
-interface Profile {
-  user_id:string;
-  name: string;
-  monthly_income: number;
-  currency: string;
-  language: string;
-  theme: string;
-}
+import type { Profile } from '../type/profile';
 
 interface UserState {
   profile: Profile | null;
   loading: boolean;
   fetchProfile: (userId: string) => Promise<void>;
   updateProfile: (updates: Profile) => Promise<void>;
-  setTheme: (theme: string) => Promise<void>;
+  setTheme: (newTheme: string) => Promise<void>;
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
@@ -57,15 +49,24 @@ export const useUserStore = create<UserState>((set, get) => ({
     }
   },
 
-  setTheme: async (theme: string) => {
+  setTheme: async (newTheme: string) => {
     set((state) => ({
-      profile: state.profile ? { ...state.profile, theme } : null
+      profile: state.profile ? { ...state.profile, theme: newTheme } : null
     }));
-    if (theme === "Dark") {
+
+    if (newTheme.toLowerCase() === "night") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
-    await get().updateProfile({ ...get().profile, theme } as Profile);
+
+    const { error } = await supabase
+      .from('users')
+      .update({ theme: newTheme })
+      .eq('user_id', get().profile?.user_id);
+
+    if (error) {
+      console.error("Failed to sync theme to database:", error);
+    }
   }
 }));
