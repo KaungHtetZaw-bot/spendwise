@@ -105,9 +105,9 @@ const HistoryPage = () => {
       {/* Transactions List Area */}
       <div className="max-w-3xl mx-auto space-y-3">
         {filteredTransactions.length > 0 ? (
-          filteredTransactions.map((t) => (
+          filteredTransactions.map((t,i) => (
             <div 
-              key={t.id} 
+              key={i} 
               className="group flex items-center justify-between md:p-4 p-2 bg-white dark:bg-slate-900 md:rounded-[1.5rem] rounded-[0.75rem] shadow-sm border border-slate-100 dark:border-slate-800/50 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all active:scale-[0.98]"
             >
               <div className="flex items-center gap-4">

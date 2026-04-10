@@ -1,11 +1,13 @@
 import { Coins, Check, X } from 'lucide-react'
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 
 const BudgetCard = () => {
     const [isEditing, setIsEditing] = useState(false);
   const [tempBudget, setTempBudget] = useState(1500000);
   const [budget, setBudget] = useState(1500000);
+  const { t } =useTranslation()
 
   const handleSave = () => {
     setBudget(tempBudget);
@@ -32,7 +34,7 @@ const BudgetCard = () => {
         </div>
 
         <div className="relative z-10">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">Monthly Budget</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">{ t('budget') }</p>
             {isEditing ? (
           /* Edit Mode Input */
           <div className="mt-2 flex items-center gap-3 animate-in fade-in zoom-in-95 duration-200">
@@ -65,7 +67,7 @@ const BudgetCard = () => {
             onClick={() => setIsEditing(true)}
             className="mt-6 px-6 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-white/10 active:scale-95"
           >
-            Update Budget
+            { t('update_budget') }
           </button>
         )}
         </div>

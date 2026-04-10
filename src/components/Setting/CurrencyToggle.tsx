@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Coins } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const CurrencyToggle = () => {
+  const { t } = useTranslation()
     const [currency, setCurrency] = useState<'mmk' | 'usd'>('usd');
       const handleLanguageToggle = () => {
         setCurrency(prev => prev === 'mmk' ? 'usd' : 'mmk');
@@ -13,7 +15,7 @@ const CurrencyToggle = () => {
           <Coins size={20} />
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Currency</span>
+          <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{ t('currency') }</span>
           <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
             {currency === 'mmk' ? 'MMK (Ks)' : 'USD ($)'}
           </span>

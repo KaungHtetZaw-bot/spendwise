@@ -5,6 +5,7 @@ import './index.css'
 import App from './App.tsx'
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
+import './i18n'
 const theme = createTheme({
   primaryColor: 'indigo',
   fontFamily: 'Inter, sans-serif',

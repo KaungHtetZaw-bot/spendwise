@@ -12,17 +12,19 @@ import { useState } from 'react';
 import AccountModal from '../components/Setting/AccountModal.tsx';
 import PerSonalSettingGroup from '../components/Setting/PersonalSettingGroup.tsx';
 import BudgetCard from '../components/Setting/BudgetCard.tsx';
+import { useTranslation } from 'react-i18next';
 
 const SettingPage = () => {
   const { profile } = useUserStore();
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const { t } = useTranslation()
   const settingsGroups = [
     {
-      title: "Security & App",
+      title: t('security_app'),
       items: [
-        { icon: <ShieldCheck size={20} />, label: "Privacy Policy", value: "", color: "text-emerald-500",onClick: () => setIsPrivacyOpen(true)},
-        { icon: <User size={20} />, label: "Account Setting", value: "", color: "text-indigo-500",onClick: () => setIsAccountOpen(true) },
+        { icon: <ShieldCheck size={20} />, label: t('privacy.title'), value: "", color: "text-emerald-500",onClick: () => setIsPrivacyOpen(true)},
+        { icon: <User size={20} />, label: t('account_settings'), value: "", color: "text-indigo-500",onClick: () => setIsAccountOpen(true) },
       ]
     }
   ];
@@ -101,14 +103,14 @@ const SettingPage = () => {
             <div className="absolute h-screen inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => setIsPrivacyOpen(false)} />
             <div className="relative bg-white dark:bg-slate-900 w-full max-w-lg max-h-[80vh] md:rounded-[2.5rem] rounded-[1.25rem] overflow-hidden flex flex-col shadow-2xl border border-slate-100 dark:border-slate-800">
               <div className="p-6 border-b border-slate-50 dark:border-slate-800 flex justify-between items-center">
-                <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-xs">Privacy Policy</h3>
-                <button onClick={() => setIsPrivacyOpen(false)} className="text-slate-400 font-bold text-xs uppercase">Close</button>
+                <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-xs">{t('privacy.title')}</h3>
+                <button onClick={() => setIsPrivacyOpen(false)} className="text-slate-400 font-bold text-xs uppercase">{t('privacy.close')}</button>
               </div>
               <div className="flex-1 overflow-y-auto p-8 prose dark:prose-invert prose-sm">
-                <h4 className="text-slate-900 dark:text-white font-black">1. Data Collection</h4>
-                <p className="text-slate-500 dark:text-slate-400">We collect your email and transaction data solely to provide expense tracking services. Your data is stored securely via Supabase.</p>
-                <h4 className="text-slate-900 dark:text-white font-black mt-4">2. Data Security</h4>
-                <p className="text-slate-500 dark:text-slate-400">All data is encrypted and we do not share your personal information with third parties.</p>
+                <h4 className="text-slate-900 dark:text-white font-black">{t('privacy.section1_title')}</h4>
+                <p className="text-slate-500 dark:text-slate-400">{t('privacy.section1_desc')}</p>
+                <h4 className="text-slate-900 dark:text-white font-black mt-4">{t('privacy.section2_title')}</h4>
+                <p className="text-slate-500 dark:text-slate-400">{t('privacy.section2_desc')}</p>
               </div>
             </div>
           </div>
@@ -122,7 +124,7 @@ const SettingPage = () => {
           className="w-full py-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-rose-500 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 active:scale-95 transition-all mt-4 mb-10 shadow-sm hover:bg-rose-50 dark:hover:bg-rose-950/20"
         >
           <LogOut size={18} />
-          Sign Out Account
+          { t('sign_out') }
         </button>
 
       </div>

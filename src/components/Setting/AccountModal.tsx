@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { ChevronLeft, User, Camera, ShieldAlert } from 'lucide-react';
+import { ChevronLeft, Camera, ShieldAlert } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { useTranslation } from 'react-i18next';
 
 interface AccountModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface AccountModalProps {
 }
 
 const AccountModal = ({ isOpen, onClose, profile }: AccountModalProps) => {
+  const { t } = useTranslation();
   const [name, setName] = useState(profile?.full_name || '');
   const [job, setJob] = useState(profile?.job_title || '');
   const [loading, setLoading] = useState(false);
@@ -36,7 +38,7 @@ const AccountModal = ({ isOpen, onClose, profile }: AccountModalProps) => {
         <button onClick={onClose} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-500">
           <ChevronLeft size={20} />
         </button>
-        <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-[10px]">Account Settings</h3>
+        <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-[10px]">{t('account.title')}</h3>
       </div>
 
       <div className="flex-1 overflow-y-auto p-8 space-y-10 max-w-md mx-auto w-full">
@@ -59,22 +61,22 @@ const AccountModal = ({ isOpen, onClose, profile }: AccountModalProps) => {
         {/* Form Inputs */}
         <div className="space-y-6">
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Display Name</label>
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">{t('account.name_label')}</label>
             <input 
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-indigo-500 p-4 rounded-2xl outline-none font-bold text-slate-700 dark:text-white transition-all shadow-sm"
-              placeholder="Your Name"
+              placeholder={ t('account.name_placeholder') }
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Job Title / Role</label>
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">{t('account.job_label')}</label>
             <input 
               value={job}
               onChange={(e) => setJob(e.target.value)}
               className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-indigo-500 p-4 rounded-2xl outline-none font-bold text-slate-700 dark:text-white transition-all shadow-sm"
-              placeholder="Developer, Student, etc."
+              placeholder={ t('account.job_placeholder') }
             />
           </div>
         </div>
@@ -86,16 +88,16 @@ const AccountModal = ({ isOpen, onClose, profile }: AccountModalProps) => {
             disabled={loading}
             className="w-full py-5 bg-indigo-600 text-white rounded-[2rem] font-black text-[11px] uppercase tracking-[0.2em] shadow-xl shadow-indigo-500/20 active:scale-95 transition-all"
           >
-            {loading ? "Saving Changes..." : "Save Changes"}
+            {loading ? t('account.saving') : t('account.save')}
           </button>
           
           <div className="pt-8 border-t border-slate-100 dark:border-slate-800">
              <div className="flex items-center gap-2 mb-4 ml-2 text-rose-500">
                 <ShieldAlert size={14} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Danger Zone</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">{t('account.danger_zone')}</span>
              </div>
              <button className="w-full py-4 border-2 border-rose-50 dark:border-rose-900/20 text-rose-500 rounded-[1.5rem] font-black text-[10px] uppercase tracking-widest hover:bg-rose-50 transition-colors">
-                Delete Account & Data
+                {t('account.delete')}
              </button>
           </div>
         </div>

@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Bell,BellOff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 
 const NotifyToggle = () => {
     const [isNotifyEnabled, setIsNotifyEnabled] = useState(true);
+    const { t } = useTranslation()
     
   return (
     <>
@@ -11,7 +13,7 @@ const NotifyToggle = () => {
         <div className={`p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 transition-colors text-indigo-400`}>
             {isNotifyEnabled ? <Bell size={20} /> : <BellOff size={20} />}
         </div>
-        <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Notifications</span>
+        <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{ t('notifications') }</span>
         </div>
         <button 
         onClick={() => setIsNotifyEnabled(!isNotifyEnabled)}

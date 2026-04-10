@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useUserStore } from "../storage/useUserStore";
 import { Moon, Sun, Languages, EllipsisVertical, LogOut } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const MobileHeader = () => {
-  const { profile, setTheme, updateProfile } = useUserStore();
+  const { profile, setTheme } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
+  const { i18n } = useTranslation()
 
   const toggleTheme = () => {
     if (!profile) return;
@@ -14,10 +16,10 @@ const MobileHeader = () => {
   };
 
   const toggleLanguage = () => {
-    const newLang = profile?.language === "EN" ? "MM" : "EN";
-    if (profile) updateProfile({ ...profile, language: newLang });
+    const nextLang = i18n.language === "en" ? "mm" : "en";
+    i18n.changeLanguage(nextLang);
     setIsOpen(false);
-  };
+};
 
   return (
     <div className="relative">
@@ -82,7 +84,7 @@ const MobileHeader = () => {
                   <Languages size={18} className="text-emerald-500" />
                   {/* <span className="text-sm font-bold">Language</span> */}
                 </div>
-                <span className="text-sm font-black uppercase opacity-50">{profile?.language || 'EN'}</span>
+                <span className="text-sm font-black uppercase opacity-50">{ (profile?.language === 'mm' || i18n.language === 'mm') ? "MM" : "EN" }</span>
               </button>
 
               <div className="h-[1px] bg-slate-100 dark:bg-slate-800 my-1 mx-2" />

@@ -1,20 +1,24 @@
 import { Home, History, PieChart, Settings, Plus } from 'lucide-react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-const routeItems = [
-  { name: 'Home', href: '/', icon: Home },
-  { name: 'History', href: '/history', icon: History },
-  { name: 'Stats', href: '/stats', icon: PieChart },
-  { name: 'Settings', href: '/settings', icon: Settings },
-];
+
 
 const BottomNav = ({ onAddClick }: { onAddClick: () => void }) => {
+  const { t } = useTranslation();
+
+const routeItems = [
+  { name: t('nav.home'), href: '/', icon: Home },
+  { name: t('nav.history'), href: '/history', icon: History },
+  { name: t('nav.stats'), href: '/stats', icon: PieChart },
+  { name: t('nav.settings'), href: '/settings', icon: Settings },
+];
   const mid = Math.ceil(routeItems.length / 2);
   const firstHalf = routeItems.slice(0, mid);
   const secondHalf = routeItems.slice(mid);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:bottom-auto md:top-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg border-t md:border-t-0 md:border-b border-slate-200 dark:border-slate-800 px-6 py-2 md:py-4">
+    <nav className="fixed bottom-0 left-0 right-0 z-30 md:bottom-auto md:top-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg border-t md:border-t-0 md:border-b border-slate-200 dark:border-slate-800 px-6 py-2 md:py-4">
       <div className="max-w-4xl mx-auto flex justify-between items-center">
         
         <h1 className="hidden md:block text-xl font-bold tracking-tighter text-indigo-600 dark:text-indigo-400">
