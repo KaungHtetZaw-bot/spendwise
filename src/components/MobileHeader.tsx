@@ -4,15 +4,22 @@ import { Moon, Sun, Languages, EllipsisVertical, LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const MobileHeader = () => {
-  const { profile, setTheme } = useUserStore();
+  const { profile, setTheme, theme } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
   const { i18n } = useTranslation()
 
   const toggleTheme = () => {
-    if (!profile) return;
-    const nextTheme = profile.theme?.toLowerCase() === "night" ? "day" : "night";
-  
-  setTheme(nextTheme);
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    if (!document.startViewTransition) {
+      console.log("Toggling theme to:", nextTheme);
+      setTheme(nextTheme);
+      return;
+    }
+
+    document.startViewTransition(() => {
+      console.log("Toggling theme to:", nextTheme);
+      setTheme(nextTheme);
+    });
   };
 
   const toggleLanguage = () => {
@@ -23,7 +30,7 @@ const MobileHeader = () => {
 
   return (
     <div className="relative">
-      <div className="flex items-center justify-between px-4 md:py-4 py-2 md:hidden bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm sticky top-0 z-30 border-b border-slate-100 dark:border-slate-900">
+      <div className="flex items-center justify-between px-4 md:py-4 py-2 md:hidden backdrop-blur-sm sticky top-0 z-30">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-black shadow-sm">
             {profile?.name ? profile.name.charAt(0).toUpperCase() : "K"}
@@ -50,46 +57,40 @@ const MobileHeader = () => {
         </div>
       </div>
 
-      {/* Dropdown Menu */}
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
           <div className="absolute right-4 top-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200 origin-top-right">
             <div className="p-2 space-y-1">
               
-              {/* Dark Mode Toggle */}
               <button 
                 onClick={toggleTheme}
                 className="w-full flex items-center justify-between p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors active:bg-slate-100 dark:active:bg-slate-700"
               >
                 <div className="flex items-center gap-3">
-                  {profile?.theme?.toLowerCase() === "day" ? (
+                  {theme === "light" ? (
                     <Moon size={18} className="text-indigo-400" />
                   ) : (
                     <Sun size={18} className="text-amber-500" />
                   )}
-                  {/* <span className="text-sm font-bold">Appearance</span> */}
-                  <span className="text-sm font-black uppercase opacity-50">
-                    {profile?.theme?.toLowerCase() === "day" ? "Night Mode" : "Day Mode"}
-                  </span>              
                 </div>
+                  <span className="text-sm font-black uppercase opacity-50">
+                    {theme === "light" ? "Night" : "Day"}
+                  </span>              
               </button>
 
-              {/* Language Switch */}
               <button 
                 onClick={toggleLanguage}
                 className="w-full flex items-center justify-between p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors active:bg-slate-100 dark:active:bg-slate-700"
               >
                 <div className="flex items-center gap-3">
                   <Languages size={18} className="text-emerald-500" />
-                  {/* <span className="text-sm font-bold">Language</span> */}
                 </div>
                 <span className="text-sm font-black uppercase opacity-50">{ (profile?.language === 'mm' || i18n.language === 'mm') ? "MM" : "EN" }</span>
               </button>
 
               <div className="h-[1px] bg-slate-100 dark:bg-slate-800 my-1 mx-2" />
 
-              {/* Logout Button */}
               <button className="w-full flex items-center gap-3 p-1.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-500 transition-colors">
                 <LogOut size={18} />
                 <span className="text-sm font-bold">Sign Out</span>

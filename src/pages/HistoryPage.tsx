@@ -33,8 +33,8 @@ const HistoryPage = () => {
   }, [transactions, searchQuery, filterType]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-24 px-1">
-      <div className="max-w-3xl mx-auto flex justify-between items-center md:mb-8 mb-4 sticky top-0 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md md:py-4 py-2 z-20">
+    <div className="min-h-screen pb-24">
+      <div className="mx-auto flex justify-between items-center md:mb-8 mb-4 sticky md:-top-8 top-0 backdrop-blur-md md:py-4 py-2 z-20">
         <h1 className={`text-2xl font-black text-slate-900 dark:text-white transition-all duration-300 ${isSearchOpen ? 'opacity-0 scale-90 pointer-events-none absolute' : 'opacity-100 scale-100'}`}>
           History
         </h1>
@@ -103,7 +103,7 @@ const HistoryPage = () => {
       </div>
 
       {/* Transactions List Area */}
-      <div className="max-w-3xl mx-auto space-y-3">
+      <div className="mx-auto space-y-3">
         {filteredTransactions.length > 0 ? (
           filteredTransactions.map((t,i) => (
             <div 

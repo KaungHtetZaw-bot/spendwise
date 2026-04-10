@@ -35,8 +35,8 @@ const SettingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FD] dark:bg-slate-950 pb-24">
-      <div className="max-w-xl mx-auto md:space-y-8 space-y-4">
+    <div className="min-h-screen pb-24">
+      <div className="mx-auto md:space-y-8 space-y-4">
         
         <div className="flex flex-col items-center md:py-8 py-6">
           <div className="relative">

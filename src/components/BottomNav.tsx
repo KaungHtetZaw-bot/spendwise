@@ -2,8 +2,6 @@ import { Home, History, PieChart, Settings, Plus } from 'lucide-react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-
-
 const BottomNav = ({ onAddClick }: { onAddClick: () => void }) => {
   const { t } = useTranslation();
 

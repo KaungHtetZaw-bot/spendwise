@@ -25,6 +25,8 @@
     color: var(--spacing-slate-900);
     height: 100vh;
     overflow: hidden;
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark body {
