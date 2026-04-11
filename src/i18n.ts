@@ -2,6 +2,19 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+const getSavedLanguage = () => {
+  try {
+    const storage = localStorage.getItem('user-storage');
+    if (storage) {
+      const parsed = JSON.parse(storage);
+      return parsed.state.language || 'en';
+    }
+  } catch (e) {
+    return 'en';
+  }
+  return 'en';
+};
+
 const resources = {
   en: {
     translation: {
@@ -113,7 +126,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en',
+    lng: getSavedLanguage(),
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false 

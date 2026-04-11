@@ -1,14 +1,14 @@
-import  { useState } from 'react'
 import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '../../storage/useUserStore';
 
 
 const LanguageToggle = () => {
   const { i18n,t } = useTranslation();
-  const [lang, setLang] = useState<'en' | 'mm'>('en');
+  const { language, setLanguage} = useUserStore();
   const handleLanguageToggle = () => {
-    const nextLang = lang === 'en' ? 'mm' : 'en';
-    setLang(nextLang);
+    const nextLang = language === 'en' ? 'mm' : 'en';
+    setLanguage(nextLang);
     i18n.changeLanguage(nextLang);
   };
   
@@ -21,7 +21,7 @@ const LanguageToggle = () => {
         <div className="flex flex-col">
           <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{ t('language') }</span>
           <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-            {lang === 'en' ? 'English (US)' : 'မြန်မာ (MM)'}
+            {language === 'en' ? 'English (US)' : 'မြန်မာ (MM)'}
           </span>
         </div>
       </div>
@@ -32,7 +32,7 @@ const LanguageToggle = () => {
       >
         <div 
           className={`absolute h-7 w-9 bg-white dark:bg-slate-700 rounded-lg shadow-sm transition-all duration-300 ${
-            lang === 'mm' ? 'translate-x-9' : 'translate-x-0'
+            language === 'mm' ? 'translate-x-9' : 'translate-x-0'
           }`} 
         />
         

@@ -4,7 +4,7 @@ import { Moon, Sun, Languages, EllipsisVertical, LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const MobileHeader = () => {
-  const { profile, setTheme, theme } = useUserStore();
+  const { profile, setTheme, theme, language,setLanguage } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
   const { i18n } = useTranslation()
 
@@ -23,10 +23,10 @@ const MobileHeader = () => {
   };
 
   const toggleLanguage = () => {
-    const nextLang = i18n.language === "en" ? "mm" : "en";
-    i18n.changeLanguage(nextLang);
+    const nextLang = language === "en" ? "mm" : "en";
+    setLanguage(nextLang);
     setIsOpen(false);
-};
+  };
 
   return (
     <div className="relative">
@@ -86,7 +86,7 @@ const MobileHeader = () => {
                 <div className="flex items-center gap-3">
                   <Languages size={18} className="text-emerald-500" />
                 </div>
-                <span className="text-sm font-black uppercase opacity-50">{ (profile?.language === 'mm' || i18n.language === 'mm') ? "MM" : "EN" }</span>
+                <span className="text-sm font-black uppercase opacity-50">{ (language === 'en' || i18n.language === 'en') ? "MM" : "EN" }</span>
               </button>
 
               <div className="h-[1px] bg-slate-100 dark:bg-slate-800 my-1 mx-2" />
