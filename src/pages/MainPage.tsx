@@ -1,13 +1,12 @@
 import StatCard from '../components/dashboard/StatCard';
 import OverviewChart from '../components/dashboard/OverviewChart';
 import RecentList from '../components/dashboard/RecentList';
-import { useTransactionStore } from '../store/useTransactionStore';
-import { useUserStore } from '../store/useUserStore';
-import { useEffect } from 'react';
+import { useTransactions } from '../hooks/useTransactions';
+import { useTranslation } from 'react-i18next';
 
 const MainPage = () => {
-  const { transactions, fetchTransactions } = useTransactionStore();
-  const { profile } = useUserStore();
+  const { t } = useTranslation();
+  const { data: transactions = [], isLoading, isError } = useTransactions();
   
     const income = transactions
       .filter((t) => t.type === 'income')
@@ -21,22 +20,15 @@ const MainPage = () => {
 
     const transactionsToShow = transactions.slice(0, 5);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        if (profile)
-        await fetchTransactions(profile?.user_id);
-      };
-      fetchData();
-    }, [ fetchTransactions, profile]);
   return (
-    <div className="space-y-8">
+    <div className="MD:space-y-8 space-y-4">
       <section className="grid grid-cols-3 md:gap-4 gap-2 pt-2.5">
-        <StatCard title="Total Income" amount={income} variant="income" />
-        <StatCard title="Total Expense" amount={expense} variant="expense" />
-        <StatCard title="Net Balance" amount={balance} variant="neutral" />
+        <StatCard title={t('stats.total_income')} amount={income} variant="income" />
+        <StatCard title={t('stats.total_expense')} amount={expense} variant="expense" />
+        <StatCard title={t('stats.total_net')} amount={balance} variant="neutral" />
       </section>
 
-      <OverviewChart />
+      <OverviewChart allTransactions={transactions}/>
       <RecentList transactions={transactionsToShow} />
       
     </div>

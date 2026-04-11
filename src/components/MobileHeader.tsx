@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 const MobileHeader = () => {
   const { profile, setTheme, theme, language,setLanguage } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
-  const { i18n } = useTranslation()
+  const { i18n,t } = useTranslation()
 
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -36,7 +36,7 @@ const MobileHeader = () => {
             {profile?.name ? profile.name.charAt(0).toUpperCase() : "K"}
           </div>
           <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Hello,</p>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{ t('greeting') }</p>
             <h2 className="text-sm font-black text-slate-900 dark:text-slate-100 mt-1">{profile?.name || "User"}</h2>
           </div>
         </div>
@@ -93,7 +93,7 @@ const MobileHeader = () => {
 
               <button className="w-full flex items-center gap-3 p-1.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-500 transition-colors">
                 <LogOut size={18} />
-                <span className="text-sm font-bold">Sign Out</span>
+                <span className="text-sm font-bold">{ t('sign_out')}</span>
               </button>
             </div>
           </div>

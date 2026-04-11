@@ -17,7 +17,7 @@ const StatCard = ({ title, amount, variant }: { title: string; amount: number; v
           {isExpense && <ArrowDownRight className="w-3 h-3 md:w-6 md:h-6" />}
           {!isIncome && !isExpense && <Wallet className="w-3 h-3 md:w-6 md:h-6" />}
         </div>
-        <p className="hidden md:block text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest truncate">
+        <p className="hidden md:block text-xs md:text-sm font-bold text-slate-400 uppercase tracking-widest">
           {title}
         </p>
       </div>
