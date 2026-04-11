@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Plus } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
-import { useTransactionStore } from '../../store/useTransactionStore';
 import type { FormData } from '../../type/transaction';
-import { useUserStore } from '../../store/useUserStore';
+import { useCategories, useAddCategory } from '../../hooks/useTransactions';
 
 interface CategorySectionProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 }
 const CategorySection = ({ formData, setFormData }: CategorySectionProps) => {
-    const { profile } = useUserStore();
-    const { categories, fetchCategories } = useTransactionStore();
+    const { data: categories = [], error } = useCategories();
+    const { mutate: addCategory, error: addCategoryError } = useAddCategory();
     const [isAdding, setIsAdding] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [categoryId, setCategoryId] = useState('');
@@ -20,44 +18,21 @@ const CategorySection = ({ formData, setFormData }: CategorySectionProps) => {
 
     const onAddCategory = async () => {
         if (newCategoryName.trim()) {
-          await handleAddNewCategory(newCategoryName);
-          setNewCategoryName('');
-          setIsAdding(false);
+            addCategory(
+            { name: newCategoryName, type: formData.type },
+            {
+            onSuccess: (data) => {
+                setCategoryId(data.category_id);
+                setFormData((prev) => ({
+                ...prev,
+                category_id: data.category_id,
+                }));
+            },
+            });
+            setNewCategoryName('');
+            setIsAdding(false);
         }
       };
-    const handleAddNewCategory = async (name: string) => {
-        if (!profile?.user_id) return;
-
-        try {
-            const { data, error } = await supabase
-            .from('categories')
-            .insert([{ 
-                name, 
-                user_id: profile.user_id, 
-                type: formData.type 
-            }])
-            .select()
-            .single();
-
-            if (error) throw error;
-
-            if (data) {
-            await fetchCategories();
-            
-            setCategoryId(data.category_id);
-            setFormData(prev => ({ ...prev, category_id: data.category_id }));
-            }
-        } catch (err) {
-            console.error("Error adding category:", err);
-            alert("Failed to add category");
-        }
-    };
-
-    useEffect(() => {
-        if(profile && categories.length === 0) {
-          fetchCategories();
-        }
-    }, [profile]);
   return (
     <div className="flex flex-wrap gap-3">
         <button 

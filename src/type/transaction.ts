@@ -1,12 +1,15 @@
 interface Transaction {
-  id: string;
+  transaction_id: string;
   user_id: string;
   amount: number;
   type: 'income' | 'expense';
   category_id: string;
-  category: string;
+  categories: {
+    name: string;
+  };
   date: string;
   note: string;
+  created_at: string;
 }
 
 interface Category {
@@ -18,8 +21,8 @@ interface Category {
 
 interface FormData {
   type: 'income' | 'expense';
-  amount: number;
-  date: Date | null;
+  amount: number | '';
+  date: string;
   category_id: string;
   note: string;
 }

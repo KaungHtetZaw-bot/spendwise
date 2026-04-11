@@ -1,26 +1,27 @@
 import { useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
-import { useTransactionStore } from '../store/useTransactionStore';
 import type { FormData } from '../type/transaction';
 import CalendarSection from './transaction-modal/CalendarSection';
 import InputSection from './transaction-modal/InputSection';
 import CategorySection from './transaction-modal/CategorySection';
+import { useTranslation } from 'react-i18next';
+import { useAddTransaction } from '../hooks/useTransactions';
 
 const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-
-  const { addTransaction } = useTransactionStore();
+  const { t } = useTranslation();
+  const { mutate: addTransaction } = useAddTransaction();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     type: 'expense' as 'income' | 'expense',
-    amount: Number.NaN,
-    date: new Date() as Date | null,
+    amount: '',
+    date: String(new Date().toISOString().split('T')[0]),
     category_id: '',
     note: '',
   });
 
   const handleSubmit = async () => {
-    if (!formData.date || isNaN(formData.amount) || !formData.category_id || !formData.note) {
+    if (!formData.date || formData.amount === '' || !formData.category_id || !formData.note) {
       alert("Please fill all required fields");
       return;
     }
@@ -28,19 +29,23 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     setIsSubmitting(true);
     try {
       const payload = {
-        amount: formData.amount,
+        amount: Number(formData.amount),
         type: formData.type,
         category_id: formData.category_id,
-        date: formData.date.toISOString().split('T')[0],
+        date: formData.date.toString().split('T')[0],
         note: formData.note,
       };
 
-      await addTransaction(payload as any);
-      
+      addTransaction(payload, {
+        onSuccess: () => {
+          // alert("Transaction added successfully!");
+        }
+      });
+
       setFormData({
-        type: 'expense',
-        amount: Number.NaN,
-        date: new Date(),
+        type: formData.type,
+        amount: '',
+        date: String(new Date().toISOString().split('T')[0]),
         category_id: '',
         note: '',
       });
@@ -70,13 +75,13 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               onClick={() => setFormData({ ...formData, type: 'income' })}
               className={`md:px-6 px-3 md:py-2 py-1 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${formData.type === 'income' ? 'bg-white dark:bg-slate-700 text-blue-600 shadow-sm' : 'text-slate-400'}`}
             >
-              Income
+              {t('income')}
             </button>
             <button 
               onClick={() => setFormData({ ...formData, type: 'expense' })}
               className={`md:px-6 px-3 md:py-2 py-1 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${formData.type === 'expense' ? 'bg-white dark:bg-slate-700 text-rose-500 shadow-sm' : 'text-slate-400'}`}
             >
-              Expense
+              {t('expense')}
             </button>
           </div>
           <div className="w-10" />

@@ -2,14 +2,23 @@ import { useState,useMemo } from 'react';
 import { ArrowUpRight, ArrowDownRight, Calendar, ChevronDown, BarChart3, Check,PiIcon } from 'lucide-react';
 import { 
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { useTransactionStore } from '../store/useTransactionStore';
+import { useTransactions } from '../hooks/useTransactions';
+import { useTranslation } from 'react-i18next';
 
 const StatsPage = () => {
-  const [timeRange, setTimeRange] = useState('This Month');
+  const { t } = useTranslation();
+  const [timeRange, setTimeRange] = useState(t('time.today'));
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const { transactions } = useTransactionStore();
+  const { data: transactions = [], isLoading, isError } = useTransactions();
 
-  const timeOptions = ['Today', 'This Week', 'This Month', 'This Year', 'Custom Range'];
+
+  const timeOptions = [
+    { id: 'today', label: t('time.today') },
+    { id: 'week', label: t('time.week') },
+    { id: 'month', label: t('time.month') },
+    { id: 'year', label: t('time.year') },
+    { id: 'custom', label: t('time.custom') },
+  ];
 
   const colorPalette = [
     '#f43f5e',
@@ -17,13 +26,6 @@ const StatsPage = () => {
     '#6366f1',
     '#94a3b8',
     '#e2e8f0',
-  ];
-
-  const categoryStats = [
-    { name: 'Food & Drinks', amount: 450000, percentage: 45, color: 'bg-rose-500' },
-    { name: 'Shopping', amount: 250000, percentage: 25, color: 'bg-amber-500' },
-    { name: 'Transportation', amount: 150000, percentage: 15, color: 'bg-indigo-500' },
-    { name: 'Others', amount: 150000, percentage: 15, color: 'bg-slate-400' },
   ];
 
   const { statsData, totalIncome, totalExpense } = useMemo(() => {
@@ -37,10 +39,8 @@ const StatsPage = () => {
         income += amount;
       } else {
         expense += amount;
-        const catName = t.category || 'General';
+        const catName = t.categories?.name || 'General';
         breakdown[catName] = (breakdown[catName] || 0) + amount;
-        console.log("breakdown",(breakdown[catName] || 0) + amount)
-        console.log(breakdown[catName])
       }
     });
 
@@ -61,7 +61,7 @@ const StatsPage = () => {
     <div className="min-h-screen md:pt-5 pt-2.5 pb-24">
       <div className="mx-auto md:space-y-8 space-y-4">
         <div className="flex justify-between items-center md:pt-6 relative">
-          <h1 className="md:text-2xl text-xl font-black text-slate-900 dark:text-white">Statistics</h1>
+          <h1 className="md:text-2xl text-lg font-black text-slate-900 dark:text-white">{t('statistics')}</h1>
           
           <div className="relative">
             <button 
@@ -79,19 +79,19 @@ const StatsPage = () => {
 
             {isCalendarOpen && (
               <>
-                <div className="fixed w-30 inset-0 z-10" onClick={() => setIsCalendarOpen(false)} />
-                <div className="absolute right-0 mt-2 bg-white dark:bg-slate-900 md:rounded-[1.5rem] rounded-[0.75rem] shadow-xl border border-slate-100 dark:border-slate-800 md:py-2 py-1 z-20 animate-in zoom-in-95 whitespace-nowrap duration-200 origin-top-right">
+                <div className="fixed w-full inset-0 z-10" onClick={() => setIsCalendarOpen(false)} />
+                <div className="absolute w-30 md:w-45 right-0 mt-2 bg-white dark:bg-slate-900 md:rounded-[1.5rem] rounded-[0.75rem] shadow-xl border border-slate-100 dark:border-slate-800 md:py-2 py-1 z-20 animate-in zoom-in-95 whitespace-nowrap duration-200 origin-top-right">
                   {timeOptions.map((option) => (
                     <button
-                      key={option}
+                      key={option.id}
                       onClick={() => {
-                        setTimeRange(option);
+                        setTimeRange(option.label);
                         setIsCalendarOpen(false);
                       }}
                       className="w-full flex items-center justify-between md:px-5 px-2.5 md:py-3 py-1.75 !text-sm font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                     >
-                      {option}
-                      {timeRange === option && <Check size={14} className="text-indigo-500" />}
+                      {option.label}
+                      {timeRange === option.id && <Check size={14} className="text-indigo-500" />}
                     </button>
                   ))}
                 </div>
@@ -105,7 +105,7 @@ const StatsPage = () => {
             <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-950 text-emerald-500 rounded-lg flex items-center justify-center mb-4">
               <ArrowUpRight size={20} />
             </div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Income</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('stats.total_income')}</p>
             <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">{totalIncome} <span className="text-[10px] font-medium opacity-50">Ks</span></h3>
           </div>
 
@@ -113,7 +113,7 @@ const StatsPage = () => {
             <div className="w-10 h-10 bg-rose-50 dark:bg-rose-950 text-rose-500 rounded-lg flex items-center justify-center mb-4">
               <ArrowDownRight size={20} />
             </div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Expense</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('stats.total_expense')}</p>
             <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">{totalExpense} <span className="text-[10px] font-medium opacity-50">Ks</span></h3>
           </div>
         </div>
@@ -144,7 +144,7 @@ const StatsPage = () => {
             
             {/* Chart အလယ်က စာသား */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total</p>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('stats.total_balance')}</p>
               <h2 className="text-2xl font-black text-slate-900 dark:text-white">{expensePercentage}%</h2>
             </div>
           </div>
@@ -153,7 +153,7 @@ const StatsPage = () => {
         {/* Breakdown List */}
         <div className="md:space-y-4 space-y-2">
           <div className="flex justify-between items-center px-2">
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Spending Breakdown</h3>
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('stats.spending_breakdown')}</h3>
             <BarChart3 size={16} className="text-slate-300" />
           </div>
 
@@ -179,7 +179,7 @@ const StatsPage = () => {
             )) : (
               <div className="py-10 text-center opacity-30">
                  <PiIcon size={40} className="mx-auto mb-2" />
-                 <p className="text-[10px] font-black uppercase tracking-widest">No data available</p>
+                 <p className="text-[10px] font-black uppercase tracking-widest">{t('stats.no_data')}</p>
               </div>
             )}
           </div>

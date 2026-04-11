@@ -1,21 +1,18 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { getChartData } from '../../lib/helper';
-import { useTransactionStore } from '../../store/useTransactionStore.ts';
-import { useUserStore } from '../../store/useUserStore.ts';
+import type { Transaction } from '../../type/transaction.ts';
+import { useTranslation } from 'react-i18next';
 
-const OverviewChart = () => {
-  const { transactions: allTransactions } = useTransactionStore();
-  const { profile } = useUserStore();
-
-  const userTransactions = allTransactions.filter(tx => tx.user_id === profile?.user_id);
-  const chartData = getChartData(userTransactions);
+const OverviewChart = ({allTransactions}: {allTransactions: Transaction[]}) => {
+    const { t } = useTranslation();
+    const chartData = getChartData(allTransactions);
   return (
     <section className="h-[300px] md:h-[400px] w-full py-4 px-2 md:p-6 rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Weekly Activity</h3>
+        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t('weekly_activity')}</h3>
         <div className="flex gap-4">
-            <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500" /><span className="text-[10px] text-slate-500">Income</span></div>
-            <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-500" /><span className="text-[10px] text-slate-500">Expense</span></div>
+            <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500" /><span className="text-[10px] text-slate-500">{t('income')}</span></div>
+            <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-500" /><span className="text-[10px] text-slate-500">{t('expense')}</span></div>
         </div>
       </div>
       

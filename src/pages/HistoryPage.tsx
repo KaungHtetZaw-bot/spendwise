@@ -1,26 +1,27 @@
 import { useState, useMemo } from 'react';
 import { ArrowUpCircle, ArrowDownCircle, Search, Filter, X, ChevronDown, Check, Inbox } from 'lucide-react';
-import { useTransactionStore } from '../store/useTransactionStore';
-
+import { useTransactions } from '../hooks/useTransactions';
+import { useTranslation } from 'react-i18next';
 const HistoryPage = () => {
+  const { t } = useTranslation();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { transactions } = useTransactionStore();
-  
+  const { data: transactions = [], isLoading, isError } = useTransactions();
+
   // Filter Dropdown States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'income' | 'expense'>('all');
 
   const filterOptions = [
-    { label: 'All Transactions', value: 'all' },
-    { label: 'Incomes Only', value: 'income' },
-    { label: 'Expenses Only', value: 'expense' },
+    { label: 'All', value: 'all' },
+    { label: 'Incomes', value: 'income' },
+    { label: 'Expenses', value: 'expense' },
   ];
 
   const filteredTransactions = useMemo(() => {
     return transactions
       .filter((t) => {
-        const categoryName = t.category || '';
+        const categoryName = t.categories?.name || '';
         const noteText = t.note || '';
         const searchContent = `${categoryName} ${noteText}`.toLowerCase();
         const matchesSearch = searchContent.includes(searchQuery.toLowerCase());
@@ -34,16 +35,16 @@ const HistoryPage = () => {
 
   return (
     <div className="min-h-screen pb-24">
-      <div className="mx-auto flex justify-between items-center md:mb-8 mb-4 sticky md:-top-8 top-0 backdrop-blur-md md:py-4 py-2 z-20">
-        <h1 className={`text-2xl font-black text-slate-900 dark:text-white transition-all duration-300 ${isSearchOpen ? 'opacity-0 scale-90 pointer-events-none absolute' : 'opacity-100 scale-100'}`}>
-          History
+      <div className="w-full flex justify-between items-center sticky md:-top-8 top-0 backdrop-blur-md md:py-4 py-2 z-20">
+        <h1 className={`md:text-2xl text-lg font-black text-slate-900 dark:text-white transition-all duration-300 ${isSearchOpen ? 'opacity-0 scale-90 pointer-events-none absolute' : 'opacity-100 scale-100'}`}>
+          { t('nav.history') }
         </h1>
 
-        <div className="flex items-center gap-2 ml-auto">
+        <div className="flex items-center gap-2">
           <div className={`relative flex items-center transition-all duration-500 ease-in-out ${isSearchOpen ? 'w-64 md:w-80' : 'w-10'}`}>
             <input 
               type="text"
-              placeholder="Search by note or category..."
+              placeholder={t('search_placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               autoFocus={isSearchOpen}
@@ -56,7 +57,7 @@ const HistoryPage = () => {
                 setIsSearchOpen(!isSearchOpen);
                 if(isSearchOpen) setSearchQuery('');
               }}
-              className={`absolute right-0 p-2.5 rounded-xl transition-colors ${isSearchOpen ? 'text-slate-400 hover:text-rose-500' : 'text-slate-500 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm'}`}
+              className={`absolute right-0 md:p-3 p-2 rounded-xl transition-colors ${isSearchOpen ? 'text-slate-400 hover:text-rose-500' : 'text-slate-500 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm'}`}
             >
               {isSearchOpen ? <X size={18} /> : <Search size={20} />}
             </button>
@@ -66,7 +67,7 @@ const HistoryPage = () => {
           <div className="relative">
             <button 
               onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all shadow-sm ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all shadow-sm ${
                 isDropdownOpen 
                 ? 'bg-indigo-600 border-indigo-600 text-white' 
                 : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500'
@@ -80,12 +81,12 @@ const HistoryPage = () => {
             {isDropdownOpen && (
                <>
                  <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)} />
-                 <div className="absolute right-0 mt-3 w-52 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 py-2 z-20 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                 <div className="absolute right-0 md:w-52 w-30 mt-3 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-100 dark:border-slate-800 py-2 z-20 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
                     {filterOptions.map((opt) => (
                       <button
                         key={opt.value}
                         onClick={() => { setFilterType(opt.value as any); setIsDropdownOpen(false); }}
-                        className={`w-full px-4 py-3 text-[11px] font-black uppercase text-left transition-colors flex justify-between items-center ${
+                        className={`w-full md:px-4 px-2 md:py-3 py-1.5 md:text-[11px] text-xs font-black uppercase text-left transition-colors flex justify-between items-center ${
                           filterType === opt.value 
                           ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' 
                           : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'
@@ -120,11 +121,11 @@ const HistoryPage = () => {
                 </div>
                 <div className="overflow-hidden">
                   <h3 className="font-bold text-slate-900 dark:text-white text-sm truncate max-w-[180px] md:max-w-xs">
-                    {t.note || t.category}
+                    {t.note || 'No Description'}
                   </h3>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="text-[9px] font-black uppercase px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-md">
-                      {t.category}
+                      {t.categories?.name || 'General'}
                     </span>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
                       {new Date(t.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
