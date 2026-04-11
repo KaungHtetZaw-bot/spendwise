@@ -1,7 +1,7 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { getChartData } from '../../lib/helper';
-import { useTransactionStore } from '../../storage/useTransactionStore.ts';
-import { useUserStore } from '../../storage/useUserStore.ts';
+import { useTransactionStore } from '../../store/useTransactionStore.ts';
+import { useUserStore } from '../../store/useUserStore.ts';
 
 const OverviewChart = () => {
   const { transactions: allTransactions } = useTransactionStore();

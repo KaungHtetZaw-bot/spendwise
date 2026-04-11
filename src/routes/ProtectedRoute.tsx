@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import LoadingScreen from '../components/LoadingScreen.tsx';
-import { useUserStore } from '../storage/useUserStore.ts';
+import { useUserStore } from '../store/useUserStore.ts';
 import { supabase } from '../lib/supabase.ts';
 
 const ProtectedRoute = () => {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Plus } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { useTransactionStore } from '../../storage/useTransactionStore';
+import { useTransactionStore } from '../../store/useTransactionStore';
 import type { FormData } from '../../type/transaction';
-import { useUserStore } from '../../storage/useUserStore';
+import { useUserStore } from '../../store/useUserStore';
 
 interface CategorySectionProps {
   formData: FormData;

@@ -1,8 +1,8 @@
 import StatCard from '../components/dashboard/StatCard';
 import OverviewChart from '../components/dashboard/OverviewChart';
 import RecentList from '../components/dashboard/RecentList';
-import { useTransactionStore } from '../storage/useTransactionStore';
-import { useUserStore } from '../storage/useUserStore';
+import { useTransactionStore } from '../store/useTransactionStore';
+import { useUserStore } from '../store/useUserStore';
 import { useEffect } from 'react';
 
 const MainPage = () => {

@@ -1,6 +1,6 @@
 import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useUserStore } from '../../storage/useUserStore';
+import { useUserStore } from '../../store/useUserStore';
 
 
 const LanguageToggle = () => {

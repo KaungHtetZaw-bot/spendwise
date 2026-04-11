@@ -1,13 +1,12 @@
 import { 
-  User, 
-  Coins,  
+  User,   
   ChevronRight, 
   LogOut, 
   ShieldCheck,
   Plus,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase.ts';
-import { useUserStore } from '../storage/useUserStore';
+import { useUserStore } from '../store/useUserStore.ts';
 import { useState } from 'react';
 import AccountModal from '../components/Setting/AccountModal.tsx';
 import PerSonalSettingGroup from '../components/Setting/PersonalSettingGroup.tsx';

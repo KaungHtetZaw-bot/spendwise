@@ -2,7 +2,7 @@ import { useState,useMemo } from 'react';
 import { ArrowUpRight, ArrowDownRight, Calendar, ChevronDown, BarChart3, Check,PiIcon } from 'lucide-react';
 import { 
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { useTransactionStore } from '../storage/useTransactionStore';
+import { useTransactionStore } from '../store/useTransactionStore';
 
 const StatsPage = () => {
   const [timeRange, setTimeRange] = useState('This Month');

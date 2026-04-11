@@ -1,5 +1,5 @@
 import { Sun, Moon } from 'lucide-react';
-import { useUserStore } from '../../storage/useUserStore';
+import { useUserStore } from '../../store/useUserStore';
 
 const PreferThemeToggle = () => {
   const { profile, setTheme } = useUserStore();

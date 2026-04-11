@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import './App.css'
 import AppRoute from './routes/AppRoute'
-import { useUserStore } from './storage/useUserStore';
+import { useUserStore } from './store/useUserStore';
 
 function App() {
   const { theme } = useUserStore();

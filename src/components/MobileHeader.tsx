@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useUserStore } from "../storage/useUserStore";
+import { useUserStore } from "../store/useUserStore";
 import { Moon, Sun, Languages, EllipsisVertical, LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

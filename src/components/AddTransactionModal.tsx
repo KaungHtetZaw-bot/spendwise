@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
-import { useTransactionStore } from '../storage/useTransactionStore';
+import { useTransactionStore } from '../store/useTransactionStore';
 import type { FormData } from '../type/transaction';
 import CalendarSection from './transaction-modal/CalendarSection';
 import InputSection from './transaction-modal/InputSection';

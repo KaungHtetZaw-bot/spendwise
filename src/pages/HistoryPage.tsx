@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { ArrowUpCircle, ArrowDownCircle, Search, Filter, X, ChevronDown, Check, Inbox } from 'lucide-react';
-import { useTransactionStore } from '../storage/useTransactionStore';
+import { useTransactionStore } from '../store/useTransactionStore';
 
 const HistoryPage = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
