@@ -15,12 +15,13 @@ interface UserState {
   setTheme: (newTheme: string) => void;
   setLanguage: (lang: string) => void;
   setUseSystemTheme: (val: boolean) => void;
+  setProfile: (profile: Profile) => void;
 }
 
 export const useUserStore = create<UserState>()(
   persist(
     (set,get) => ({
-      profile: null,
+      profile: [] as unknown as Profile,
       loading: false,
       language: 'en',
       theme: 'Light',
@@ -56,12 +57,10 @@ export const useUserStore = create<UserState>()(
 
         if (!error) {
           set({ profile: { ...profile, ...updates } });
-          
-          if (updates.theme) {
-            document.documentElement.classList.toggle('dark', updates.theme === 'Dark');
-          }
         }
       },
+
+      setProfile: (profile: Profile) => set({ profile }),
 
       setTheme: async (newTheme: string) => {
         set({ theme: newTheme, useSystemTheme: false });

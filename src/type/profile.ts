@@ -3,6 +3,6 @@ export interface Profile {
   name: string;
   monthly_income: number;
   currency: string;
-  language: string;
-  theme: string;
+  career: string;
+  avatar_url: string;
 }
