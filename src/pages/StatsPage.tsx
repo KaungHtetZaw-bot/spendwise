@@ -118,7 +118,7 @@ const StatsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 md:p-8 p-6 md:rounded-[2.5rem] rounded-[1.25rem] border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center">
+        <div className="bg-white dark:bg-slate-900 md:p-8 p-4 md:rounded-[2.5rem] rounded-[1.25rem] border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center">
           <div className="w-full h-64 relative">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -128,7 +128,7 @@ const StatsPage = () => {
                   cy="50%"
                   innerRadius={60}
                   outerRadius={80}
-                  paddingAngle={8}
+                  paddingAngle={1}
                   dataKey="value"
                   stroke="none"
                 >

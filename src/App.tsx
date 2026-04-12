@@ -4,18 +4,22 @@ import AppRoute from './routes/AppRoute'
 import { useUserStore } from './store/useUserStore';
 
 function App() {
-  const { theme } = useUserStore();
+  const { theme, useSystemTheme } = useUserStore();
 
   useEffect(() => {
-    const isDark = theme === 'dark';
-    document.documentElement.classList.toggle('dark', isDark);
-  }, [theme]);
+    const root = document.documentElement;
+    
+    const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
+    if (useSystemTheme) {
+      root.classList.toggle('dark', getSystemTheme() === 'dark');
+    } else {
+      root.classList.toggle('dark', theme === 'dark');
+    }
+  }, [theme, useSystemTheme]);
   return (
     <>
-      
-        <AppRoute/>
-      
+      <AppRoute/>
     </>
   )
 }

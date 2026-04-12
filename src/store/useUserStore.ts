@@ -8,11 +8,13 @@ interface UserState {
   profile: Profile | null;
   loading: boolean;
   language: string;
+  useSystemTheme: boolean;
   theme: string;
   fetchProfile: (userId: string) => Promise<void>;
   updateProfile: (updates: Profile) => Promise<void>;
   setTheme: (newTheme: string) => void;
   setLanguage: (lang: string) => void;
+  setUseSystemTheme: (val: boolean) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -22,6 +24,7 @@ export const useUserStore = create<UserState>()(
       loading: false,
       language: 'en',
       theme: 'Light',
+      useSystemTheme: false,
 
       fetchProfile: async (userId) => {
         if (get().profile) return; 
@@ -61,12 +64,12 @@ export const useUserStore = create<UserState>()(
       },
 
       setTheme: async (newTheme: string) => {
-        set({ theme: newTheme });
-        const root = document.documentElement;
-        const isDark = newTheme === 'dark'
-        
-        root.classList.toggle('dark', isDark);
+        set({ theme: newTheme, useSystemTheme: false });
+        const root = document.documentElement
+        root.classList.toggle('dark', newTheme.toLowerCase() === 'darkd');
       },
+
+      setUseSystemTheme: (val) => set({ useSystemTheme: val }),
 
       setLanguage: (lang: string) => {
         i18n.changeLanguage(lang);

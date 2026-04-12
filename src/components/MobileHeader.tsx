@@ -9,15 +9,14 @@ const MobileHeader = () => {
   const { i18n,t } = useTranslation()
 
   const toggleTheme = () => {
-    const nextTheme = theme === "dark" ? "light" : "dark";
+    const isCurrentlyDark = document.documentElement.classList.contains('dark');
+    const nextTheme = isCurrentlyDark ? "light" : "dark";
     if (!document.startViewTransition) {
-      console.log("Toggling theme to:", nextTheme);
       setTheme(nextTheme);
       return;
     }
 
     document.startViewTransition(() => {
-      console.log("Toggling theme to:", nextTheme);
       setTheme(nextTheme);
     });
   };
