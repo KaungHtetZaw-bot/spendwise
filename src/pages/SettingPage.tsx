@@ -8,28 +8,29 @@ import {
 import { supabase } from '../lib/supabase.ts';
 import { useUserStore } from '../store/useUserStore.ts';
 import { useState } from 'react';
-import AccountModal from '../components/Setting/AccountModal.tsx';
 import PerSonalSettingGroup from '../components/Setting/PersonalSettingGroup.tsx';
 import BudgetCard from '../components/Setting/BudgetCard.tsx';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const SettingPage = () => {
   const { profile } = useUserStore();
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
-  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const { t } = useTranslation()
+  const navigate = useNavigate();
   const settingsGroups = [
     {
       title: t('security_app'),
       items: [
         { icon: <ShieldCheck size={20} />, label: t('privacy.title'), value: "", color: "text-emerald-500",onClick: () => setIsPrivacyOpen(true)},
-        { icon: <User size={20} />, label: t('account_settings'), value: "", color: "text-indigo-500",onClick: () => setIsAccountOpen(true) },
+        { icon: <User size={20} />, label: t('account_settings'), value: "", color: "text-indigo-500",onClick: () => navigate('/settings/account')}, 
       ]
     }
   ];
 
   const logout = async () => { 
     await supabase.auth.signOut();
+    localStorage.clear();
     window.location.href = '/auth'; 
   };
 
@@ -39,24 +40,28 @@ const SettingPage = () => {
         
         <div className="flex flex-col items-center md:py-8 py-6">
           <div className="relative">
-            <div className="w-24 h-24 rounded-[2.5rem] bg-gradient-to-tr from-indigo-600 to-blue-400 p-1 shadow-xl shadow-indigo-500/20">
-              <div className="w-full h-full rounded-[2.3rem] bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden">
+            <div className='md:w-34 md:h-34 w-30 h-30 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500'>
+              {
+              profile?.avatar_url ? (
+                <img src={`${profile.avatar_url}?t=${Date.now()}`} alt="Avatar" className="w-full h-full object-cover rounded-full" />
+              ) : (
                 <img 
-                  src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.full_name || 'Felix'}`} 
+                  src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.name || 'Felix'}`} 
                   alt="avatar" 
-                  className="w-20 h-20"
+                  className="w-full h-full rounded-full bg-slate-200 dark:bg-slate-800 p-2 text-slate-500"
                 />
-              </div>
+              )
+            }
             </div>
-            <button className="absolute bottom-0 right-0 p-2 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-100 dark:border-slate-800 hover:scale-110 transition-transform">
+            <button onClick={()=> navigate('/settings/account')} className="absolute bottom-0 right-0 p-2 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-slate-100 dark:border-slate-800 hover:scale-110 transition-transform">
               <Plus size={14} className="text-indigo-600" />
             </button>
           </div>
           <h2 className="mt-4 text-xl font-black text-slate-900 dark:text-white">
-            {profile?.full_name || 'User Name'}
+            {profile?.name || 'User Name'}
           </h2>
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">
-            {profile?.job_title || 'Junior Developer'}
+            {profile?.career || 'Junior Developer'}
           </p>
         </div>
 
@@ -96,7 +101,6 @@ const SettingPage = () => {
           </div>
         ))}
         
-
         {isPrivacyOpen && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-6">
             <div className="absolute h-screen inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => setIsPrivacyOpen(false)} />
@@ -114,8 +118,6 @@ const SettingPage = () => {
             </div>
           </div>
         )}
-
-        <AccountModal isOpen={isAccountOpen} onClose={()=>setIsAccountOpen(!isAccountOpen)} profile={profile} />
 
         {/* Sign Out Button */}
         <button 

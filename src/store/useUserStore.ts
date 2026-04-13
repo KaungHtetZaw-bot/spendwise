@@ -21,7 +21,7 @@ interface UserState {
 export const useUserStore = create<UserState>()(
   persist(
     (set,get) => ({
-      profile: [] as unknown as Profile,
+      profile: null,
       loading: false,
       language: 'en',
       theme: 'Light',
@@ -41,9 +41,6 @@ export const useUserStore = create<UserState>()(
         } else {
           set({ loading: false });
         }
-        const currentTheme = get().theme;
-        document.documentElement.classList.toggle('dark', currentTheme === 'Dark' || currentTheme.toLowerCase() === 'night');
-        i18n.changeLanguage(get().language);
       },
 
       updateProfile: async (updates) => {
@@ -60,12 +57,19 @@ export const useUserStore = create<UserState>()(
         }
       },
 
-      setProfile: (profile: Profile) => set({ profile }),
+      setProfile: (updates: Profile) => {
+        set((state) => ({
+          profile: {
+            ...state.profile,
+            ...updates,
+          },
+        }))
+      },
 
       setTheme: async (newTheme: string) => {
         set({ theme: newTheme, useSystemTheme: false });
         const root = document.documentElement
-        root.classList.toggle('dark', newTheme.toLowerCase() === 'darkd');
+        root.classList.toggle('dark', newTheme.toLowerCase() === 'dark');
       },
 
       setUseSystemTheme: (val) => set({ useSystemTheme: val }),

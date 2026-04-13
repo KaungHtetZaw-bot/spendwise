@@ -8,6 +8,8 @@ import MainLayout from '../components/layouts/MainLayout';
 import NotFoundPage from '../pages/NotFoundPage';
 import AuthPage from '../pages/AuthPage';
 import ProtectedRoute from './ProtectedRoute';
+import Index from '../pages/index';
+import AccountPage from '../pages/AccountPage';
 
 const AppRoute = () => {
   return (
@@ -15,14 +17,16 @@ const AppRoute = () => {
       <Routes>
         <Route element={ <ProtectedRoute/> }>
           <Route element={<MainLayout />}>
-            <Route index element={<MainPage />} />
+            <Route path='/home' element={<MainPage />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/stats" element={<StatsPage />} />
             <Route path="/settings" element={<SettingPage />} />
+            <Route path="/settings/account" element={<AccountPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Route>
         <Route path="/auth" element={<AuthPage/>} />
+        <Route index element={<Index />} />
       </Routes>
     </Router>
   );

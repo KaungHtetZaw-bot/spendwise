@@ -1,12 +1,14 @@
 import { Home, History, PieChart, Settings, Plus } from 'lucide-react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useUserStore } from '../store/useUserStore';
 
 const BottomNav = ({ onAddClick }: { onAddClick: () => void }) => {
   const { t } = useTranslation();
+  const { profile } = useUserStore();
 
 const routeItems = [
-  { name: t('nav.home'), href: '/', icon: Home },
+  { name: t('nav.home'), href: '/home', icon: Home },
   { name: t('nav.history'), href: '/history', icon: History },
   { name: t('nav.stats'), href: '/stats', icon: PieChart },
   { name: t('nav.settings'), href: '/settings', icon: Settings },
@@ -52,7 +54,23 @@ const routeItems = [
           ))}
         </div>
 
-        <div className="hidden md:block w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800" />
+        <div className="hidden md:block w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800" >
+          {
+            profile?.avatar_url ? (
+              <img 
+                src={`${profile.avatar_url}?t=${Date.now()}`} 
+                alt="avatar" 
+                className="w-full h-full rounded-full object-cover"
+              />
+            ) : (
+              <img 
+                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.name || 'Felix'}`} 
+                alt="avatar" 
+                className="w-full h-full rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 object-cover"
+              />
+            )
+          }
+        </div>
       </div>
     </nav>
   );

@@ -31,9 +31,17 @@ const MobileHeader = () => {
     <div className="relative">
       <div className="flex items-center justify-between px-4 md:py-4 py-2 md:hidden backdrop-blur-sm sticky top-0 z-30">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-black shadow-sm">
-            {profile?.name ? profile.name.charAt(0).toUpperCase() : "K"}
-          </div>
+          {
+            profile?.avatar_url ? (
+              <img src={`${profile.avatar_url}?t=${Date.now()}`} alt="Avatar" className="w-10 h-10 rounded-full object-cover" />
+            ) : (
+              <img 
+                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.name || 'Felix'}`} 
+                alt="avatar" 
+                className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 object-cover"
+              />
+            )
+          }
           <div>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{ t('greeting') }</p>
             <h2 className="text-sm font-black text-slate-900 dark:text-slate-100 mt-1">{profile?.name || "User"}</h2>

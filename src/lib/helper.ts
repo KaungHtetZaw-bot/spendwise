@@ -1,3 +1,5 @@
+import { supabase } from "./supabase";
+
 const getCurrentWeekData = (transactions: any[]) => {
   const now = new Date();
   
@@ -45,4 +47,28 @@ export const getChartData = (transactions: any[]) => {
   });
 
   return chartData;
+};
+
+export const StoreAvatar = async (file:File, userId:string) => {
+  const fileExt = file.name.split('.').pop();
+  const filePath = `${userId}/avatar.${fileExt}`;
+  await supabase.storage
+    .from('avatars')
+    .remove([
+      `${userId}/avatar.png`,
+      `${userId}/avatar.jpg`,
+      `${userId}/avatar.jpeg`,
+      `${userId}/avatar.webp`,
+    ]);
+    
+  const { error: uploadError } = await supabase.storage
+  .from('avatars')
+  .upload(filePath, file, {
+    upsert: true,
+  });
+
+  if (uploadError) throw uploadError;
+  const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(filePath);
+  const publicUrl = urlData.publicUrl;
+  return publicUrl;
 };
