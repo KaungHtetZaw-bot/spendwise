@@ -1,13 +1,20 @@
 import { useState, useMemo } from 'react';
-import { ArrowUpCircle, ArrowDownCircle, Search, Filter, X, ChevronDown, Check, Inbox } from 'lucide-react';
+import { ArrowUpCircle, ArrowDownCircle, Search, Filter, X, ChevronDown, Check, Inbox, Trash2, Edit2 } from 'lucide-react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useTranslation } from 'react-i18next';
+import { supabase } from '../lib/supabase';
+import TransactionActionSheet from '../components/TransactionActionSheet';
+import { useOutletContext } from 'react-router-dom';
+import { useToastStore } from '../store/useToastStore';
 const HistoryPage = () => {
   const { t } = useTranslation();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { data: transactions = [], isLoading, isError } = useTransactions();
-
+  const [selectedT, setSelectedT] = useState<any>(null);
+  const [isActionOpen, setIsActionOpen] = useState(false);
+  const { onEditAction } = useOutletContext<any>();
+  const { showToast } = useToastStore();
   // Filter Dropdown States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'income' | 'expense'>('all');
@@ -32,6 +39,35 @@ const HistoryPage = () => {
       })
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [transactions, searchQuery, filterType]);
+
+  const handleItemClick = (t: any) => {
+    setSelectedT(t);
+    setIsActionOpen(true);
+  };
+
+  const onDelete = async (id: string) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this transaction?");
+    if (isConfirmed) {
+      try {
+        const { error } = await supabase
+          .from('transactions') // Table name ကို သေချာအောင် စစ်ပေးပါ
+          .delete()
+          .eq('id', id); // တကယ်လို့ ID column က user_id မဟုတ်ရင် 'id' လို့ပဲ သုံးပါ
+
+        if (error) throw error;
+        alert("Deleted successfully!");
+        // Note: react-query သုံးထားရင် queryClient.invalidateQueries(['transactions']) လုပ်ပေးဖို့ လိုနိုင်ပါတယ်
+      } catch (error: any) {
+        showToast(error.messge,'danger')
+      }
+    }
+  };
+
+// --- EDIT LOGIC ---
+  const onEdit = (transaction: any) => {
+    onEditAction(transaction);
+    setIsActionOpen(false);
+  };
 
   return (
     <div className="min-h-screen pb-24">
@@ -108,38 +144,61 @@ const HistoryPage = () => {
         {filteredTransactions.length > 0 ? (
           filteredTransactions.map((t,i) => (
             <div 
-              key={i} 
-              className="group flex items-center justify-between md:p-4 p-2 bg-white dark:bg-slate-900 md:rounded-[1.5rem] rounded-[0.75rem] shadow-sm border border-slate-100 dark:border-slate-800/50 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-2xl transition-transform group-hover:scale-110 ${
-                  t.type === 'income' 
-                  ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600' 
-                  : 'bg-rose-50 dark:bg-rose-950/30 text-rose-500'
-                }`}>
-                  {t.type === 'income' ? <ArrowUpCircle size={22} /> : <ArrowDownCircle size={22} />}
-                </div>
-                <div className="overflow-hidden">
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm truncate max-w-[180px] md:max-w-xs">
-                    {t.note || 'No Description'}
-                  </h3>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[9px] font-black uppercase px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-md">
-                      {t.categories?.name || 'General'}
-                    </span>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                      {new Date(t.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                    </p>
-                  </div>
-                </div>
+            key={i} 
+            onClick={() => handleItemClick(t)}
+            className="group flex items-center justify-between md:p-4 p-2 bg-white dark:bg-slate-900 md:rounded-[1.5rem] rounded-[0.75rem] shadow-sm border border-slate-100 dark:border-slate-800/50 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all active:scale-[0.99] relative overflow-hidden"
+          >
+            <div className="flex items-center gap-4">
+              <div className={`p-3 rounded-2xl transition-transform group-hover:scale-110 ${
+                t.type === 'income' 
+                ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600' 
+                : 'bg-rose-50 dark:bg-rose-950/30 text-rose-500'
+              }`}>
+                {t.type === 'income' ? <ArrowUpCircle size={22} /> : <ArrowDownCircle size={22} />}
               </div>
-              <div className="text-right">
-                <p className={`text-sm font-black ${t.type === 'income' ? 'text-emerald-500' : 'text-slate-900 dark:text-white'}`}>
-                  {t.type === 'income' ? '+' : '-'} {Number(t.amount).toLocaleString()} 
-                  <span className="ml-1 text-[10px] opacity-40 font-bold uppercase">Ks</span>
-                </p>
+              
+              <div className="overflow-hidden">
+                <h3 className="font-bold text-slate-900 dark:text-white text-sm truncate max-w-[120px] md:max-w-xs">
+                  {t.note || 'No Description'}
+                </h3>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-[9px] font-black uppercase px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-md">
+                    {t.categories?.name || 'General'}
+                  </span>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                    {new Date(t.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
+                  </p>
+                </div>
               </div>
             </div>
+
+            <div className="flex items-center gap-3">
+              {/* Amount - Action တွေ ပေါ်လာရင် ဒါကို ဖျောက်ထားချင်ရင် group-hover:hidden သုံးလို့ရတယ် */}
+              <div className="text-right group-hover:opacity-0 transition-opacity duration-200">
+                <p className={`text-sm font-black ${t.type === 'income' ? 'text-emerald-500' : 'text-slate-900 dark:text-white'}`}>
+                  {t.type === 'income' ? '+' : '-'} {Number(t.amount).toLocaleString()} 
+                  <span className="ml-1 text-[10px] opacity-40 font-bold">Ks</span>
+                </p>
+              </div>
+
+              {/* Action Buttons - Hover လုပ်မှ ပေါ်လာမယ့် ပုံစံ */}
+              <div className="hidden md:absolute right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); onEdit(t); }}
+                  className="p-2.5 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 rounded-xl hover:bg-indigo-600 hover:text-white transition-all shadow-sm"
+                >
+                  <Edit2 size={16} />
+                </button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); onDelete(t.transaction_id); }}
+                  className="p-2.5 bg-rose-50 dark:bg-rose-950/30 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+
           ))
         ) : (
           /* Empty State */
@@ -147,7 +206,7 @@ const HistoryPage = () => {
             <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center mb-4">
               <Inbox size={40} strokeWidth={1} />
             </div>
-            <p className="text-xs font-black uppercase tracking-[0.3em]">No Transactions Found</p>
+            <p className="text-xs font-black uppercase tracking-[0.3em]">{ t('no_transactions_found') }</p>
             {searchQuery && (
               <button 
                 onClick={() => setSearchQuery('')}
@@ -158,6 +217,13 @@ const HistoryPage = () => {
             )}
           </div>
         )}
+        <TransactionActionSheet 
+          isOpen={isActionOpen} 
+          transaction={selectedT}
+          onClose={() => setIsActionOpen(false)}
+          onEdit={() => onEdit(selectedT)}
+          onDelete={() => onDelete(selectedT.transaction_id)}
+        />
       </div>
     </div>
   );

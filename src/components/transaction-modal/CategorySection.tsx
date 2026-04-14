@@ -12,7 +12,7 @@ const CategorySection = ({ formData, setFormData }: CategorySectionProps) => {
     const { mutate: addCategory, error: addCategoryError } = useAddCategory();
     const [isAdding, setIsAdding] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
-    const [categoryId, setCategoryId] = useState('');
+    const [categoryId, setCategoryId] = useState(formData.category_id || '');
     
     const filteredCategories = categories?.filter(cat => cat.type === formData.type) || [];
 

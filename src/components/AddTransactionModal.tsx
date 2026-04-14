@@ -1,16 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
-import type { FormData } from '../type/transaction';
+import type { FormData, Transaction } from '../type/transaction';
 import CalendarSection from './transaction-modal/CalendarSection';
 import InputSection from './transaction-modal/InputSection';
 import CategorySection from './transaction-modal/CategorySection';
 import { useTranslation } from 'react-i18next';
-import { useAddTransaction } from '../hooks/useTransactions';
+import { useAddTransaction, useEditTransaction } from '../hooks/useTransactions';
+import { useToastStore } from '../store/useToastStore';
 
-const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const AddTransactionModal = ({ isOpen, onClose, hasData }: { isOpen: boolean; onClose: () => void; hasData: Transaction }) => {
+  const isEditMode = !!hasData;
   const { t } = useTranslation();
   const { mutate: addTransaction } = useAddTransaction();
+  const { mutate: editTransaction } = useEditTransaction();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { showToast } = useToastStore();
 
   const [formData, setFormData] = useState<FormData>({
     type: 'expense' as 'income' | 'expense',
@@ -20,27 +24,69 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     note: '',
   });
 
+  useEffect(() => {
+    if (isOpen) {
+      if (hasData) {
+        setFormData({
+          type: hasData.type,
+          amount: hasData.amount,
+          date: hasData.date,
+          category_id: hasData.category_id,
+          note: hasData.note,
+        });
+      } else {
+        // Add mode ဆိုရင် default ပြန်ထားမယ်
+        setFormData({
+          type: 'expense',
+          amount: '',
+          date: String(new Date().toISOString().split('T')[0]),
+          category_id: '',
+          note: '',
+        });
+      }
+    }
+  }, [isOpen, hasData]);
+
   const handleSubmit = async () => {
     if (!formData.date || formData.amount === '' || !formData.category_id || !formData.note) {
-      alert("Please fill all required fields");
+      showToast(t('errors.required_fields'), 'warning');
       return;
     }
+    const payload = {
+      amount: Number(formData.amount),
+      type: formData.type,
+      category_id: formData.category_id,
+      date: formData.date.toString().split('T')[0],
+      note: formData.note,
+    };
 
     setIsSubmitting(true);
     try {
-      const payload = {
-        amount: Number(formData.amount),
-        type: formData.type,
-        category_id: formData.category_id,
-        date: formData.date.toString().split('T')[0],
-        note: formData.note,
-      };
 
-      addTransaction(payload, {
-        onSuccess: () => {
-          // alert("Transaction added successfully!");
-        }
+      if(isEditMode && hasData.transaction_id){
+        editTransaction(
+          { transactionId: hasData.transaction_id, updates:payload }, 
+          {
+            onSuccess: () => {
+              showToast(t('success.transaction_updated'),'success')
+            },
+            onError: () => {
+              showToast(t('errors.update_failed'),'danger')
+              setIsSubmitting(false);
+            }
+          }
+        );
+      }else{
+        addTransaction(payload, {
+          onSuccess: () => {
+            showToast(t('success.added'),'success')
+          },
+          onError: () => {
+            showToast(t('errors.add_failed'), 'danger');
+            setIsSubmitting(false);
+          }
       });
+      }
 
       setFormData({
         type: formData.type,
@@ -52,6 +98,7 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       onClose();
     } catch (error) {
       console.error("Submission failed:", error);
+      showToast(t(''), 'danger');
     } finally {
       setIsSubmitting(false);
     }
@@ -100,7 +147,7 @@ const AddTransactionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               <button onClick={()=>{handleSubmit()}} className={`md:w-full w-1/2 px-2 md:py-5 py-3 mt-5 rounded-2xl font-black text-[11px] uppercase text-white shadow-xl transition-all active:scale-95 ${
                 formData.type === 'income' ? 'bg-blue-600' : 'bg-rose-500'
               }`}>
-                {isSubmitting ? 'Saving...' : 'Add Transaction'}
+                {isSubmitting ? t('actions.saving') : (isEditMode ? t('actions.update_transaction') : t('actions.add_transaction'))}
               </button>
             </div>
           </div>

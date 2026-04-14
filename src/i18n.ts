@@ -43,6 +43,15 @@ const resources = {
       "account_settings": "Account Setting",
       "security_app": "Security & App",
       "weekly_activity": "Weekly Activity",
+      "no_transactions_found": "No Transactions Found",
+      "monthly_income": "Monthly Income",
+      "budget_limit": "Budget Limit",
+      "spending_progress": "Spending Progress",
+      "update_income": "Update Income",
+      "spent": "Spent",
+      "remaining": "Remaining",
+      "over_limit_warning": "Limit Exceeded!",
+      "budget_warning": "Approaching Limit",
       "nav": {
         "home": "Home",
         "history": "History",
@@ -84,12 +93,79 @@ const resources = {
         "spending_breakdown": "Spending Breakdown",
         "no_data": "No data available"
       },
+      "landing": {
+        "login": "Login",
+        "get_started": "Get Started",
+        "smart_tracking": "Smart Finance Tracking",
+        "hero_title_1": "Take Control of Your",
+        "hero_title_2": "Financial Future.",
+        "hero_desc": "The best way to track your daily expenses and save money systematically. Simple, Secure, and Automated.",
+        "start_trial": "Start Free Trial",
+        "secure_title": "Secure Data",
+        "secure_desc": "Your data is always safe with our Supabase integration.",
+        "insights_title": "Visual Insights",
+        "insights_desc": "Clearly see where your money is going with charts and graphs.",
+        "budget_title": "Monthly Budget",
+        "budget_desc": "Set monthly budgets and stay in control of your spending."
+      },
+      "auth": {
+        "login_tab": "Login",
+        "register_tab": "Register",
+        "welcome_back": "Welcome Back!",
+        "create_account": "Create Account",
+        "final_steps": "Final Steps",
+        "login_desc": "Enter your details to sign in.",
+        "register_desc": "Let’s start with basics.",
+        "final_desc": "Tell us a bit about yourself.",
+        "full_name": "Full Name",
+        "email": "Email Address",
+        "password": "Password",
+        "career": "Your Career",
+        "income": "Monthly Income",
+        "upload_photo": "Upload Photo",
+        "back": "Back",
+        "sign_in": "Sign In",
+        "continue": "Continue",
+        "complete_setup": "Complete Setup",
+        "processing": "Processing..."
+      },
       "inputs": {
         "amount_label": "Amount",
         "amount_placeholder": "Enter amount",
         "note_label": "Note",
         "note_placeholder": "What was this for?",
         "currency_unit": "Ks."
+      },
+
+      "actions": {
+        "add_transaction": "Add Transaction",
+        "update_transaction": "Update Transaction",
+        "saving": "Saving...",
+        "transaction_actions": "Transaction Actions",
+        "edit": "Edit",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+      },
+      
+      "success": {
+        "login_success": "Login successful!",
+        "register_success": "Registered successfully!",
+        "added": "Transaction added successfully!",
+        "updated": "Profile updated!",
+        "transaction_updated": "Transaction updated!",
+        "deleted": "Deleted successfully",
+        "saved": "Saved!"
+      },
+      "errors": {
+        "invalid_credentials": "Invalid email or password.",
+        "user_exists": "An account with this email already exists.",
+        "weak_password": "Password should be at least 6 characters.",
+        "general_auth_error": "Authentication failed. Please try again.",
+        "network_error": "Network error. Please check your connection.",
+        "required_fields": "Please fill all required fields before saving.",
+        "update_failed": "Update failed. Please try again.",
+        "add_failed": "Failed to add transaction.",
       }
     }
   },
@@ -119,6 +195,15 @@ const resources = {
       "account_settings": "အကောင့် ဆက်တင်",
       "security_app": "လုံခြုံရေးနှင့် အက်ပ်ဆက်တင်",
       "weekly_activity": "အပတ်စဉ် လှုပ်ရှားမှု",
+      "no_transactions_found": "မှတ်တမ်းများ ရှာမတွေ့ပါ",
+      "monthly_income": "လစဉ်ဝင်ငွေ",
+      "budget_limit": "သုံးစွဲမှု ကန့်သတ်ချက်",
+      "spending_progress": "သုံးစွဲမှု အခြေအနေ",
+      "update_income": "ဝင်ငွေ ပြင်ဆင်ရန်",
+      "spent": "သုံးပြီး",
+      "remaining": "ကျန်ရှိ",
+      "over_limit_warning": "ကန့်သတ်ချက်ထက် ကျော်လွန်နေသည်!",
+      "budget_warning": "ကန့်သတ်ချက် နီးကပ်နေသည်",
       "nav": {
         "home": "ပင်မ",
         "history": "မှတ်တမ်း",
@@ -161,12 +246,78 @@ const resources = {
         "spending_breakdown": "သုံးစွဲမှု အမျိုးအစားများ",
         "no_data": "အချက်အလက် မရှိသေးပါ"
       },
+      "landing": {
+        "login": "ဝင်ရန်",
+        "get_started": "စတင်မည်",
+        "smart_tracking": "စမတ်ကျသော ငွေကြေးစီမံမှု",
+        "hero_title_1": "သင့်ရဲ့ ငွေကြေးအနာဂတ်ကို",
+        "hero_title_2": "စိတ်ကြိုက် ထိန်းချုပ်လိုက်ပါ။",
+        "hero_desc": "မင်းရဲ့ နေ့စဉ်အသုံးစရိတ်တွေကို စနစ်တကျ မှတ်သားပြီး ငွေစုဆောင်းနိုင်မယ့် နည်းလမ်းကောင်း။ ရိုးရှင်း၊ လုံခြုံပြီး အလိုအလျောက် လုပ်ဆောင်ပေးမှာပါ။",
+        "start_trial": "အခမဲ့ စတင်သုံးစွဲရန်",
+        "secure_title": "လုံခြုံစိတ်ချရမှု",
+        "secure_desc": "Supabase နဲ့ ချိတ်ဆက်ထားလို့ မင်းရဲ့ data တွေက အမြဲတမ်း လုံခြုံနေမှာပါ။",
+        "insights_title": "မြင်သာသော အချက်အလက်များ",
+        "insights_desc": "Chart တွေ၊ Graph တွေနဲ့ မင်းငွေ ဘယ်ကိုရောက်နေလဲဆိုတာ ရှင်းရှင်းလင်းလင်း သိနိုင်မယ်။",
+        "budget_title": "လစဉ် အသုံးစရိတ်",
+        "budget_desc": "လအလိုက် Budget သတ်မှတ်ပြီး ပိုမသုံးမိအောင် ထိန်းချုပ်လိုက်ပါ။"
+      },
+      "auth": {
+        "login_tab": "ဝင်မည်",
+        "register_tab": "အကောင့်သစ်ဖွင့်မည်",
+        "welcome_back": "ပြန်လည်ကြိုဆိုပါတယ်!",
+        "create_account": "အကောင့်အသစ်ပြုလုပ်ရန်",
+        "final_steps": "နောက်ဆုံးအဆင့်",
+        "login_desc": "အချက်အလက်များဖြည့်သွင်းပြီး ဝင်ရောက်ပါ။",
+        "register_desc": "အခြေခံအချက်အလက်များမှ စတင်ရအောင်။",
+        "final_desc": "သင့်အကြောင်း အနည်းငယ် သိပါရစေ။",
+        "full_name": "အမည်အပြည့်အစုံ",
+        "email": "အီးမေးလ် လိပ်စာ",
+        "password": "စကားဝှက်",
+        "career": "အလုပ်အကိုင်",
+        "income": "လစဉ်ဝင်ငွေ (ကျပ်)",
+        "upload_photo": "ဓာတ်ပုံတင်ရန်",
+        "back": "နောက်သို့",
+        "sign_in": "ဝင်ရောက်မည်",
+        "continue": "ဆက်သွားရန်",
+        "complete_setup": "အပြီးသတ်မည်",
+        "processing": "လုပ်ဆောင်နေပါသည်..."
+      },
       "inputs": {
         "amount_label": "ပမာဏ",
         "amount_placeholder": "ပမာဏ ထည့်ပါ",
         "note_label": "မှတ်စု",
         "note_placeholder": "အကြောင်းအရာ ရေးသားပါ",
         "currency_unit": "ကျပ်"
+      },
+      "actions": {
+        "add_transaction": "စာရင်းသွင်းရန်",
+        "update_transaction": "စာရင်းပြင်ဆင်ရန်",
+        "saving": "သိမ်းဆည်းနေသည်...",
+        "edit": "ပြင်ဆင်ရန်",
+        "delete": "ဖျက်ရန်",
+        "cancel": "မလုပ်တော့ပါ",
+        "confirm": "သေချာသည်",
+        "transaction_actions": "လုပ်ဆောင်ချက်များ"
+
+      },
+      "success": {
+        "login_success": "ဝင်ရောက်မှု အောင်မြင်ပါသည်။",
+        "register_success": "အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်။",
+        "added": "စာရင်းသွင်းမှု အောင်မြင်ပါသည်။",
+        "updated": "ပရိုဖိုင် ပြင်ဆင်ပြီးပါပြီ။",
+        "transaction_updated": "စာရင်းပြင်ဆင်မှု အောင်မြင်ပါသည်။",
+        "deleted": "ဖျက်သိမ်းမှု အောင်မြင်ပါသည်။",
+        "saved": "သိမ်းဆည်းပြီးပါပြီ။"
+      },
+      "errors": {
+        "invalid_credentials": "အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားယွင်းနေပါသည်။",
+        "user_exists": "ဤအီးမေးလ်ဖြင့် အကောင့်ဖွင့်ထားပြီးသား ဖြစ်နေပါသည်။",
+        "weak_password": "စကားဝှက်သည် အနည်းဆုံး စာလုံး ၆ လုံးရှိရပါမည်။",
+        "general_auth_error": "လုပ်ဆောင်မှု မအောင်မြင်ပါ။ ထပ်မံကြိုးစားကြည့်ပါ။",
+        "network_error": "အင်တာနက်ချိတ်ဆက်မှု မရှိပါ။ ပြန်လည်စစ်ဆေးပေးပါ။",
+        "update_failed": "ပြင်ဆင်ရန် အဆင်မပြေပါ။ ထပ်မံကြိုးစားကြည့်ပါ။",
+        "add_failed": "စာရင်းသွင်းရန် အဆင်မပြေပါ။",
+        "required_fields": "မသိမ်းဆည်းမီ လိုအပ်သော အချက်အလက်များ အားလုံးကို ဖြည့်စွက်ပေးပါ။"
       }
     }
   }

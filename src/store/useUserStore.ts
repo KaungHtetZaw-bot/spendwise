@@ -15,7 +15,7 @@ interface UserState {
   setTheme: (newTheme: string) => void;
   setLanguage: (lang: string) => void;
   setUseSystemTheme: (val: boolean) => void;
-  setProfile: (profile: Profile) => void;
+  setProfile: (profile: Partial<Profile>) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -57,13 +57,16 @@ export const useUserStore = create<UserState>()(
         }
       },
 
-      setProfile: (updates: Profile) => {
+      setProfile: (updates: Partial<Profile>) => {
         set((state) => ({
-          profile: {
-            ...state.profile,
-            ...updates,
-          },
-        }))
+          profile: state.profile
+            ? { ...state.profile, ...updates }
+            : state.profile,
+        }));
+      },
+
+      setCurrency: async (c:'MMK' | 'USD') => {
+        set({})
       },
 
       setTheme: async (newTheme: string) => {

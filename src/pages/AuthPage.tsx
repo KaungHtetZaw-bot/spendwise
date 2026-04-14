@@ -3,6 +3,8 @@ import { Mail, Lock, User, ArrowRight, Briefcase, Wallet, ArrowLeft, Camera } fr
 import { supabase } from '../lib/supabase.ts';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { StoreAvatar } from '../lib/helper.ts';
+import { useToastStore } from '../store/useToastStore.ts';
+import { useTranslation } from 'react-i18next';
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams();
@@ -10,14 +12,17 @@ const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [career, setCareer] = useState('');
   const [income, setIncome] = useState(0);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const { showToast } = useToastStore();
 
   const navigate = useNavigate();
 
@@ -40,6 +45,7 @@ const AuthPage = () => {
         if (isLogin) {
           const { data, error } = await supabase.auth.signInWithPassword({ email, password });
           if (error) throw error;
+          showToast('success.login_success','success')
           navigate('/home');
         } else {
           // Registration Logic
@@ -47,7 +53,7 @@ const AuthPage = () => {
           if (error) throw error;
           
           if (data.user) {
-            
+
             const publicUrl = avatarFile ? await StoreAvatar(avatarFile, data.user.id) : null;
             await supabase.from('users').insert([
               {
@@ -55,14 +61,23 @@ const AuthPage = () => {
                 name: fullName,
                 career: career,
                 monthly_income: income,
+                currency,
                 avatar_url: publicUrl,
               }
             ]);
+            showToast('success.register_success','success')
             navigate('/home');
           }
         }
       } catch (error: any) {
-        alert(error.message);
+        let errorMessage = t('errors.general_auth_error');
+
+        if (error.message?.includes("Invalid login credentials")) {
+          errorMessage = t('errors.invalid_credentials');
+        } else if (error.message?.includes("User already registered")) {
+          errorMessage = t('errors.user_exists');
+        }
+        showToast(errorMessage, 'danger');
       } finally {
         setLoading(false);
       }
@@ -88,10 +103,10 @@ const AuthPage = () => {
         {/* Header Section */}
         <div className="text-center md:space-y-2 space-y-1">
           <h1 className="md:text-3xl text-xl font-black text-slate-900 dark:text-white tracking-tighter">
-            {isLogin ? 'Welcome Back!' : step === 1 ? 'Create Account' : 'Final Steps'}
+            {isLogin ? t('auth.welcome_back') : step === 1 ? t('auth.create_account') : t('auth.final_steps')}
           </h1>
           <p className="text-sm font-medium text-slate-400">
-            {isLogin ? 'Enter your details to sign in.' : step === 1 ? 'Let’s start with basics.' : 'Tell us a bit about yourself.'}
+            {isLogin ? t('auth.login_desc') : step === 1 ? t('auth.register_desc') : t('auth.final_desc')}
           </p>
         </div>
 
@@ -102,7 +117,7 @@ const AuthPage = () => {
               onClick={() => setIsLogin(true)}
               className={`flex-1 md:py-3 py-1.5 rounded-[1.8rem] text-xs font-black uppercase tracking-widest transition-all ${isLogin ? 'bg-white dark:bg-slate-800 text-indigo-600 shadow-sm' : 'text-slate-400'}`}
             >
-              Login
+              { t('landing.login')}
             </button>
             <button 
               onClick={() => setIsLogin(false)}
@@ -122,7 +137,7 @@ const AuthPage = () => {
               <div className="animate-in slide-in-from-right duration-500">
                 {!isLogin && (
                   <div className="md:space-y-2 space-y-1 mb-4">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Full Name</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">{t('auth.full_name')}</label>
                     <div className="relative">
                       <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                       <input 
@@ -135,7 +150,7 @@ const AuthPage = () => {
                 )}
 
                 <div className="md:space-y-2 space-y-1 mb-4">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Email Address</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">{ t('auths.email')}</label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                     <input 
@@ -147,7 +162,7 @@ const AuthPage = () => {
                 </div>
 
                 <div className="md:space-y-2 space-y-1">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Password</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">{ t('auths.password')}</label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                     <input 
@@ -164,7 +179,7 @@ const AuthPage = () => {
             {!isLogin && step === 2 && (
               <div className="animate-in slide-in-from-right duration-500">
                 <button type="button" onClick={() => {setStep(1);setAvatarFile(null);setAvatarPreview(null)}} className="mb-4 flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-500">
-                  <ArrowLeft size={14} /> Back
+                  <ArrowLeft size={14} /> { t('auth.back')}
                 </button>
 
                 <div className="flex flex-col items-center mb-6">
@@ -181,11 +196,11 @@ const AuthPage = () => {
                       <Camera size={12} />
                     </div>
                   </label>
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3">Upload Photo</span>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3">{ t('auth.upload_photo')}</span>
                 </div>
                 
                 <div className="md:space-y-2 space-y-1 mb-4">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Your Career</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">{ t('auth.career')}</label>
                   <div className="relative">
                     <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                     <input 
@@ -197,16 +212,49 @@ const AuthPage = () => {
                 </div>
 
                 <div className="md:space-y-2 space-y-1">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Monthly Income (ks)</label>
-                  <div className="relative">
-                    <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
-                    <input 
-                      type="number" placeholder="3000" required
-                      onChange={(e) => setIncome(Number(e.target.value))}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-transparent focus:border-indigo-500/20 rounded-2xl py-3.5 pl-12 pr-4 font-bold text-slate-700 dark:text-white outline-none transition-all"
-                    />
-                  </div>
-                </div>
+  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">
+    {t('auth.income')}
+  </label>
+  <div className="relative group">
+    {/* Icon */}
+    <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors" size={18} />
+    
+    {/* Input Field */}
+    <input 
+      type="number" 
+      placeholder="3000" 
+      required
+      onChange={(e) => setIncome(Number(e.target.value))}
+      className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-transparent focus:border-indigo-500/20 rounded-2xl py-3.5 pl-12 pr-24 font-bold text-slate-700 dark:text-white outline-none transition-all"
+    />
+
+    {/* Currency Switcher */}
+    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex bg-white dark:bg-slate-900 p-1 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+      <button
+        type="button"
+        onClick={() => setCurrency('MMK')}
+        className={`px-3 py-1.5 rounded-lg text-[10px] font-black transition-all ${
+          currency === 'MMK' 
+          ? 'bg-indigo-600 text-white shadow-md' 
+          : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+        }`}
+      >
+        Ks
+      </button>
+      <button
+        type="button"
+        onClick={() => setCurrency('USD')}
+        className={`px-3 py-1.5 rounded-lg text-[10px] font-black transition-all ${
+          currency === 'USD' 
+          ? 'bg-indigo-600 text-white shadow-md' 
+          : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+        }`}
+      >
+        $
+      </button>
+    </div>
+  </div>
+</div>
               </div>
             )}
 
@@ -215,7 +263,9 @@ const AuthPage = () => {
               disabled={loading}
               className="w-full md:py-5 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white md:rounded-2xl rounded-xl font-black text-[11px] uppercase tracking-[0.3em] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4 disabled:opacity-50"
             >
-              {loading ? 'Processing...' : (isLogin ? 'Sign In' : step === 1 ? 'Continue' : 'Complete Setup')}
+              {loading 
+              ? t('auth.processing') 
+              : (isLogin ? t('auth.sign_in') : step === 1 ? t('auth.continue') : t('auth.complete_setup'))}
               <ArrowRight size={16} />
             </button>
           </form>

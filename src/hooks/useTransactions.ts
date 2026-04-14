@@ -55,6 +55,60 @@ export const useAddTransaction = () => {
   });
 };
 
+export const useEditTransaction = () => {
+  const queryClient = useQueryClient();
+  const userId = useUserStore((state) => state.profile?.user_id);
+
+  return useMutation({
+    mutationFn: async ({ transactionId, updates }: { transactionId: string; updates: FormData }) => {
+      const formattedDate = updates.date
+        ? new Date(updates.date).toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0];
+      const cleanAmount = Number(updates.amount) || 0;
+      const transactionData = {
+        ...updates,
+        date: formattedDate,
+        user_id: userId,
+        amount: cleanAmount,
+      };
+
+      const { data, error } = await supabase
+        .from('transactions')
+        .update(transactionData)
+        .eq('transaction_id', transactionId)
+        .eq('user_id', userId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions', userId] });
+    },
+  });
+};
+
+export const useDeleteTransaction = () => {
+  const queryClient = useQueryClient();
+  const userId = useUserStore((state) => state.profile?.user_id);
+
+  return useMutation({
+    mutationFn: async (transactionId: string) => {
+      const { error } = await supabase
+        .from('transactions')
+        .delete()
+        .eq('transaction_id', transactionId)
+        .eq('user_id', userId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions', userId] });
+    },
+  });
+};
+
 export const useCategories = () => {
     const userId = useUserStore((state) => state.profile?.user_id);
 

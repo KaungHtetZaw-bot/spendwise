@@ -5,11 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../store/useUserStore';
 import { StoreAvatar } from '../lib/helper';
+import { useToastStore } from '../store/useToastStore';
 
 const AccountPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { profile, setProfile } = useUserStore();
+  const { showToast } = useToastStore();
 
   const [name, setName] = useState(profile?.name || '');
   const [career, setCareer] = useState(profile?.career || '');
@@ -63,7 +65,7 @@ const AccountPage = () => {
             setTimeout(() => setStatus('idle'), 3000);
 
         } catch (error: any) {
-            alert(error.message || "Update failed");
+            showToast(t('errors.update_failed'),'danger')
         } finally {
             setLoading(false);
         }
