@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useUserStore } from "../store/useUserStore";
 import { Moon, Sun, Languages, EllipsisVertical, LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { logout } from "../lib/helper";
 
 const MobileHeader = () => {
   const { profile, setTheme, theme, language,setLanguage } = useUserStore();
@@ -98,7 +99,7 @@ const MobileHeader = () => {
 
               <div className="h-[1px] bg-slate-100 dark:bg-slate-800 my-1 mx-2" />
 
-              <button className="w-full flex items-center gap-3 p-1.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-500 transition-colors">
+              <button onClick={logout} className="w-full flex items-center gap-3 p-1.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-500 transition-colors">
                 <LogOut size={18} />
                 <span className="text-sm font-bold">{ t('sign_out')}</span>
               </button>

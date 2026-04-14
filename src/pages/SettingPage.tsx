@@ -5,13 +5,13 @@ import {
   ShieldCheck,
   Plus,
 } from 'lucide-react';
-import { supabase } from '../lib/supabase.ts';
 import { useUserStore } from '../store/useUserStore.ts';
 import { useState } from 'react';
 import PerSonalSettingGroup from '../components/Setting/PersonalSettingGroup.tsx';
 import BudgetCard from '../components/Setting/BudgetCard.tsx';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../lib/helper.ts';
 
 const SettingPage = () => {
   const { profile } = useUserStore();
@@ -27,12 +27,6 @@ const SettingPage = () => {
       ]
     }
   ];
-
-  const logout = async () => { 
-    await supabase.auth.signOut();
-    localStorage.clear();
-    window.location.href = '/auth'; 
-  };
 
   return (
     <div className="min-h-screen pb-24">

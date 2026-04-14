@@ -1,8 +1,9 @@
 import { ArrowUpRight, ArrowDownRight, Wallet } from 'lucide-react'; // Lucide icons သုံးထားပါတယ်
-
+import { useUserStore } from '../../store/useUserStore';
 const StatCard = ({ title, amount, variant }: { title: string; amount: number; variant: 'income' | 'expense' | 'neutral' }) => {
   const isIncome = variant === 'income';
   const isExpense = variant === 'expense';
+  const { profile } = useUserStore()
   
   const colorClass = isIncome ? 'text-emerald-500' : isExpense ? 'text-rose-500' : 'text-indigo-500';
   const bgClass = isIncome ? 'bg-emerald-50 dark:bg-emerald-500/10' : isExpense ? 'bg-rose-50 dark:bg-rose-500/10' : 'bg-indigo-50 dark:bg-indigo-500/10';
@@ -22,7 +23,6 @@ const StatCard = ({ title, amount, variant }: { title: string; amount: number; v
         </p>
       </div>
 
-      {/* Amount Section */}
       <div className="mt-2 md:mt-0">
         <p className="md:hidden text-[8px] font-bold text-slate-400 uppercase tracking-tighter mb-0.5">
           {title}
@@ -31,8 +31,8 @@ const StatCard = ({ title, amount, variant }: { title: string; amount: number; v
           <span className={`text-sm sm:text-lg md:text-3xl font-black tracking-tighter md:tracking-tight ${colorClass}`}>
             {amount.toLocaleString()}
           </span>
-          <span className="text-[7px] md:text-sm font-medium text-slate-400 hidden sm:inline">
-            MMK
+          <span className="text-[7px] md:text-sm font-medium text-slate-400 inline">
+            { profile?.currency ? profile.currency : 'MMK' }
           </span>
         </div>
       </div>

@@ -7,8 +7,10 @@ import {
   BarChart3, 
   PieChart 
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Index = () => {
+  const { t } = useTranslation();
   return (
     <div className="min-h-[100dvh] h-full overflow-y-auto bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-indigo-100">
       
@@ -20,9 +22,9 @@ const Index = () => {
             <span className="tracking-tight">SpendWise</span>
           </div>
           <div className="flex items-center gap-6">
-            <Link to="/auth?mode=login" className="text-sm font-bold hover:text-indigo-500 transition-colors">Login</Link>
+            <Link to="/auth?mode=login" className="text-sm font-bold hover:text-indigo-500 transition-colors">{ t('landing.login')}</Link>
             <Link to="/auth?mode=register" className="px-5 py-2 bg-indigo-600 text-white rounded-full text-sm font-bold shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all active:scale-95">
-              Get Started
+              { t('landing.get_started')}
             </Link>
           </div>
         </div>
@@ -33,24 +35,22 @@ const Index = () => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mb-6 border border-emerald-500/20">
             <TrendingUp size={14} />
-            <span className="text-[10px] font-black uppercase tracking-wider">Smart Finance Tracking</span>
+            <span className="text-[10px] font-black uppercase tracking-wider">{ t('landing.smart_tracking')}</span>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-[1.1]">
-            Take Control of Your <br />
+            { t('landing.hero_title_1')} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-              Financial Future.
+              { t('landing.hero_title_2')}
             </span>
           </h1>
-          
           <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-10 font-medium leading-relaxed">
-            မင်းရဲ့ နေ့စဉ်အသုံးစရိတ်တွေကို စနစ်တကျ မှတ်သားပြီး ငွေစုဆောင်းနိုင်မယ့် နည်းလမ်းကောင်း။ 
-            Simple, Secure, and Automated.
+            { t('landing.hero_desc')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/auth?mode=register" className="w-full sm:w-auto px-10 py-4 bg-indigo-600 text-white rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-500/20">
-              Start Free Trial <ArrowRight size={20} />
+              { t('landing.start_trial')} <ArrowRight size={20} />
             </Link>
           </div>
         </div>
@@ -80,24 +80,24 @@ const Index = () => {
             <div className="w-12 h-12 bg-indigo-500/10 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto">
               <ShieldCheck size={24} />
             </div>
-            <h3 className="font-black text-xl">Secure Data</h3>
-            <p className="text-slate-500 text-sm">Supabase နဲ့ ချိတ်ဆက်ထားလို့ မင်းရဲ့ data တွေက အမြဲတမ်း လုံခြုံနေမှာပါ။</p>
+            <h3 className="font-black text-xl">{ t('landing.secure_title') }</h3>
+            <p className="text-slate-500 text-sm">{ t('landing.secure_desc') }</p>
           </div>
           
           <div className="space-y-4">
             <div className="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto">
               <PieChart size={24} />
             </div>
-            <h3 className="font-black text-xl">Visual Insights</h3>
-            <p className="text-slate-500 text-sm">Chart တွေ၊ Graph တွေနဲ့ မင်းငွေ ဘယ်ကိုရောက်နေလဲဆိုတာ ရှင်းရှင်းလင်းလင်း သိနိုင်မယ်။</p>
+            <h3 className="font-black text-xl">{ t('landing.insights_title') }</h3>
+            <p className="text-slate-500 text-sm">{ t('landing.insights_desc') }</p>
           </div>
 
           <div className="space-y-4">
             <div className="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center mx-auto">
               <BarChart3 size={24} />
             </div>
-            <h3 className="font-black text-xl">Monthly Budget</h3>
-            <p className="text-slate-500 text-sm">လအလိုက် Budget သတ်မှတ်ပြီး ပိုမသုံးမိအောင် ထိန်းချုပ်လိုက်ပါ။</p>
+            <h3 className="font-black text-xl">{ t('landing.budget_title') }</h3>budget_desc
+            <p className="text-slate-500 text-sm">{ t('landing.budget_desc') }</p>
           </div>
         </div>
       </section>

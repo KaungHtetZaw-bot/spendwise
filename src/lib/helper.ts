@@ -72,3 +72,9 @@ export const StoreAvatar = async (file:File, userId:string) => {
   const publicUrl = urlData.publicUrl;
   return publicUrl;
 };
+
+export const logout = async () => { 
+  await supabase.auth.signOut();
+  localStorage.clear();
+  window.location.href = '/auth'; 
+};
