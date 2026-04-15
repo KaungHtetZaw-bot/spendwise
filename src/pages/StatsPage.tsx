@@ -4,20 +4,25 @@ import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { useTransactions } from '../hooks/useTransactions';
 import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../hooks/useCurrency';
 
 const StatsPage = () => {
   const { t } = useTranslation();
-  const [timeRange, setTimeRange] = useState(t('time.today'));
+  const [timeRange, setTimeRange] = useState('today');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const { data: transactions = [], isLoading, isError } = useTransactions();
-
+  const { data: transactions = [] } = useTransactions();
+  const { format,currency } = useCurrency()
+  const [customDates, setCustomDates] = useState({
+    start: '', // e.g., '2026-04-01'
+    end: ''    // e.g., '2026-04-15'
+  });
 
   const timeOptions = [
     { id: 'today', label: t('time.today') },
     { id: 'week', label: t('time.week') },
     { id: 'month', label: t('time.month') },
     { id: 'year', label: t('time.year') },
-    { id: 'custom', label: t('time.custom') },
+    // { id: 'custom', label: t('time.custom') },
   ];
 
   const colorPalette = [
@@ -29,31 +34,57 @@ const StatsPage = () => {
   ];
 
   const { statsData, totalIncome, totalExpense } = useMemo(() => {
-    const breakdown: Record<string, number> = {};
-    let income = 0;
-    let expense = 0;
+  const breakdown: Record<string, number> = {};
+  let income = 0;
+  let expense = 0;
 
-    transactions.forEach(t => {
-      const amount = Number(t.amount);
-      if (t.type === 'income') {
-        income += amount;
-      } else {
-        expense += amount;
-        const catName = t.categories?.name || 'General';
-        breakdown[catName] = (breakdown[catName] || 0) + amount;
-      }
-    });
+  const filteredTransactions = transactions.filter(t => {
+    const tDate = new Date(t.created_at);
+    const now = new Date();
 
-    const chartData = Object.entries(breakdown)
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .map((item, index) => ({
-        ...item,
-        color: colorPalette[index] || '#94a3b8' 
-      }));
+    switch (timeRange) {
+      case 'today':
+        return tDate.toDateString() === now.toDateString();
+      case 'week':
+        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        return tDate >= weekAgo;
+      case 'month':
+        return tDate.getMonth() === now.getMonth() && tDate.getFullYear() === now.getFullYear();
+      case 'year':
+        return tDate.getFullYear() === now.getFullYear();
+      case 'custom':
+        if (!customDates.start || !customDates.end) return true; // Date မရွေးရသေးရင် အကုန်ပြမယ်
+        const start = new Date(customDates.start);
+        const end = new Date(customDates.end);
+        end.setHours(23, 59, 59); // End date ကို နေ့ကုန်အထိ သတ်မှတ်မယ်
+        return tDate >= start && tDate <= end;
+      default:
+        return true;
+    }
+  });
 
-    return { statsData: chartData, totalIncome: income, totalExpense: expense };
-  }, [transactions]);
+  filteredTransactions.forEach(t => {
+    const amount = Number(t.amount);
+    if (t.type === 'income') {
+      income += amount;
+    } else {
+      expense += amount;
+      const catName = t.categories?.name || 'General';
+      breakdown[catName] = (breakdown[catName] || 0) + amount;
+    }
+  });
+
+  // Chart data sorting & coloring...
+  const chartData = Object.entries(breakdown)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value)
+    .map((item, index) => ({
+      ...item,
+      color: colorPalette[index] || '#94a3b8' 
+    }));
+
+  return { statsData: chartData, totalIncome: income, totalExpense: expense };
+}, [transactions, timeRange]);
 
   const expensePercentage = totalIncome > 0 ? Math.min(Math.round((totalExpense / totalIncome) * 100), 100) : 0;
 
@@ -73,27 +104,58 @@ const StatsPage = () => {
               }`}
             >
               <Calendar size={14} /> 
-              {timeRange} 
+              {timeOptions.find(opt => opt.id === timeRange)?.label} 
               <ChevronDown size={14} className={`transition-transform duration-300 ${isCalendarOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isCalendarOpen && (
               <>
-                <div className="fixed w-full inset-0 z-10" onClick={() => setIsCalendarOpen(false)} />
-                <div className="absolute w-30 md:w-45 right-0 mt-2 bg-white dark:bg-slate-900 md:rounded-[1.5rem] rounded-[0.75rem] shadow-xl border border-slate-100 dark:border-slate-800 md:py-2 py-1 z-20 animate-in zoom-in-95 whitespace-nowrap duration-200 origin-top-right">
+                <div className="fixed inset-0 z-10" onClick={() => setIsCalendarOpen(false)} />
+                <div className="absolute right-0 mt-2 bg-white dark:bg-slate-900 md:rounded-[1.5rem] rounded-[1rem] shadow-2xl border border-slate-100 dark:border-slate-800 p-2 z-20 animate-in zoom-in-95 duration-200 origin-top-right min-w-[180px]">
                   {timeOptions.map((option) => (
                     <button
                       key={option.id}
                       onClick={() => {
-                        setTimeRange(option.label);
-                        setIsCalendarOpen(false);
+                        setTimeRange(option.id);
+                        if (option.id !== 'custom') setIsCalendarOpen(false);
                       }}
-                      className="w-full flex items-center justify-between md:px-5 px-2.5 md:py-3 py-1.75 !text-sm font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                      className="w-full flex items-center justify-between px-4 py-3 text-xs font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors"
                     >
                       {option.label}
                       {timeRange === option.id && <Check size={14} className="text-indigo-500" />}
                     </button>
                   ))}
+
+                  {/* Custom Date Inputs */}
+                  {timeRange === 'custom' && (
+                    <div className="mt-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl space-y-3 animate-in fade-in slide-in-from-top-2">
+                      <div className="space-y-1">
+                        <p className="text-[8px] font-black text-slate-400 uppercase ml-1">From</p>
+                        <input 
+                          type="date" 
+                          value={customDates.start}
+                          onChange={(e) => setCustomDates(prev => ({ ...prev, start: e.target.value }))}
+                          className="w-full p-2 text-[10px] font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg outline-none focus:border-indigo-500"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[8px] font-black text-slate-400 uppercase ml-1">To</p>
+                        <input 
+                          type="date" 
+                          value={customDates.end}
+                          onChange={(e) => setCustomDates(prev => ({ ...prev, end: e.target.value }))}
+                          className="w-full p-2 text-[10px] font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg outline-none focus:border-indigo-500"
+                        />
+                      </div>
+                      <button 
+                        disabled={!customDates.start || !customDates.end}
+                        onClick={() => setIsCalendarOpen(false)}
+                        className="w-full py-2.5 bg-indigo-600 text-white text-[9px] font-black uppercase rounded-xl shadow-lg shadow-indigo-500/20 active:scale-95 disabled:opacity-50"
+                      >
+                        Apply Filter
+                      </button>
+                    </div>
+                  )}
                 </div>
               </>
             )}
@@ -106,7 +168,7 @@ const StatsPage = () => {
               <ArrowUpRight size={20} />
             </div>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('stats.total_income')}</p>
-            <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">{totalIncome} <span className="text-[10px] font-medium opacity-50">Ks</span></h3>
+            <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">{format(totalIncome)} <span className="text-[10px] font-medium opacity-50">{currency}</span></h3>
           </div>
 
           <div className="bg-white dark:bg-slate-900 md:p-6 p-3 md:rounded-[2rem] rounded-[1rem] border border-slate-100 dark:border-slate-800 shadow-sm">
@@ -114,7 +176,7 @@ const StatsPage = () => {
               <ArrowDownRight size={20} />
             </div>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('stats.total_expense')}</p>
-            <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">{totalExpense} <span className="text-[10px] font-medium opacity-50">Ks</span></h3>
+            <h3 className="text-xl font-black text-slate-900 dark:text-white mt-1">{format(totalExpense)} <span className="text-[10px] font-medium opacity-50">{currency}</span></h3>
           </div>
         </div>
 
@@ -166,7 +228,7 @@ const StatsPage = () => {
                     <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{cat.name}</span>
                   </div>
                   <span className="text-[11px] font-black text-slate-900 dark:text-white">
-                    {cat.value.toLocaleString()} Ks
+                    {format(cat.value)} {currency}
                   </span>
                 </div>
                 <div className="w-full h-2 bg-slate-50 dark:bg-slate-800 rounded-full overflow-hidden">
