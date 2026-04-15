@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { useUserStore } from '../store/useUserStore';
-import type { Transaction,Category, FormData,TransactionPayload } from '../type/transaction';
+import type { Transaction,Category,TransactionPayload } from '../type/transaction';
+import { useBudgetChecker } from './useBudgetChecker';
 
 const convertToStoreAmount = (amount: number, currency: 'USD' | 'MMK', rate: number) => {
   return currency === 'USD' ? amount * rate : amount;
@@ -41,6 +42,7 @@ export const useAddTransaction = () => {
   const queryClient = useQueryClient();
   const profile = useUserStore((state) => state.profile);
   const userId = profile?.user_id;
+  const { checkBudget } = useBudgetChecker()
   
   return useMutation({
     mutationFn: async (newTx:TransactionPayload) => {
@@ -69,8 +71,11 @@ export const useAddTransaction = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess:async (data) => {
       queryClient.invalidateQueries({ queryKey: ['transactions', userId] });
+      if (data.type === 'expense' && userId) {
+        await checkBudget();
+      }
     },
   });
 };
@@ -79,6 +84,7 @@ export const useEditTransaction = () => {
   const queryClient = useQueryClient();
   const profile = useUserStore((state) => state.profile);
   const userId = profile?.user_id;
+  const { checkBudget } = useBudgetChecker()
 
   return useMutation({
     mutationFn: async ({ transactionId, updates }: { transactionId: string; updates: TransactionPayload }) => {
@@ -108,8 +114,9 @@ export const useEditTransaction = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess:async() => {
       queryClient.invalidateQueries({ queryKey: ['transactions', userId] });
+      await checkBudget()
     },
   });
 };

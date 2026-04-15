@@ -10,12 +10,14 @@ interface UserState {
   language: string;
   useSystemTheme: boolean;
   theme: string;
+  isNotifyEnabled:boolean;
   fetchProfile: (userId: string) => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
   setTheme: (newTheme: string) => void;
   setLanguage: (lang: string) => void;
   setUseSystemTheme: (val: boolean) => void;
   setProfile: (profile: Partial<Profile>) => void;
+  toggleNotify: ()=> void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -26,6 +28,7 @@ export const useUserStore = create<UserState>()(
       language: 'en',
       theme: 'Light',
       useSystemTheme: false,
+      isNotifyEnabled: true, // default အနေနဲ့ ဖွင့်ထားမယ်
 
       fetchProfile: async (userId) => {
         if (get().profile) return; 
@@ -81,6 +84,7 @@ export const useUserStore = create<UserState>()(
         i18n.changeLanguage(lang);
         set({ language: lang });
       },
+      toggleNotify: () => set((state) => ({ isNotifyEnabled: !state.isNotifyEnabled })),
     }),
     {
       name: 'user-storage',

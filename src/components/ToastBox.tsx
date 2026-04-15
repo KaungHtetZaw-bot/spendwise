@@ -10,7 +10,7 @@ interface ToastBoxProps {
   duration?: number;
 }
 
-const ToastBox = ({ type, message, onClose, duration = 3000 }: ToastBoxProps) => {
+const ToastBox = ({ type, message, onClose, duration = 10000 }: ToastBoxProps) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -21,7 +21,6 @@ const ToastBox = ({ type, message, onClose, duration = 3000 }: ToastBoxProps) =>
 
   if (!mounted) return null;
 
-  // Type အလိုက် အရောင်နဲ့ Icon သတ်မှတ်ခြင်း
   const config = {
     success: {
       bg: 'bg-emerald-50/80 dark:bg-emerald-950/20',
@@ -48,9 +47,24 @@ const ToastBox = ({ type, message, onClose, duration = 3000 }: ToastBoxProps) =>
 
   const theme = config[type];
 
+  const formatMessage = (msg: string) => {
+    if (msg.includes('(Tip:')) {
+      const [main, tip] = msg.split('(Tip:');
+      return (
+        <>
+          {main}
+          <span className="block text-[11px] font-medium opacity-60 mt-1 italic leading-snug">
+            Tip:{tip}
+          </span>
+        </>
+      );
+    }
+    return msg;
+  };
+
   return createPortal(
     <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] w-[92%] max-w-sm animate-in fade-in slide-in-from-top-6 duration-500 ease-out">
-      <div className={`relative overflow-hidden ${theme.bg} ${theme.border} border backdrop-blur-xl p-4 rounded-[1.5rem] flex items-center gap-4 shadow-2xl shadow-black/5`}>
+      <div className={`relative overflow-hidden ${theme.bg} ${theme.border} border backdrop-blur-xl md:p-4 p-2 md:rounded-[1.5rem] rounded-[0.75rem] flex items-center gap-4 shadow-2xl shadow-black/5`}>
         
         {/* Glow Effect */}
         <div className={`absolute -top-12 -left-12 w-24 h-24 ${theme.glow} blur-3xl rounded-full`} />
@@ -59,13 +73,13 @@ const ToastBox = ({ type, message, onClose, duration = 3000 }: ToastBoxProps) =>
           {theme.icon}
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <h4 className={`text-[10px] font-black uppercase tracking-[0.2em] opacity-70 ${theme.text}`}>
             {type}
           </h4>
-          <p className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight mt-0.5">
-            {message}
-          </p>
+          <div className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight mt-0.5 break-words">
+            {formatMessage(message)}
+          </div>
         </div>
 
         <button 

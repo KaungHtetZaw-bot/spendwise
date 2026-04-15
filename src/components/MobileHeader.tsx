@@ -1,15 +1,29 @@
 import { useState } from "react";
 import { useUserStore } from "../store/useUserStore";
-import { Moon, Sun, Languages, EllipsisVertical, LogOut } from "lucide-react";
+import { Moon, Sun, Languages, EllipsisVertical, LogOut,Bell, BellOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { logout } from "../lib/helper";
 import { useConfirmationStore } from "../store/useConfirmationStore";
+import { useTransactions } from "../hooks/useTransactions"
+import { useNavigate } from "react-router-dom";
 
 const MobileHeader = () => {
-  const { profile, setTheme, theme, language,setLanguage } = useUserStore();
+  const { profile, setTheme, theme, language,setLanguage, isNotifyEnabled } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
   const { i18n,t } = useTranslation()
   const { openConfirm } = useConfirmationStore()
+  const { data: transactions = [] } = useTransactions();
+  const navigate = useNavigate()
+
+  const totalSpent = transactions
+  .filter(t => t.type === 'expense')
+  .reduce((sum, t) => sum + t.amount, 0);
+  const budget = profile?.monthly_budget || 0;
+  const usagePercent = budget > 0 ? (totalSpent / budget) * 100 : 0;
+  
+  const isOverBudget = usagePercent >= 100;
+  const isWarning = usagePercent >= 80;
+
 
   const toggleTheme = () => {
     const isCurrentlyDark = document.documentElement.classList.contains('dark');
@@ -29,6 +43,27 @@ const MobileHeader = () => {
     setLanguage(nextLang);
     setIsOpen(false);
   };
+
+  const handleBellClick = () => {
+  const isWarning = usagePercent >= 80;
+  const statusTitle = isOverBudget 
+    ? t('budgetPage.exceeded_title') 
+    : t('budgetPage.status_title');
+
+  const statusDesc = isOverBudget
+    ? t('budgetPage.exceeded_desc')
+    : t('budgetPage.usage_desc', { percent: Math.round(usagePercent) });
+
+  openConfirm({
+    title: statusTitle,
+    description: `${statusDesc}\n\n💡 ${t('notifications.tip_title')}: ${t('notifications.tip_message')}`,
+    confirmText: t('notifications.go_to_settings'),
+    type: isOverBudget ? "danger" : (isWarning ? "warning" : "info"),
+    onConfirm: () => {
+      navigate('/settings')
+    }
+  });
+};
 
   const handleLogout = () => {
     setIsOpen(false)
@@ -64,8 +99,25 @@ const MobileHeader = () => {
 
         <div className="flex items-center gap-2">
           {/* Notification Button */}
-          <button className="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <button 
+            onClick={handleBellClick}
+            className={`p-2 rounded-xl transition-all duration-500 relative ${
+              isOverBudget 
+                ? "text-rose-500 bg-rose-50 dark:bg-rose-950/30 animate-pulse" 
+                : isWarning 
+                ? "text-amber-500 bg-amber-50 dark:bg-amber-950/30" 
+                : "text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+            }`}
+          >
+            {isNotifyEnabled ? <Bell size={18} /> : <BellOff size={18} />}
+
+            {isNotifyEnabled && (isWarning || isOverBudget) && (
+              <span 
+                className={`absolute top-[7px] right-[7px] w-2.5 h-2.5 rounded-full border-2 border-white dark:border-slate-900 transition-colors duration-300 ${
+                  isOverBudget ? "bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]" : "bg-amber-500"
+                }`} 
+              />
+            )}
           </button>
 
           {/* Three Dots / Settings Toggle */}
