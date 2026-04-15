@@ -6,6 +6,8 @@ import { supabase } from '../lib/supabase';
 import TransactionActionSheet from '../components/TransactionActionSheet';
 import { useOutletContext } from 'react-router-dom';
 import { useToastStore } from '../store/useToastStore';
+import { useCurrency } from '../hooks/useCurrency';
+
 const HistoryPage = () => {
   const { t } = useTranslation();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -18,6 +20,7 @@ const HistoryPage = () => {
   // Filter Dropdown States
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'income' | 'expense'>('all');
+  const { format,symbol } = useCurrency()
 
   const filterOptions = [
     { label: 'All', value: 'all' },
@@ -176,8 +179,8 @@ const HistoryPage = () => {
               {/* Amount - Action တွေ ပေါ်လာရင် ဒါကို ဖျောက်ထားချင်ရင် group-hover:hidden သုံးလို့ရတယ် */}
               <div className="text-right group-hover:opacity-0 transition-opacity duration-200">
                 <p className={`text-sm font-black ${t.type === 'income' ? 'text-emerald-500' : 'text-slate-900 dark:text-white'}`}>
-                  {t.type === 'income' ? '+' : '-'} {Number(t.amount).toLocaleString()} 
-                  <span className="ml-1 text-[10px] opacity-40 font-bold">Ks</span>
+                  {t.type === 'income' ? '+' : '-'} {format(t.amount)}  
+                  <span className="ml-1 text-[10px] opacity-40 font-bold">{symbol}</span>
                 </p>
               </div>
 

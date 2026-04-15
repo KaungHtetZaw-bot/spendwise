@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useCurrency } from "../../hooks/useCurrency";
 
 const RecentList = ({transactions}: {transactions: any[]}) => {
   const { t } = useTranslation();
     const navigate = useNavigate();
+    const { format,symbol } = useCurrency()
   return (
     <>
     <section className="space-y-4 ">
@@ -34,7 +36,7 @@ const RecentList = ({transactions}: {transactions: any[]}) => {
               </div>
               <div className="text-right">
                 <p className={`font-black text-sm ${item.type === 'income' ? 'text-emerald-500' : 'text-rose-500'}`}>
-                  {item.type === 'income' ? '+' : '-'} {item.amount.toLocaleString()}
+                  {item.type === 'income' ? '+' : '-'} {format(item.amount)} {symbol}
                 </p>
                 <p className="text-[10px] text-slate-400 uppercase">{item.date}</p>
               </div>
