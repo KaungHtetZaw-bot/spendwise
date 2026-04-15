@@ -5,6 +5,8 @@ import MobileHeader from '../MobileHeader';
 import AddTransactionModal from '../AddTransactionModal';
 import ToastBox from '../ToastBox';
 import { useToastStore } from '../../store/useToastStore';
+import { useConfirmationStore } from '../../store/useConfirmationStore';
+import ConfirmationModal from '../ConfirmationModal';
 
 const MainLayout = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,6 +15,7 @@ const MainLayout = () => {
     const [history, setHistory] = useState([]);
     const [editingData, setEditingData] = useState<any>(null);
     const { message, type, isOpen, hideToast } = useToastStore();
+    const { isOpen:isComfirmOpen, closeConfirm, onConfirm, title, description, confirmText, type:comfirmType } = useConfirmationStore();
 
     const handleCloseModal = () => {
       setIsModalOpen(false);
@@ -46,12 +49,25 @@ const MainLayout = () => {
         </main>
         <AddTransactionModal isOpen={isModalOpen} onClose={handleCloseModal} hasData={editingData} />
         {isOpen && (
-        <ToastBox 
-          message={message} 
-          type={type} 
-          onClose={hideToast} 
-        />
-      )}
+          <ToastBox 
+            message={message} 
+            type={type} 
+            onClose={hideToast} 
+          />
+        )}
+
+        <ConfirmationModal
+        isOpen={isComfirmOpen}
+        onClose={closeConfirm}
+        onConfirm={async () => {
+          await onConfirm();
+          closeConfirm();
+        }}
+        title={title}
+        description={description}
+        confirmText={confirmText}
+        type={comfirmType}
+      />
     </div>
   );
 }
