@@ -1,11 +1,14 @@
-import { Home, History, PieChart, Settings, Plus } from 'lucide-react';
+import { Home, History, PieChart, Settings, LogOut,Plus } from 'lucide-react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '../store/useUserStore';
+import { logout } from '../lib/helper';
+import { useConfirmationStore } from '../store/useConfirmationStore';
 
 const Navbar = ({ onAddClick }: { onAddClick: () => void }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { profile } = useUserStore();
+  const { openConfirm } = useConfirmationStore()
 
   const routeItems = [
     { name: t('nav.home'), href: '/home', icon: Home },
@@ -13,6 +16,16 @@ const Navbar = ({ onAddClick }: { onAddClick: () => void }) => {
     { name: t('nav.stats'), href: '/stats', icon: PieChart },
     { name: t('nav.settings'), href: '/settings', icon: Settings },
   ];
+
+  const handleLogout = () => {
+    openConfirm({
+      title: t('account.logout_confirm_title'),
+      description: t('account.logout_confirm_msg'),
+      confirmText: t('account.logout_confirm_btn'),
+      type: "warning",
+      onConfirm: async ()=>{logout}
+    })
+  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 md:bottom-auto md:top-0 backdrop-blur-xl border-t md:border-t-0 md:border-b border-slate-200 dark:border-slate-800 px-4 py-2 md:py-3">
@@ -54,10 +67,10 @@ const Navbar = ({ onAddClick }: { onAddClick: () => void }) => {
           
           {/* Add New Button (Desktop) */}
           <button 
-            onClick={onAddClick}
-            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-500/20 active:scale-95"
+            onClick={handleLogout}
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-2 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-500/20 active:scale-95"
           >
-            <Plus size={16} />
+            <LogOut size={16} />
             {t('sign_out')}
           </button>
 
