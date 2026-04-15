@@ -12,12 +12,16 @@ import BudgetCard from '../components/Setting/BudgetCard.tsx';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../lib/helper.ts';
+import BudgetModal from '../components/Setting/BudgetModal.tsx';
+import { useConfirmationStore } from '../store/useConfirmationStore.ts';
 
 const SettingPage = () => {
   const { profile } = useUserStore();
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const { t } = useTranslation()
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { openConfirm } = useConfirmationStore()
   const settingsGroups = [
     {
       title: t('security_app'),
@@ -27,6 +31,16 @@ const SettingPage = () => {
       ]
     }
   ];
+
+  const handleLogout = () => {
+    openConfirm({
+      title: t('account.logout_confirm_title'),
+      description: t('account.logout_confirm_msg'),
+      confirmText: t('account.logout_confirm_btn'),
+      type: "warning",
+      onConfirm: async() => {logout}
+    })
+  }
 
   return (
     <div className="min-h-screen pb-24">
@@ -60,7 +74,7 @@ const SettingPage = () => {
         </div>
 
         {/* Budget Card */}
-        <BudgetCard />
+        <BudgetCard onOpenModal={setIsModalOpen}/>
 
         < PerSonalSettingGroup />
 
@@ -115,7 +129,7 @@ const SettingPage = () => {
 
         {/* Sign Out Button */}
         <button 
-          onClick={logout} 
+          onClick={handleLogout} 
           className="w-full py-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-rose-500 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 active:scale-95 transition-all mt-4 mb-10 shadow-sm hover:bg-rose-50 dark:hover:bg-rose-950/20"
         >
           <LogOut size={18} />
@@ -123,6 +137,7 @@ const SettingPage = () => {
         </button>
 
       </div>
+      <BudgetModal isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} />
     </div>
   );
 };
