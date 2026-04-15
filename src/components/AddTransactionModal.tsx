@@ -77,7 +77,6 @@ const AddTransactionModal = ({ isOpen, onClose, hasData }: { isOpen: boolean; on
           }
         );
       }else{
-        console.log("else")
         addTransaction(payload, {
           onSuccess: () => {
             showToast(t('success.added'),'success')

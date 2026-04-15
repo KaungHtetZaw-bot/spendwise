@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 interface ConfirmationState {
   isOpen: boolean;
-  type: 'danger' | 'warning';
+  type: 'danger' | 'warning' | 'info';
   title: string;
   description: string;
   confirmText: string;

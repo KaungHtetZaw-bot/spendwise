@@ -32,7 +32,6 @@ const resources = {
       
       ////
       "personal": "Personal Preference",
-      "notifications": "Notifications",
       "budget": "Monthly Budget",
       "update_budget": "Update Budget",
       "language": "Language",
@@ -49,6 +48,7 @@ const resources = {
       "spending_progress": "Spending Progress",
       "update_income": "Update Income",
       "spent": "Spent",
+      "left":"Left",
       "remaining": "Remaining",
       "over_limit_warning": "Limit Exceeded!",
       "budget_warning": "Approaching Limit",
@@ -149,7 +149,11 @@ const resources = {
         "save_more": "Save More",
         "balanced": "Balanced",
         "spend_more": "Spend More",
-        "update_plan": "Update Finance Plan"
+        "update_plan": "Update Finance Plan",
+        "exceeded_title": "Budget Exceeded!",
+        "exceeded_desc": "You have spent more than your set limit for this month. It might be time to review your upcoming expenses.",
+        "status_title": "Budget Status",
+        "usage_desc": "You have used {{percent}}% of your monthly budget.",
       },
       "inputs": {
         "amount_label": "Amount",
@@ -195,6 +199,18 @@ const resources = {
       },
       "common": {
         "delete": "Delete Now",
+        "got_it": "Got it",
+        "understand": "I Understand"
+      },
+      "notifications": {
+        "title": "Budget Alerts",
+        "enabled": "Notifications Enabled",
+        "disabled": "Notifications Disabled",
+        "desc": "Get notified when you reach your spending limits.",
+        "tip_title": "Tip",
+        "tip_message": "You can turn off these notifications in your Profile Settings if they become distracting.",
+        "mute_action": "Mute Alerts",
+        "go_to_settings": "Go to Settings"
       }
     }
   },
@@ -213,7 +229,6 @@ const resources = {
       "sign_out":"ထွက်ရန်",
       ////
       "personal": "ကိုယ်ရေးကိုယ်တာ ဦးစားပေး",
-      "notifications": "အသိပေးချက်များ",
       "budget": "လစဉ် အသုံးစရိတ်",
       "update_budget": "ပမာဏ ပြင်ဆင်ရန်",
       "language": "ဘာသာစကား",
@@ -230,6 +245,7 @@ const resources = {
       "spending_progress": "သုံးစွဲမှု အခြေအနေ",
       "update_income": "ဝင်ငွေ ပြင်ဆင်ရန်",
       "spent": "သုံးပြီး",
+      "left":'ကျန်',
       "remaining": "ကျန်ရှိ",
       "over_limit_warning": "ကန့်သတ်ချက်ထက် ကျော်လွန်နေသည်!",
       "budget_warning": "ကန့်သတ်ချက် နီးကပ်နေသည်",
@@ -331,7 +347,11 @@ const resources = {
         "save_more": "ပိုစုမယ်",
         "balanced": "မျှတစေမယ်",
         "spend_more": "ပိုသုံးမယ်",
-        "update_plan": "အတည်ပြုမည်"
+        "update_plan": "အတည်ပြုမည်",
+        "exceeded_title": "အသုံးစရိတ် ကျော်လွန်နေပါသည်!",
+        "exceeded_desc": "သင်သတ်မှတ်ထားသော လစဉ်အသုံးစရိတ်ထက် ကျော်လွန်သွားပါပြီ။ ကျန်ရှိသော အသုံးစရိတ်များကို ပြန်လည်စစ်ဆေးရန် အကြံပြုလိုပါသည်။",
+        "status_title": "အသုံးစရိတ် အခြေအနေ",
+        "usage_desc": "သင်သည် လစဉ်အသုံးစရိတ်၏ {{percent}}% ကို အသုံးပြုပြီးပါပြီ။",
       },
       "inputs": {
         "amount_label": "ပမာဏ",
@@ -376,6 +396,18 @@ const resources = {
       },
       "common": {
         "delete": "ယခုဖျက်မည်",
+        "got_it": "သိပါပြီ",
+        "understand": "နားလည်ပါသည်"
+      },
+      "notifications": {
+        "title": "အသုံးစရိတ် သတိပေးချက်",
+        "enabled": "အကြောင်းကြားချက် ဖွင့်ထားသည်",
+        "disabled": "အကြောင်းကြားချက် ပိတ်ထားသည်",
+        "desc": "သတ်မှတ်အသုံးစရိတ် ပြည့်ခါနီးလျှင် အသိပေးချက် ရယူပါ။",
+        "tip_title": "အကြံပြုချက်",
+        "tip_message": "ဤအသိပေးချက်များကို စိတ်အနှောင့်အယှက်ဖြစ်ပါက ပရိုဖိုင် ဆက်တင် တွင် ပိတ်ထားနိုင်ပါသည်။",
+        "mute_action": "သတိပေးချက် ပိတ်မည်",
+        "go_to_settings": "ဆက်တင်သို့ သွားမည်"
       }
     }
   }
