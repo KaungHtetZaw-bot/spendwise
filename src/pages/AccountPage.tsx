@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, Camera, ShieldAlert, CheckCircle2, Loader2 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { ChevronLeft, Camera, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../store/useUserStore';
@@ -10,13 +9,12 @@ import { useToastStore } from '../store/useToastStore';
 const AccountPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { profile, setProfile } = useUserStore();
+  const { profile,updateProfile } = useUserStore();
   const { showToast } = useToastStore();
 
   const [name, setName] = useState(profile?.name || '');
   const [career, setCareer] = useState(profile?.career || '');
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [status, setStatus] = useState<'idle' | 'success'>('idle');
@@ -40,34 +38,16 @@ const AccountPage = () => {
         let avatar_url = profile.avatar_url;
 
         try {
-            // 1. Upload avatar if exists
-            if (avatarFile) {
-            avatar_url = await StoreAvatar(avatarFile, profile.user_id);
-            }
-
-            // 2. Update DB
-            const { error } = await supabase
-            .from('users')
-            .update({ name, career, avatar_url })
-            .eq('user_id', profile.user_id);
-
-            if (error) throw error;
-
-            // 3. Update local state
-            setProfile({
-            ...profile,
-            name,
-            career,
-            avatar_url,
-            });
-
-            setStatus('success');
-            setTimeout(() => setStatus('idle'), 3000);
-
+          if (avatarFile) {
+          avatar_url = await StoreAvatar(avatarFile, profile.user_id);
+          }
+          await updateProfile({name,career,avatar_url})
+          setStatus('success');
+          setTimeout(() => setStatus('idle'), 3000);
         } catch (error: any) {
-            showToast(t('errors.update_failed'),'danger')
+          showToast(t('errors.update_failed'),'danger')
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
     };
 
@@ -98,16 +78,9 @@ const AccountPage = () => {
       </div>
 
       <div className="mx-auto md:py-12 py-6 md:space-y-12 space-y-6">
-        {/* Profile Avatar Section */}
         <section className="bg-white dark:bg-slate-900 md:rounded-[2.5rem] rounded-[1.25rem] p-10 border border-slate-100 dark:border-slate-800 shadow-xl flex flex-col items-center gap-6">
           <div className="relative group">
             <div className="w-32 h-32 rounded-[3rem] bg-indigo-50 dark:bg-slate-950 flex items-center justify-center overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl relative">
-              {uploading && (
-                <div className="absolute inset-0 z-10 bg-black/20 backdrop-blur-sm flex items-center justify-center">
-                  <Loader2 className="animate-spin text-white" size={24} />
-                </div>
-              )}
-              
               { avatarPreview ? (
                 <img src={avatarPreview} alt="avatar" className="w-full h-full object-cover" />
               ) : profile?.avatar_url ? (
@@ -121,7 +94,6 @@ const AccountPage = () => {
               )}
             </div>
             
-            {/* Input file ကို Camera ခလုတ်နဲ့ ချိတ်မယ် */}
             <label className="absolute bottom-0 right-0 p-3.5 bg-indigo-600 text-white rounded-[1.25rem] shadow-lg border-4 border-white dark:border-slate-900 hover:bg-indigo-700 active:scale-90 transition-all cursor-pointer">
               <Camera size={18} />
               <input 
@@ -129,7 +101,6 @@ const AccountPage = () => {
                 className="hidden" 
                 accept="image/*" 
                 onChange={handleFileChange}
-                disabled={uploading}
               />
             </label>
           </div>
@@ -173,21 +144,21 @@ const AccountPage = () => {
         </section>
 
         {/* Danger Zone */}
-        <section className="pt-12 border-t border-slate-200 dark:border-slate-800">
+        {/* <section className="pt-12 border-t border-slate-200 dark:border-slate-800">
            <div className="flex items-center gap-2 mb-6 ml-4 text-rose-500">
               <ShieldAlert size={16} />
               <span className="text-[11px] font-black uppercase tracking-[0.2em]">{t('account.danger_zone')}</span>
            </div>
            <div className="p-8 bg-rose-50/30 dark:bg-rose-950/10 border border-rose-100 dark:border-rose-900/20 md:rounded-[2.5rem] rounded-[1.25rem] flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="text-center md:text-left">
-                <h4 className="text-sm font-black text-slate-900 dark:text-white">Delete Account</h4>
-                <p className="text-[10px] font-bold text-slate-400 mt-1">This action is permanent and cannot be undone.</p>
+                <h4 className="text-sm font-black text-slate-900 dark:text-white">{t('account.delete_title')}</h4>
+                <p className="text-[10px] font-bold text-slate-400 mt-1">{t('account.delete_desc')}</p>
               </div>
               <button className="px-8 py-4 bg-white dark:bg-slate-900 border-2 border-rose-100 dark:border-rose-900/30 text-rose-500 md:rounded-2xl rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all">
                 {t('account.delete')}
               </button>
            </div>
-        </section>
+        </section> */}
       </div>
     </div>
   );
