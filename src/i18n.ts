@@ -188,6 +188,13 @@ const resources = {
         "required_fields": "Please fill all required fields before saving.",
         "update_failed": "Update failed. Please try again.",
         "add_failed": "Failed to add transaction.",
+      },
+      "transaction": {
+        "delete_title": "Delete Transaction?",
+        "delete_desc": "This action cannot be undone. This transaction will be permanently removed from your history."
+      },
+      "common": {
+        "delete": "Delete Now",
       }
     }
   },
@@ -362,6 +369,13 @@ const resources = {
         "update_failed": "ပြင်ဆင်ရန် အဆင်မပြေပါ။ ထပ်မံကြိုးစားကြည့်ပါ။",
         "add_failed": "စာရင်းသွင်းရန် အဆင်မပြေပါ။",
         "required_fields": "မသိမ်းဆည်းမီ လိုအပ်သော အချက်အလက်များ အားလုံးကို ဖြည့်စွက်ပေးပါ။"
+      },
+      "transaction": {
+        "delete_title": "စာရင်းဖျက်ရန် သေချာပါသလား?",
+        "delete_desc": "ဤလုပ်ဆောင်ချက်ကို ပြန်ပြင်၍မရနိုင်ပါ။ ဤစာရင်းအား မှတ်တမ်းထဲမှ အပြီးအပိုင် ဖျက်သိမ်းသွားမည်ဖြစ်သည်။"
+      },
+      "common": {
+        "delete": "ယခုဖျက်မည်",
       }
     }
   }

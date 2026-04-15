@@ -8,7 +8,7 @@ import { useCurrency } from '../hooks/useCurrency';
 
 const StatsPage = () => {
   const { t } = useTranslation();
-  const [timeRange, setTimeRange] = useState('today');
+  const [timeRange, setTimeRange] = useState('month');
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const { data: transactions = [] } = useTransactions();
   const { format,currency } = useCurrency()

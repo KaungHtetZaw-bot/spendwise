@@ -8,9 +8,15 @@ import { useOutletContext } from 'react-router-dom';
 import { useToastStore } from '../store/useToastStore';
 import { useCurrency } from '../hooks/useCurrency';
 import type { Transaction } from '../type/transaction';
+import { useConfirmationStore } from '../store/useConfirmationStore';
+import { useQueryClient } from '@tanstack/react-query';
+import { useUserStore } from '../store/useUserStore';
 
 const HistoryPage = () => {
   const { t } = useTranslation();
+  const { openConfirm } = useConfirmationStore();
+  const { profile } = useUserStore()
+  const queryClient = useQueryClient();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { data: transactions = [], isLoading, isError } = useTransactions();
@@ -49,22 +55,29 @@ const HistoryPage = () => {
     setIsActionOpen(true);
   };
 
-  const onDelete = async (id: string) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this transaction?");
-    if (isConfirmed) {
-      try {
-        const { error } = await supabase
-          .from('transactions') // Table name ကို သေချာအောင် စစ်ပေးပါ
-          .delete()
-          .eq('id', id); // တကယ်လို့ ID column က user_id မဟုတ်ရင် 'id' လို့ပဲ သုံးပါ
+  const onDelete = (id: string) => {
+    openConfirm({
+      title: t('transaction.delete_title') || "Delete Transaction?",
+      description: t('transaction.delete_desc') || "This action cannot be undone. This transaction will be permanently removed from your history.",
+      confirmText: t('common.delete') || "Delete Now",
+      type: "danger",
+      onConfirm: async () => {
+        try {
+          const { error } = await supabase
+            .from('transactions')
+            .delete()
+            .eq('transaction_id', id);
 
-        if (error) throw error;
-        alert("Deleted successfully!");
-        // Note: react-query သုံးထားရင် queryClient.invalidateQueries(['transactions']) လုပ်ပေးဖို့ လိုနိုင်ပါတယ်
-      } catch (error: any) {
-        showToast(error.messge,'danger')
+          if (error) throw error;
+
+          queryClient.invalidateQueries({ queryKey: ['transactions', profile?.user_id] });
+          
+          showToast(t('success.deleted'), 'success');
+        } catch (error: any) {
+          showToast(error.message, 'danger');
+        }
       }
-    }
+    });
   };
 
 // --- EDIT LOGIC ---
@@ -180,25 +193,31 @@ const HistoryPage = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              {/* Amount - Action တွေ ပေါ်လာရင် ဒါကို ဖျောက်ထားချင်ရင် group-hover:hidden သုံးလို့ရတယ် */}
-              <div className="text-right group-hover:opacity-0 transition-opacity duration-200">
+              {/* Amount: Hover လုပ်တဲ့အခါ နေရာဖယ်ပေးဖို့ transition ထည့်ထားတယ် */}
+              <div className="text-right transition-all duration-300 group-hover:pr-24 md:group-hover:pr-28">
                 <p className={`text-sm font-black ${t.type === 'income' ? 'text-emerald-500' : 'text-slate-900 dark:text-white'}`}>
                   {t.type === 'income' ? '+' : '-'} {format(t.amount)}  
                   <span className="ml-1 text-[10px] opacity-40 font-bold">{symbol}</span>
                 </p>
               </div>
 
-              {/* Action Buttons - Hover လုပ်မှ ပေါ်လာမယ့် ပုံစံ */}
-              <div className="hidden md:absolute right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+              {/* Action Buttons: absolute အစား flex နဲ့ပဲ နေရာယူခိုင်းလိုက်တာ ပိုစိတ်ချရပါတယ် */}
+              <div className="hidden md:flex absolute right-4 items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0 z-10">
                 <button 
-                  onClick={(e) => { e.stopPropagation(); onEdit(t); }}
-                  className="p-2.5 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 rounded-xl hover:bg-indigo-600 hover:text-white transition-all shadow-sm"
+                  onClick={(e) => { 
+                    e.stopPropagation(); // Card click ကို တားဖို့
+                    onEdit(t); 
+                  }}
+                  className="p-2.5 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 rounded-xl hover:bg-indigo-600 hover:text-white transition-all shadow-sm border border-indigo-100 dark:border-indigo-800"
                 >
                   <Edit2 size={16} />
                 </button>
                 <button 
-                  onClick={(e) => { e.stopPropagation(); onDelete(t.transaction_id); }}
-                  className="p-2.5 bg-rose-50 dark:bg-rose-950/30 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                  onClick={(e) => { 
+                    e.stopPropagation(); // Card click ကို တားဖို့
+                    onDelete(t.transaction_id); 
+                  }}
+                  className="p-2.5 bg-rose-50 dark:bg-rose-950/30 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm border border-rose-100 dark:border-rose-800"
                 >
                   <Trash2 size={16} />
                 </button>
