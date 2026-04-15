@@ -68,10 +68,6 @@ export const useUserStore = create<UserState>()(
         }));
       },
 
-      setCurrency: async (c:'MMK' | 'USD') => {
-        set({})
-      },
-
       setTheme: async (newTheme: string) => {
         set({ theme: newTheme, useSystemTheme: false });
         const root = document.documentElement

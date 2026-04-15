@@ -34,12 +34,12 @@ const StatCard = ({ title, amount, variant,isLoading }: { title: string; amount:
       
       {/* Icon & Title Row */}
       <div className="flex items-center justify-between gap-2">
-        <div className={`p-1.5 md:p-3 rounded-lg md:rounded-xl ${bgClass} ${colorClass}`}>
+        <div className={`p-1.5 lg:p-3 rounded-lg md:rounded-xl ${bgClass} ${colorClass}`}>
           {isIncome && <ArrowUpRight className="w-3 h-3 md:w-6 md:h-6" />}
           {isExpense && <ArrowDownRight className="w-3 h-3 md:w-6 md:h-6" />}
           {!isIncome && !isExpense && <Wallet className="w-3 h-3 md:w-6 md:h-6" />}
         </div>
-        <p className="hidden md:block text-xs md:text-sm font-bold text-slate-400 uppercase tracking-widest">
+        <p className="hidden md:block text-xs lg:text-sm font-bold text-slate-400 uppercase tracking-widest">
           {title}
         </p>
       </div>
@@ -49,10 +49,10 @@ const StatCard = ({ title, amount, variant,isLoading }: { title: string; amount:
           {title}
         </p>
         <div className="flex items-baseline gap-0.5 md:gap-1.5">
-          <span className={`text-sm sm:text-lg md:text-3xl font-black tracking-tighter md:tracking-tight ${colorClass}`}>
+          <span className={`text-sm md:text-2xl lg:text-3xl font-black tracking-tighter md:tracking-tight ${colorClass}`}>
             {format(amount)}
           </span>
-          <span className="text-[7px] md:text-sm font-medium text-slate-400 inline">
+          <span className="text-[7px] lg:text-sm font-medium text-slate-400 inline">
             { profile?.currency ? profile.currency : 'MMK' }
           </span>
         </div>

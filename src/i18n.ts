@@ -211,6 +211,16 @@ const resources = {
         "tip_message": "You can turn off these notifications in your Profile Settings if they become distracting.",
         "mute_action": "Mute Alerts",
         "go_to_settings": "Go to Settings"
+      },
+      "insights": {
+        "title": "Insights",
+        "budget_tip": "Budget Tip",
+        "status": "Status",
+        "on_track": "On Track to Save",
+        "off_track": "Over Spending",
+        "tip_1": "Small purchases add up quickly. Try to track even the smallest expenses!",
+        "tip_2": "You're doing great! You've spent less than last week.",
+        "tip_3": "Consider reducing non-essential spending this weekend."
       }
     }
   },
@@ -408,6 +418,16 @@ const resources = {
         "tip_message": "ဤအသိပေးချက်များကို စိတ်အနှောင့်အယှက်ဖြစ်ပါက ပရိုဖိုင် ဆက်တင် တွင် ပိတ်ထားနိုင်ပါသည်။",
         "mute_action": "သတိပေးချက် ပိတ်မည်",
         "go_to_settings": "ဆက်တင်သို့ သွားမည်"
+      },
+      "insights": {
+        "title": "သုံးသပ်ချက်",
+        "budget_tip": "အကြံပြုချက်",
+        "status": "အခြေအနေ",
+        "on_track": "စုဆောင်းနိုင်မည့် အခြေအနေ",
+        "off_track": "အသုံးစရိတ် များနေသည်",
+        "tip_1": "အသေးအမွှား အသုံးစရိတ်လေးတွေက စုလိုက်ရင် များသွားတတ်ပါတယ်။ အကုန်လုံးကို မှတ်သားထားဖို့ မမေ့ပါနဲ့!",
+        "tip_2": "အရမ်းကောင်းပါတယ်! ဒီအပတ်မှာ ပြီးခဲ့တဲ့အပတ်ကထက် ပိုချွေတာနိုင်ခဲ့ပါတယ်။",
+        "tip_3": "ဒီတစ်ပတ် ပိတ်ရက်မှာ မလိုအပ်တဲ့ အသုံးစရိတ်တွေကို လျှော့ချဖို့ အကြံပြုလိုပါတယ်။"
       }
     }
   }
