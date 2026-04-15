@@ -11,7 +11,7 @@ interface UserState {
   useSystemTheme: boolean;
   theme: string;
   fetchProfile: (userId: string) => Promise<void>;
-  updateProfile: (updates: Profile) => Promise<void>;
+  updateProfile: (updates: Partial<Profile>) => Promise<void>;
   setTheme: (newTheme: string) => void;
   setLanguage: (lang: string) => void;
   setUseSystemTheme: (val: boolean) => void;
@@ -43,14 +43,14 @@ export const useUserStore = create<UserState>()(
         }
       },
 
-      updateProfile: async (updates) => {
+      updateProfile: async (updates:Partial<Profile>) => {
         const profile = get().profile;
         if (!profile) return;
 
         const { error } = await supabase
           .from('users')
           .update(updates)
-          .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+          .eq('user_id', profile.user_id);
 
         if (!error) {
           set({ profile: { ...profile, ...updates } });
