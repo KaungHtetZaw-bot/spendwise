@@ -25,6 +25,11 @@ const AuthPage = () => {
   const { showToast } = useToastStore();
 
   const navigate = useNavigate();
+  const DEFAULT_RATE = 4500;
+
+  const convertToStoreAmount = (amount: number) => {
+    return currency === 'USD' ? amount * DEFAULT_RATE : amount;
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -55,14 +60,17 @@ const AuthPage = () => {
           if (data.user) {
 
             const publicUrl = avatarFile ? await StoreAvatar(avatarFile, data.user.id) : null;
+            const storeAmount = convertToStoreAmount(income) || income
+            const budget = storeAmount * 0.8;
             await supabase.from('users').insert([
               {
                 user_id: data.user.id,
                 name: fullName,
                 career: career,
-                monthly_income: income,
+                monthly_income: storeAmount,
                 currency,
                 avatar_url: publicUrl,
+                monthly_budget: budget,
               }
             ]);
             showToast('success.register_success','success')
