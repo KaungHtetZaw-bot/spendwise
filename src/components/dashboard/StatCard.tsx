@@ -2,7 +2,7 @@ import { ArrowUpRight, ArrowDownRight, Wallet } from 'lucide-react'; // Lucide i
 import { useUserStore } from '../../store/useUserStore';
 import { useCurrency } from '../../hooks/useCurrency';
 
-const StatCard = ({ title, amount, variant }: { title: string; amount: number; variant: 'income' | 'expense' | 'neutral' }) => {
+const StatCard = ({ title, amount, variant,isLoading }: { title: string; amount: number; variant: 'income' | 'expense' | 'neutral',isLoading:boolean }) => {
   const isIncome = variant === 'income';
   const isExpense = variant === 'expense';
   const { profile } = useUserStore()
@@ -11,6 +11,24 @@ const StatCard = ({ title, amount, variant }: { title: string; amount: number; v
   const colorClass = isIncome ? 'text-emerald-500' : isExpense ? 'text-rose-500' : 'text-indigo-500';
   const bgClass = isIncome ? 'bg-emerald-50 dark:bg-emerald-500/10' : isExpense ? 'bg-rose-50 dark:bg-rose-500/10' : 'bg-indigo-50 dark:bg-indigo-500/10';
 
+  if (isLoading) {
+    return (
+      <div className="p-3 md:p-6 min-h-[100px] md:min-h-[160px] rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 animate-pulse flex flex-col justify-between">
+        <div className="flex items-center justify-between">
+          <div className="p-1.5 md:p-3 rounded-lg md:rounded-xl bg-slate-100 dark:bg-slate-800 w-6 h-6 md:w-12 md:h-12" />
+          <div className="hidden md:block h-4 w-20 bg-slate-100 dark:bg-slate-800 rounded shadow-sm" />
+        </div>
+        <div className="mt-2 md:mt-0 space-y-2">
+          <div className="md:hidden h-2 w-12 bg-slate-100 dark:bg-slate-800 rounded" />
+          <div className="flex items-baseline gap-2">
+            <div className="h-6 md:h-10 w-24 md:w-32 bg-slate-100 dark:bg-slate-800 rounded shadow-sm" />
+            <div className="h-3 w-8 bg-slate-50 dark:bg-slate-800/50 rounded" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <div className="group p-3 md:p-6 min-h-[100px] md:min-h-[160px] rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all active:scale-95 md:hover:shadow-md flex flex-col justify-between overflow-hidden">
       

@@ -1,10 +1,20 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { useUserStore } from '../store/useUserStore';
-import type { Transaction,Category, FormData } from '../type/transaction';
+import type { Transaction,Category, FormData,TransactionPayload } from '../type/transaction';
 
 const convertToStoreAmount = (amount: number, currency: 'USD' | 'MMK', rate: number) => {
   return currency === 'USD' ? amount * rate : amount;
+};
+
+const formatDate = (date: Date | string | null) => {
+  const d = date ? new Date(date) : new Date();
+
+  return d.getFullYear() +
+    '-' +
+    String(d.getMonth() + 1).padStart(2, '0') +
+    '-' +
+    String(d.getDate()).padStart(2, '0');
 };
 
 export const useTransactions = () => {
@@ -33,14 +43,15 @@ export const useAddTransaction = () => {
   const userId = profile?.user_id;
   
   return useMutation({
-    mutationFn: async (newTx:FormData) => {
+    mutationFn: async (newTx:TransactionPayload) => {
       if (!userId) throw new Error('User not authenticated');
       const rate = profile?.exchange_rate || 4500;
       const currentCurrency = profile?.currency || 'MMK';
-      const formattedDate = newTx.date 
-          ? new Date(newTx.date).toISOString().split('T')[0] 
-          : new Date().toISOString().split('T')[0];
-      const cleanAmount = Number(newTx.amount) || 0;
+      const formattedDate = formatDate(newTx.date);
+      const cleanAmount = Number(newTx.amount);
+      if (isNaN(cleanAmount)) {
+        throw new Error("Invalid amount");
+      }
       const storeAmount = convertToStoreAmount(cleanAmount, currentCurrency, rate);
       const transactionData = {
         ...newTx,
@@ -48,6 +59,7 @@ export const useAddTransaction = () => {
         user_id: userId,
         amount: storeAmount,
       };
+
       const { data, error } = await supabase
         .from('transactions')
         .insert([ transactionData ])
@@ -69,7 +81,7 @@ export const useEditTransaction = () => {
   const userId = profile?.user_id;
 
   return useMutation({
-    mutationFn: async ({ transactionId, updates }: { transactionId: string; updates: FormData }) => {
+    mutationFn: async ({ transactionId, updates }: { transactionId: string; updates: TransactionPayload }) => {
       if (!userId) throw new Error('User not authenticated');
       const rate = profile?.exchange_rate || 4500;
       const currentCurrency = profile?.currency || 'MMK';

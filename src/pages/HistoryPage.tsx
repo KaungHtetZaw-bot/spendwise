@@ -7,6 +7,7 @@ import TransactionActionSheet from '../components/TransactionActionSheet';
 import { useOutletContext } from 'react-router-dom';
 import { useToastStore } from '../store/useToastStore';
 import { useCurrency } from '../hooks/useCurrency';
+import type { Transaction } from '../type/transaction';
 
 const HistoryPage = () => {
   const { t } = useTranslation();
@@ -67,7 +68,7 @@ const HistoryPage = () => {
   };
 
 // --- EDIT LOGIC ---
-  const onEdit = (transaction: any) => {
+  const onEdit = (transaction: Transaction) => {
     onEditAction(transaction);
     setIsActionOpen(false);
   };
@@ -144,7 +145,10 @@ const HistoryPage = () => {
 
       {/* Transactions List Area */}
       <div className="mx-auto space-y-3">
-        {filteredTransactions.length > 0 ? (
+        { isLoading ? (
+          // Loading ဖြစ်နေရင် Skeleton ၅ ခု ပြမယ်
+          Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
+        ): filteredTransactions.length > 0 ? (
           filteredTransactions.map((t,i) => (
             <div 
             key={i} 
@@ -233,3 +237,19 @@ const HistoryPage = () => {
 };
 
 export default HistoryPage;
+
+const SkeletonRow = () => (
+  <div className="flex items-center justify-between md:p-4 p-2 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 animate-pulse">
+    <div className="flex gap-3 items-center">
+      <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800" />
+      <div className="space-y-2">
+        <div className="h-3 w-20 bg-slate-200 dark:bg-slate-800 rounded" />
+        <div className="h-2 w-28 bg-slate-100 dark:bg-slate-800/50 rounded" />
+      </div>
+    </div>
+    <div className="flex flex-col items-end space-y-2">
+      <div className="h-3 w-16 bg-slate-200 dark:bg-slate-800 rounded" />
+      {/* <div className="h-2 w-12 bg-slate-100 dark:bg-slate-800/50 rounded" /> */}
+    </div>
+  </div>
+);

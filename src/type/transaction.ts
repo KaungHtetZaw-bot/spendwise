@@ -22,9 +22,17 @@ interface Category {
 interface FormData {
   type: 'income' | 'expense';
   amount: number | '';
-  date: string;
+  date: Date | null;
   category_id: string;
   note: string;
 }
 
-export type { Transaction, Category, FormData };
+type TransactionPayload = {
+  amount: number;
+  type: 'income' | 'expense';
+  category_id: string;
+  date: string; // YYYY-MM-DD
+  note: string;
+};
+
+export type { Transaction, Category, FormData, TransactionPayload };

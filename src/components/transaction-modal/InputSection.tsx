@@ -12,14 +12,14 @@ interface InputSectionProps {
 
 const InputSection = ({formData,setFormData, inputName}:InputSectionProps) => {
   const { t } = useTranslation();
-  const { currency } = useCurrency();
+  const { currency,symbol } = useCurrency();
   return (
     <div>
         <div className="space-y-2">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2 flex items-center gap-2">
               {inputName === 'amount' ? (
                 <>
-                 <DollarSign size={12} /> {t('inputs.amount_label')}
+                 {symbol} {t('inputs.amount_label')}
                 </>
               ) : (
                 <>

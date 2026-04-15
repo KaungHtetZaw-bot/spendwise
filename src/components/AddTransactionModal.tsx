@@ -19,7 +19,7 @@ const AddTransactionModal = ({ isOpen, onClose, hasData }: { isOpen: boolean; on
   const [formData, setFormData] = useState<FormData>({
     type: 'expense' as 'income' | 'expense',
     amount: '',
-    date: String(new Date().toISOString().split('T')[0]),
+    date: new Date(),
     category_id: '',
     note: '',
   });
@@ -30,7 +30,7 @@ const AddTransactionModal = ({ isOpen, onClose, hasData }: { isOpen: boolean; on
         setFormData({
           type: hasData.type,
           amount: hasData.amount,
-          date: hasData.date,
+          date: hasData.date ? new Date(hasData.date) : null,
           category_id: hasData.category_id,
           note: hasData.note,
         });
@@ -39,7 +39,7 @@ const AddTransactionModal = ({ isOpen, onClose, hasData }: { isOpen: boolean; on
         setFormData({
           type: 'expense',
           amount: '',
-          date: String(new Date().toISOString().split('T')[0]),
+          date: new Date(),
           category_id: '',
           note: '',
         });
@@ -56,7 +56,7 @@ const AddTransactionModal = ({ isOpen, onClose, hasData }: { isOpen: boolean; on
       amount: Number(formData.amount),
       type: formData.type,
       category_id: formData.category_id,
-      date: formData.date.toString().split('T')[0],
+      date: formData.date!.toISOString().split('T')[0],
       note: formData.note,
     };
 
@@ -70,28 +70,29 @@ const AddTransactionModal = ({ isOpen, onClose, hasData }: { isOpen: boolean; on
             onSuccess: () => {
               showToast(t('success.transaction_updated'),'success')
             },
-            onError: () => {
-              showToast(t('errors.update_failed'),'danger')
-              setIsSubmitting(false);
-            }
+            // onError: () => {
+            //   showToast(t('errors.update_failed'),'danger')
+            //   setIsSubmitting(false);
+            // }
           }
         );
       }else{
+        console.log("else")
         addTransaction(payload, {
           onSuccess: () => {
             showToast(t('success.added'),'success')
           },
-          onError: () => {
-            showToast(t('errors.add_failed'), 'danger');
-            setIsSubmitting(false);
-          }
+          // onError: () => {
+          //   showToast(t('errors.add_failed'), 'danger');
+          //   setIsSubmitting(false);
+          // }
       });
       }
 
       setFormData({
         type: formData.type,
         amount: '',
-        date: String(new Date().toISOString().split('T')[0]),
+        date: new Date(),
         category_id: '',
         note: '',
       });

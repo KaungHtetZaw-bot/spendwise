@@ -23,13 +23,13 @@ const MainPage = () => {
   return (
     <div className="MD:space-y-8 space-y-4">
       <section className="grid grid-cols-3 md:gap-4 gap-2 pt-2.5">
-        <StatCard title={t('stats.total_income')} amount={income} variant="income" />
-        <StatCard title={t('stats.total_expense')} amount={expense} variant="expense" />
-        <StatCard title={t('stats.total_net')} amount={balance} variant="neutral" />
+        <StatCard title={t('stats.total_income')} amount={income} variant="income" isLoading={isLoading}/>
+        <StatCard title={t('stats.total_expense')} amount={expense} variant="expense" isLoading={isLoading}/>
+        <StatCard title={t('stats.total_net')} amount={balance} variant="neutral" isLoading={isLoading}/>
       </section>
 
       <OverviewChart allTransactions={transactions}/>
-      <RecentList transactions={transactionsToShow} />
+      <RecentList transactions={transactionsToShow} isLoading={isLoading}/>
       
     </div>
   );

@@ -36,10 +36,6 @@ const MainLayout = () => {
     }
   }, [location.pathname]);
 
-  useEffect(() => {
-    console.log("History updated in MainLayout:", history);
-  }, [history]);
-
   return (
     <div className="h-screen flex flex-col bg-[#F8F9FD] dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
         <MobileHeader />

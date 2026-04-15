@@ -90,6 +90,7 @@ const resources = {
         "logout_confirm_btn": "Logout",
       },
       "time": {
+        "select_date": "Select Date",
         "today": "Today",
         "week": "This Week",
         "month": "This Month",
@@ -264,6 +265,7 @@ const resources = {
         "logout_confirm_btn": "ထွက်မည်",
       },
       "time": {
+        "select_date": "ရက်စွဲရွေးချယ်ရန်",
         "today": "ယနေ့",
         "week": "ယခုအပတ်",
         "month": "ယခုလ",
