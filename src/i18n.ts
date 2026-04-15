@@ -52,6 +52,7 @@ const resources = {
       "remaining": "Remaining",
       "over_limit_warning": "Limit Exceeded!",
       "budget_warning": "Approaching Limit",
+      "adjust_budget": "Adjust Budget",
       "nav": {
         "home": "Home",
         "history": "History",
@@ -76,7 +77,17 @@ const resources = {
         "delete": "Delete Account & Data",
         "success": "Profile updated!",
         "job_placeholder": "Developer, Student, etc.",
-        "name_placeholder": "Your Name"
+        "name_placeholder": "Your Name",
+        "delete_title": "Delete Account",
+        "delete_desc": "This action is permanent and cannot be undone.",
+        "confirm_delete_title": "Are you absolutely sure?",
+        "confirm_delete_desc": "All your transactions, profile data, and settings will be permanently removed from our servers.",
+        "delete_confirm_title": "Delete Account?",
+        "delete_confirm_msg": "Are you sure? All your data, including transactions and profile settings, will be permanently deleted. This cannot be undone.",
+        "delete_confirm_btn": "Yes, Delete Everything",
+        "logout_confirm_title": "Logout",
+        "logout_confirm_msg": "Are you sure you want to sign out of your account?",
+        "logout_confirm_btn": "Logout",
       },
       "time": {
         "today": "Today",
@@ -128,6 +139,16 @@ const resources = {
         "continue": "Continue",
         "complete_setup": "Complete Setup",
         "processing": "Processing..."
+      },
+      "budgetPage": {
+        "settings_title": "Financial Settings",
+        "settings_desc": "Income & Spending Plan",
+        "target_budget": "Target Budget",
+        "allocation": "Allocation",
+        "save_more": "Save More",
+        "balanced": "Balanced",
+        "spend_more": "Spend More",
+        "update_plan": "Update Finance Plan"
       },
       "inputs": {
         "amount_label": "Amount",
@@ -204,6 +225,7 @@ const resources = {
       "remaining": "ကျန်ရှိ",
       "over_limit_warning": "ကန့်သတ်ချက်ထက် ကျော်လွန်နေသည်!",
       "budget_warning": "ကန့်သတ်ချက် နီးကပ်နေသည်",
+      "adjust_budget": "အသုံးစရိတ် ပြင်ဆင်ရန်",
       "nav": {
         "home": "ပင်မ",
         "history": "မှတ်တမ်း",
@@ -225,11 +247,21 @@ const resources = {
         "job_label": "အလုပ်အကိုင် / ရာထူး",
         "save": "ပြင်ဆင်မှုများ သိမ်းဆည်းရန်",
         "saving": "သိမ်းဆည်းနေပါသည်...",
-        "danger_zone": "အန္တရာယ်ရှိ နယ်မြေ",
-        "delete": "အကောင့်နှင့် အချက်အလက်များ ဖျက်ရန်",
         "success": "ပရိုဖိုင် ပြင်ဆင်ပြီးပါပြီ။",
         "job_placeholder": "Developer ၊ ကျောင်းသား စသဖြင့်...",
-        "name_placeholder": "သင့်အမည်"
+        "name_placeholder": "သင့်အမည်",
+        "danger_zone": "အထူးသတိပြုရန်",
+        "delete": "အကောင့်ဖျက်မည်",
+        "delete_title": "အကောင့်ဖျက်ရန်",
+        "delete_desc": "ဤလုပ်ဆောင်ချက်သည် အပြီးအပိုင်ဖြစ်ပြီး ပြန်လည်ပြင်ဆင်၍မရနိုင်ပါ။",
+        "confirm_delete_title": "သေချာပါသလား?",
+        "confirm_delete_desc": "သင့်ရဲ့ မှတ်တမ်းများ၊ ပရိုဖိုင်အချက်အလက်များနှင့် သတ်မှတ်ချက်များအားလုံးကို ဆာဗာမှ အပြီးအပိုင် ဖျက်သိမ်းသွားမည် ဖြစ်သည်။",
+        "delete_confirm_title": "အကောင့်ဖျက်ရန် သေချာပါသလား?",
+        "delete_confirm_msg": "သင့်ရဲ့ မှတ်တမ်းများ၊ အချက်အလက်များအားလုံး အပြီးအပိုင် ပျက်သွားမည်ဖြစ်ပြီး ပြန်လည်ရယူ၍ မရနိုင်တော့ပါ။",
+        "delete_confirm_btn": "သေချာသည်၊ အားလုံးဖျက်မည်",
+        "logout_confirm_title": "အကောင့်မှ ထွက်ရန်",
+        "logout_confirm_msg": "သင့်အကောင့်မှ ထွက်ရန် သေချာပါသလား?",
+        "logout_confirm_btn": "ထွက်မည်",
       },
       "time": {
         "today": "ယနေ့",
@@ -281,6 +313,16 @@ const resources = {
         "continue": "ဆက်သွားရန်",
         "complete_setup": "အပြီးသတ်မည်",
         "processing": "လုပ်ဆောင်နေပါသည်..."
+      },
+      "budgetPage": {
+        "settings_title": "ငွေကြေးဆိုင်ရာ သတ်မှတ်ချက်များ",
+        "settings_desc": "ဝင်ငွေနှင့် အသုံးစရိတ် စီမံကိန်း",
+        "target_budget": "သုံးစွဲမည့် ပမာဏ",
+        "allocation": "သတ်မှတ်ချက်",
+        "save_more": "ပိုစုမယ်",
+        "balanced": "မျှတစေမယ်",
+        "spend_more": "ပိုသုံးမယ်",
+        "update_plan": "အတည်ပြုမည်"
       },
       "inputs": {
         "amount_label": "ပမာဏ",
