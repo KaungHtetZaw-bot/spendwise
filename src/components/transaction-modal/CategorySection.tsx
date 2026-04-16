@@ -8,8 +8,8 @@ interface CategorySectionProps {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 }
 const CategorySection = ({ formData, setFormData }: CategorySectionProps) => {
-    const { data: categories = [], error } = useCategories();
-    const { mutate: addCategory, error: addCategoryError } = useAddCategory();
+    const { data: categories = [] } = useCategories();
+    const { mutate: addCategory } = useAddCategory();
     const [isAdding, setIsAdding] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [categoryId, setCategoryId] = useState(formData.category_id || '');

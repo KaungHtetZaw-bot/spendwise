@@ -19,7 +19,7 @@ const HistoryPage = () => {
   const queryClient = useQueryClient();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { data: transactions = [], isLoading, isError } = useTransactions();
+  const { data: transactions = [], isLoading } = useTransactions();
   const [selectedT, setSelectedT] = useState<any>(null);
   const [isActionOpen, setIsActionOpen] = useState(false);
   const { onEditAction } = useOutletContext<any>();

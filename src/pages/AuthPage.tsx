@@ -130,6 +130,26 @@ const AuthPage = () => {
     }
   };
 
+  // const handleForgotPassword = async () => {
+  //   if (!email) {
+  //     showToast('Please enter your email first', 'danger');
+  //     return;
+  //   }
+    
+  //   setLoading(true);
+  //   try {
+  //     const { error } = await supabase.auth.resetPasswordForEmail(email, {
+  //         redirectTo: `${window.location.origin}/account`, // User link နှိပ်ရင် account page ကို ရောက်သွားမယ်
+  //     });
+  //     if (error) throw error;
+  //     showToast('Password reset link sent to your email!', 'success');
+  //   } catch (error: any) {
+  //     showToast(error.message, 'danger');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   useEffect(() => {
     setIsLogin(mode !== 'register');
     setStep(1);

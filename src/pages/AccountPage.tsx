@@ -1,16 +1,21 @@
 import { useState } from 'react';
-import { ChevronLeft, Camera, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, Camera, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../store/useUserStore';
 import { StoreAvatar } from '../lib/helper';
 import { useToastStore } from '../store/useToastStore';
+import { supabase } from '../lib/supabase';
+
 
 const AccountPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { profile,updateProfile } = useUserStore();
   const { showToast } = useToastStore();
+
+  const [newPassword, setNewPassword] = useState('');
+  const [isChangingPw, setIsChangingPw] = useState(false);
 
   const [name, setName] = useState(profile?.name || '');
   const [career, setCareer] = useState(profile?.career || '');
@@ -27,28 +32,48 @@ const AccountPage = () => {
   };
 
     const handleUpdate = async () => {
-        if (!profile) return;
-        if (
-        name === profile.name &&
-        career === profile.career &&
-        !avatarFile
-        ) return;
-        setLoading(true);
+      if (!profile) return;
+      if (
+      name === profile.name &&
+      career === profile.career &&
+      !avatarFile
+      ) return;
+      setLoading(true);
 
-        let avatar_url = profile.avatar_url;
+      let avatar_url = profile.avatar_url;
 
-        try {
-          if (avatarFile) {
-          avatar_url = await StoreAvatar(avatarFile, profile.user_id);
-          }
-          await updateProfile({name,career,avatar_url})
-          setStatus('success');
-          setTimeout(() => setStatus('idle'), 3000);
-        } catch (error: any) {
-          showToast(t('errors.update_failed'),'danger')
-        } finally {
-          setLoading(false);
+      try {
+        if (avatarFile) {
+        avatar_url = await StoreAvatar(avatarFile, profile.user_id);
         }
+        await updateProfile({name,career,avatar_url})
+        setStatus('success');
+        setTimeout(() => setStatus('idle'), 3000);
+      } catch (error: any) {
+        showToast(t('errors.update_failed'),'danger')
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const handlePasswordChange = async () => {
+      if (newPassword.length < 6) {
+          showToast(t('errors.password_too_short'), 'danger');
+          return;
+      }
+      
+      setIsChangingPw(true);
+      try {
+          const { error } = await supabase.auth.updateUser({ password: newPassword });
+          if (error) throw error;
+          
+          showToast(t('success.password_updated'), 'success');
+          setNewPassword(''); // input ကို clear လုပ်မယ်
+      } catch (error: any) {
+          showToast(error.message, 'danger');
+      } finally {
+          setIsChangingPw(false);
+      }
     };
 
   return (
@@ -141,6 +166,29 @@ const AccountPage = () => {
           >
             {loading ? t('account.saving') : t('account.save')}
           </button>
+        </section>
+
+        <section className="bg-white dark:bg-slate-900 md:rounded-[2.5rem] rounded-[1.25rem] p-8 border border-slate-100 dark:border-slate-800 shadow-sm space-y-4">
+          <h3 className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-2">Security</h3>
+          <div className="flex flex-col md:flex-row gap-4 items-end">
+            <div className="flex-1 space-y-2 w-full">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">New Password</label>
+              <input 
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-transparent focus:border-indigo-500/30 p-4 rounded-2xl outline-none font-bold text-slate-700 dark:text-white transition-all shadow-inner"
+                placeholder="••••••••"
+              />
+            </div>
+            <button 
+              onClick={handlePasswordChange}
+              disabled={isChangingPw || !newPassword}
+              className="md:w-auto w-full px-8 py-4.5 bg-slate-900 dark:bg-white dark:text-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-600 dark:hover:bg-indigo-500 dark:hover:text-white transition-all disabled:opacity-50"
+            >
+              {isChangingPw ? 'Updating...' : 'Update Password'}
+            </button>
+          </div>
         </section>
 
         {/* Danger Zone */}

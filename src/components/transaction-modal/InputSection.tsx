@@ -1,6 +1,6 @@
 import React from 'react'
 import type { FormData } from '../../type/transaction'
-import { DollarSign, PenLine } from "lucide-react"
+import { PenLine } from "lucide-react"
 import { useTranslation } from 'react-i18next';
 import { useCurrency } from '../../hooks/useCurrency';
 
