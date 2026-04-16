@@ -143,7 +143,16 @@ const resources = {
         "sign_in": "Sign In",
         "continue": "Continue",
         "complete_setup": "Complete Setup",
-        "processing": "Processing..."
+        "processing": "Processing...",
+        "check_email": "Check your Email",
+        "verification_sent": "We've sent a 6-digit code to",
+        "back_to_reg": "Back to Registration",
+        "resend_code": "Resend Code",
+        "didnt_receive": "Didn't receive the code?",
+        "verify_prompt": "Please verify your email to complete registration",
+        "verify_button": "Verify Email",
+        "already_verified": "Already verified? Login here",
+        'verifying':"Verifying..."
       },
       "budgetPage": {
         "settings_title": "Financial Settings",
@@ -290,7 +299,7 @@ const resources = {
         "save": "ပြင်ဆင်မှုများ သိမ်းဆည်းရန်",
         "saving": "သိမ်းဆည်းနေပါသည်...",
         "success": "ပရိုဖိုင် ပြင်ဆင်ပြီးပါပြီ။",
-        "job_placeholder": "Developer ၊ ကျောင်းသား စသဖြင့်...",
+        "job_placeholder": "enployeer ၊ ကျောင်းသား စသဖြင့်...",
         "name_placeholder": "သင့်အမည်",
         "danger_zone": "အထူးသတိပြုရန်",
         "delete": "အကောင့်ဖျက်မည်",
@@ -355,7 +364,16 @@ const resources = {
         "sign_in": "ဝင်ရောက်မည်",
         "continue": "ဆက်သွားရန်",
         "complete_setup": "အပြီးသတ်မည်",
-        "processing": "လုပ်ဆောင်နေပါသည်..."
+        "processing": "လုပ်ဆောင်နေပါသည်...",
+        "check_email": "အီးမေးလ်ကို စစ်ဆေးပေးပါ",
+        "verification_sent": "ဂဏန်း ၆ လုံးပါသော ကုဒ်ကို ပေးပို့ထားသော အီးမေးလ်မှာ -",
+        "back_to_reg": "အကောင့်ဖွင့်ခြင်းသို့ ပြန်သွားမည်",
+        "resend_code": "ကုဒ်ပြန်ပို့မည်",
+        "didnt_receive": "ကုဒ်မရရှိသေးပါက -",
+        "verify_prompt": "အကောင့်ဖွင့်ခြင်း ပြီးဆုံးရန် အီးမေးလ်ကို အတည်ပြုပေးပါ",
+        "verify_button": "အီးမေးလ် အတည်ပြုမည်",
+        "already_verified": "အတည်ပြုပြီးပြီလား? ဤနေရာတွင် Login ဝင်ပါ",
+        'verifying':"အတည်ပြုနေသည်..."
       },
       "budgetPage": {
         "settings_title": "ငွေကြေးဆိုင်ရာ သတ်မှတ်ချက်များ",
