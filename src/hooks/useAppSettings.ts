@@ -5,7 +5,7 @@ export const useAppSettings = () => {
   const { i18n } = useTranslation();
   const { theme, setTheme, setLanguage, profile, setProfile } = useUserStore();
 
-  const isDark = theme.toLowerCase() === 'dark';
+  const isDark = (theme || 'light').toLowerCase() === 'dark';
   const isMM = i18n.language === 'mm';
   const isUSD = profile?.currency === 'USD';
 
@@ -25,8 +25,10 @@ export const useAppSettings = () => {
   };
 
   const toggleCurrency = () => {
-    const nextCurrency = isUSD ? 'MMK' : 'USD';
-    setProfile({ currency: nextCurrency });
+    if (profile) {
+        const nextCurrency = isUSD ? 'MMK' : 'USD';
+        setProfile({ currency: nextCurrency });
+    }
   };
 
   return {

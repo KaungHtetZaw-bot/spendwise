@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
+import { useAppSettings } from "../hooks/useAppSettings"; // ငါတို့ဆောက်ခဲ့တဲ့ hook
 import { 
-  Wallet, 
   TrendingUp, 
   ShieldCheck, 
   ArrowRight, 
@@ -11,17 +11,32 @@ import { useTranslation } from "react-i18next";
 
 const Index = () => {
   const { t } = useTranslation();
+  const { isMM, toggleLanguage } = useAppSettings();
   return (
     <div className="min-h-[100dvh] h-full overflow-y-auto bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-indigo-100">
       
       {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 backdrop-blur-md border-b border-slate-100 dark:border-slate-800/50 bg-white/70 dark:bg-slate-950/70">
         <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
-          <div className="flex items-center gap-2 font-black text-xl text-indigo-600 dark:text-indigo-400">
-            <Wallet className="w-8 h-8" />
-            <span className="tracking-tight">SpendWise</span>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+                <PieChart size={18} />
+            </div>
+            <h1 className="text-lg font-black tracking-tighter text-slate-900 dark:text-white uppercase italic">
+                Spend<span className="text-indigo-600">Wise</span>
+            </h1>
           </div>
           <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 mr-2">
+              <span className={`text-[10px] font-black ${!isMM ? 'text-indigo-600' : 'text-slate-400'}`}>EN</span>
+              <button 
+                onClick={toggleLanguage}
+                className={`w-10 h-5 rounded-full relative transition-all duration-500 ${isMM ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-slate-800'}`}
+            >
+                <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all duration-500 ${isMM ? 'left-6' : 'left-1'}`} />
+              </button>
+              <span className={`text-[10px] font-black ${isMM ? 'text-indigo-600' : 'text-slate-400'}`}>MM</span>
+          </div>
             <Link to="/auth?mode=login" className="text-sm font-bold hover:text-indigo-500 transition-colors">{ t('landing.login')}</Link>
             <Link to="/auth?mode=register" className="px-5 py-2 bg-indigo-600 text-white rounded-full text-sm font-bold shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all active:scale-95">
               { t('landing.get_started')}
@@ -55,7 +70,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Mockup Preview - Dashboard အသွင်ပြောင်းလဲပြသခြင်း */}
         <div className="mt-20 max-w-5xl mx-auto relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2rem] blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
           <div className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] p-4 shadow-2xl overflow-hidden">

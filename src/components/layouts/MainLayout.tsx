@@ -45,17 +45,14 @@ const MainLayout = () => {
         <Navbar onAddClick={() => {setIsModalOpen(true)}} />
         
 
-        <div className="flex-1 flex flex-row max-w-[1400px] mx-auto w-full px-4 overflow-hidden">
-      
-          {/* Left Panel */}
+        <div className="flex-1 flex flex-row w-full max-w-[1400px] mx-auto px-4 md:px-8 relative justify-center overflow-hidden">
           <AnimatePresence>
-            {!isSettingsPage && (
+            {location.pathname !== '/settings' && (
               <motion.aside 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3, ease: "circOut" }}
-                className="hidden md:block lg:w-72 w-52 pt-24 pb-8 sticky top-0 h-full overflow-y-auto hide-scrollbar"
+                className="hidden lg:block w-72 pt-24 pb-8 absolute left-8 top-0 h-full"
               >
                 <QuickActionsCard onAddClick={() => setIsModalOpen(true)} />
               </motion.aside>
@@ -64,14 +61,16 @@ const MainLayout = () => {
 
           <main 
             ref={scrollContainerRef} 
-            className="flex-1 overflow-y-auto md:flex-end  px-0 md:px-4 pb-24 md:pt-24 md:pb-8 hide-scrollbar transition-all duration-500 mx-auto"
+            className="flex-1 overflow-y-auto w-full max-w-3xl px-0 md:px-8 pb-24 md:pt-24 md:pb-8 hide-scrollbar transition-all duration-500 mx-auto"
           >
-            <Outlet context={{ history, setHistory, setIsModalOpen, onEditAction }}/>
+              <Outlet context={{ history, setHistory, setIsModalOpen, onEditAction }}/>
           </main>
 
-          <aside className="hidden xl:block w-72 pt-24 pb-8 sticky top-0 h-full overflow-y-auto hide-scrollbar">
-            <SummaryCard />
-          </aside>
+          {!isSettingsPage && (
+            <aside className="hidden xl:block w-72 pt-24 pb-8 absolute right-8 top-0 h-full">
+              <SummaryCard />
+            </aside>
+          )}
         </div>
         <AddTransactionModal isOpen={isModalOpen} onClose={handleCloseModal} hasData={editingData} />
         {isOpen && (

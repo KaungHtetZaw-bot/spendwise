@@ -38,7 +38,7 @@ const SettingPage = () => {
       description: t('account.logout_confirm_msg'),
       confirmText: t('account.logout_confirm_btn'),
       type: "warning",
-      onConfirm: async() => {logout}
+      onConfirm: async() => {logout()}
     })
   }
 
