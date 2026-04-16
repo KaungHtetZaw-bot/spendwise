@@ -5,17 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../store/useUserStore';
 import { StoreAvatar } from '../lib/helper';
 import { useToastStore } from '../store/useToastStore';
-import { supabase } from '../lib/supabase';
-
+import ChangePasswordSection from '../components/Setting/account/ChangePasswordSection';
 
 const AccountPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { profile,updateProfile } = useUserStore();
   const { showToast } = useToastStore();
-
-  const [newPassword, setNewPassword] = useState('');
-  const [isChangingPw, setIsChangingPw] = useState(false);
 
   const [name, setName] = useState(profile?.name || '');
   const [career, setCareer] = useState(profile?.career || '');
@@ -26,10 +22,12 @@ const AccountPage = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    setAvatarPreview(URL.createObjectURL(file));
-    setAvatarFile(file);
-  };
+      if (!file) return;
+      setAvatarPreview(URL.createObjectURL(file));
+      setAvatarFile(file);
+    };
+
+    const isUnchanged = name === profile?.name && career === profile?.career && !avatarFile;
 
     const handleUpdate = async () => {
       if (!profile) return;
@@ -53,26 +51,6 @@ const AccountPage = () => {
         showToast(t('errors.update_failed'),'danger')
       } finally {
         setLoading(false);
-      }
-    };
-
-    const handlePasswordChange = async () => {
-      if (newPassword.length < 6) {
-          showToast(t('errors.password_too_short'), 'danger');
-          return;
-      }
-      
-      setIsChangingPw(true);
-      try {
-          const { error } = await supabase.auth.updateUser({ password: newPassword });
-          if (error) throw error;
-          
-          showToast(t('success.password_updated'), 'success');
-          setNewPassword('');
-      } catch (error: any) {
-          showToast(error.message, 'danger');
-      } finally {
-          setIsChangingPw(false);
       }
     };
 
@@ -161,35 +139,14 @@ const AccountPage = () => {
 
           <button 
             onClick={handleUpdate}
-            disabled={loading}
+            disabled={loading || isUnchanged}
             className="w-full py-5 bg-indigo-600 text-white md:rounded-3xl rounded-2xl font-black text-[11px] uppercase tracking-[0.3em] shadow-2xl shadow-indigo-500/30 hover:bg-indigo-700 active:scale-[0.98] transition-all disabled:opacity-50"
           >
             {loading ? t('account.saving') : t('account.save')}
           </button>
         </section>
 
-        <section className="bg-white dark:bg-slate-900 md:rounded-[2.5rem] rounded-[1.25rem] p-8 border border-slate-100 dark:border-slate-800 shadow-sm space-y-4">
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-2">Security</h3>
-          <div className="flex flex-col md:flex-row gap-4 items-end">
-            <div className="flex-1 space-y-2 w-full">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">New Password</label>
-              <input 
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-transparent focus:border-indigo-500/30 p-4 rounded-2xl outline-none font-bold text-slate-700 dark:text-white transition-all shadow-inner"
-                placeholder="••••••••"
-              />
-            </div>
-            <button 
-              onClick={handlePasswordChange}
-              disabled={isChangingPw || !newPassword}
-              className="md:w-auto w-full px-8 py-4.5 bg-slate-900 dark:bg-white dark:text-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-600 dark:hover:bg-indigo-500 dark:hover:text-white transition-all disabled:opacity-50"
-            >
-              {isChangingPw ? 'Updating...' : 'Update Password'}
-            </button>
-          </div>
-        </section>
+        <ChangePasswordSection/>
 
         {/* Danger Zone */}
         {/* <section className="pt-12 border-t border-slate-200 dark:border-slate-800">
@@ -208,6 +165,7 @@ const AccountPage = () => {
            </div>
         </section> */}
       </div>
+      
     </div>
   );
 };

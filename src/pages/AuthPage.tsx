@@ -11,6 +11,7 @@ import UserInfoForm from '../components/auth/UserInfoForm.tsx';
 import FormInput from '../components/auth/FormInput.tsx';
 import OTPModal from '../components/auth/OTPModal.tsx';
 import ToastBox from '../components/ToastBox.tsx';
+import ForgetPasswordBtn from '../components/ForgetPasswordBtn.tsx';
 
 const AuthPage = () => {
   const [searchParams] = useSearchParams();
@@ -54,7 +55,7 @@ const AuthPage = () => {
         if (isLogin) {
           const { error } = await supabase.auth.signInWithPassword({ email, password });
           if (error) throw error;
-          showToast('success.login_success','success')
+          showToast(t('success.login_success'),'success')
           navigate('/home');
         } else {
           
@@ -203,15 +204,7 @@ const AuthPage = () => {
                 )}
 
                 {isLogin && step === 1 && (
-                  <div className="flex justify-end pr-2">
-                    <button 
-                      type="button"
-                      onClick={() => setShowForgotModal(true)}
-                      className="text-[10px] font-black text-indigo-500 uppercase tracking-widest hover:text-indigo-600 transition-colors active:scale-95"
-                    >
-                      {t('auth.forgot_password_link')}
-                    </button>
-                  </div>
+                  <ForgetPasswordBtn onClick={() => setShowForgotModal(true)}/>
                 )}
 
                 <button type="submit" disabled={loading} className="w-full md:py-5 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white md:rounded-2xl rounded-xl font-black text-[11px] uppercase tracking-[0.3em] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4 disabled:opacity-50">
