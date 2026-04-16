@@ -1,4 +1,4 @@
-import { AlertTriangle, Bell,Info } from 'lucide-react';import { useTranslation } from 'react-i18next';
+import { AlertTriangle,Info } from 'lucide-react';import { useTranslation } from 'react-i18next';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -29,7 +29,7 @@ const ConfirmationModal = ({
       btnClass: 'bg-amber-500 hover:bg-amber-600 shadow-amber-500/30'
     },
     info: {
-      icon: <Info size={36} strokeWidth={2.5} />, // Info အတွက် Bell သုံးတာ ပိုလိုက်ဖက်တယ်
+      icon: <Info size={36} strokeWidth={2.5} />,
       colorClass: 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-500 border-indigo-100 dark:border-indigo-500/20',
       btnClass: 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/30'
     }

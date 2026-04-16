@@ -53,6 +53,10 @@ const resources = {
       "over_limit_warning": "Limit Exceeded!",
       "budget_warning": "Approaching Limit",
       "adjust_budget": "Adjust Budget",
+      "system": "System Default",
+      "sync": "Sync with device",
+      "appearance": "Appearance",
+      "control_center": "Control Center",
       "nav": {
         "home": "Home",
         "history": "History",
@@ -260,6 +264,10 @@ const resources = {
       "over_limit_warning": "ကန့်သတ်ချက်ထက် ကျော်လွန်နေသည်!",
       "budget_warning": "ကန့်သတ်ချက် နီးကပ်နေသည်",
       "adjust_budget": "အသုံးစရိတ် ပြင်ဆင်ရန်",
+      "system": "စနစ်၏ မူလအတိုင်း",
+      "sync": "ဖုန်း၏ သတ်မှတ်ချက်အတိုင်း",
+      "appearance": "အသွင်အပြင်",
+      "control_center": "ထိန်းချုပ်မှု ဗဟို",
       "nav": {
         "home": "ပင်မ",
         "history": "မှတ်တမ်း",

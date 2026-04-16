@@ -74,15 +74,15 @@ const Navbar = ({ onAddClick }: { onAddClick: () => void }) => {
             {t('sign_out')}
           </button>
 
-          <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1" />
+        <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1" />
 
           {/* Profile Section */}
-          <div className="flex lg:flex-row flex-col items-center gap-3 pl-2">
-             <div className="text-right flex flex-col items-end flex-end">
+          <div className="flex flex-col items-center gap-3 pl-2">
+             {/* <div className="text-right flex flex-col items-end flex-end">
                 <span className="text-xs font-black text-slate-900 dark:text-white leading-none capitalize">
                     {profile?.name || 'Guest'}
                 </span>
-             </div>
+             </div> */}
              
              <div className="flex start w-10 h-10 rounded-full border-2 border-slate-100 dark:border-slate-800 p-0.5 overflow-hidden ring-2 ring-indigo-500/10">
                 <img 
@@ -91,6 +91,9 @@ const Navbar = ({ onAddClick }: { onAddClick: () => void }) => {
                   className="w-full h-full rounded-full object-cover"
                 />
              </div>
+             <span className="text-xs font-black text-slate-900 dark:text-white leading-none capitalize">
+                {profile?.name || 'Guest'}
+              </span>
           </div>
         </div>
 

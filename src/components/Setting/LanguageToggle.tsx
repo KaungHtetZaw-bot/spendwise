@@ -1,16 +1,11 @@
 import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useUserStore } from '../../store/useUserStore';
-
+import ToggleSwitch from '../ToggleSwitch';
+import { useAppSettings } from '../../hooks/useAppSettings';
 
 const LanguageToggle = () => {
-  const { i18n,t } = useTranslation();
-  const { language, setLanguage} = useUserStore();
-  const handleLanguageToggle = () => {
-    const nextLang = language === 'en' ? 'mm' : 'en';
-    setLanguage(nextLang);
-    i18n.changeLanguage(nextLang);
-  };
+  const { t } = useTranslation();
+  const { isMM, toggleLanguage} = useAppSettings();
   
   return (
     <>
@@ -21,26 +16,11 @@ const LanguageToggle = () => {
         <div className="flex flex-col">
           <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{ t('language') }</span>
           <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-            {language === 'en' ? 'English (US)' : 'မြန်မာ (MM)'}
+            {isMM ? 'မြန်မာ (MM)' : 'English (US)'}
           </span>
         </div>
       </div>
-
-      <button 
-        onClick={handleLanguageToggle}
-        className="relative w-20 h-9 bg-slate-100 dark:bg-slate-800 rounded-xl p-1 flex items-center transition-all overflow-hidden border border-slate-200/50 dark:border-slate-700/50"
-      >
-        <div 
-          className={`absolute h-7 w-9 bg-white dark:bg-slate-700 rounded-lg shadow-sm transition-all duration-300 ${
-            language === 'mm' ? 'translate-x-9' : 'translate-x-0'
-          }`} 
-        />
-        
-        <div className="relative flex w-full justify-between px-2 text-[10px] font-black uppercase tracking-tighter z-10">
-          <span className={i18n.language === 'en' ? 'text-indigo-600' : 'text-slate-400'}>EN</span>
-          <span className={i18n.language === 'mm' ? 'text-indigo-600' : 'text-slate-400'}>MM</span>
-        </div>
-      </button>
+      <ToggleSwitch active={isMM} onClick={toggleLanguage} label={isMM ? "MM" : "EN"} />
     </>
   );
 }

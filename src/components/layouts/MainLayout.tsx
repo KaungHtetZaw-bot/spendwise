@@ -62,17 +62,13 @@ const MainLayout = () => {
             )}
           </AnimatePresence>
 
-          {/* Main Content (Outlet) */}
           <main 
             ref={scrollContainerRef} 
-            className="flex-1 overflow-y-auto px-0 md:px-4 pb-24 md:pt-24 md:pb-8 hide-scrollbar"
+            className="flex-1 overflow-y-auto md:flex-end  px-0 md:px-4 pb-24 md:pt-24 md:pb-8 hide-scrollbar transition-all duration-500 mx-auto"
           >
-            <div className="max-w-2xl mx-auto">
-              <Outlet context={{ history, setHistory, setIsModalOpen, onEditAction }}/>
-            </div>
+            <Outlet context={{ history, setHistory, setIsModalOpen, onEditAction }}/>
           </main>
 
-          {/* Right Panel */}
           <aside className="hidden xl:block w-72 pt-24 pb-8 sticky top-0 h-full overflow-y-auto hide-scrollbar">
             <SummaryCard />
           </aside>

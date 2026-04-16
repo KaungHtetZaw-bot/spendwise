@@ -1,6 +1,7 @@
 import { Bell,BellOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '../../store/useUserStore';
+import ToggleSwitch from '../ToggleSwitch';
 
 const NotifyToggle = () => {
   const { t } = useTranslation()
@@ -19,14 +20,8 @@ const NotifyToggle = () => {
             {isNotifyEnabled ? t('notifications.enabled') : t('notifications.disabled')}
           </span>
         </div>
-      {/* <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{ t('notifications') }</span> */}
     </div>
-    <button 
-    onClick={toggleNotify}
-    className={`w-12 h-6 rounded-full transition-all relative ${isNotifyEnabled ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-slate-800'}`}
-    >
-    <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300 shadow-sm ${isNotifyEnabled ? 'left-7' : 'left-1'}`} />
-    </button>
+    <ToggleSwitch active={isNotifyEnabled} onClick={toggleNotify} />
   </>
   )
 }
