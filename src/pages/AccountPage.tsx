@@ -68,7 +68,7 @@ const AccountPage = () => {
           if (error) throw error;
           
           showToast(t('success.password_updated'), 'success');
-          setNewPassword(''); // input ကို clear လုပ်မယ်
+          setNewPassword('');
       } catch (error: any) {
           showToast(error.message, 'danger');
       } finally {

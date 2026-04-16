@@ -10,7 +10,7 @@ interface ToastBoxProps {
   duration?: number;
 }
 
-const ToastBox = ({ type, message, onClose, duration = 10000 }: ToastBoxProps) => {
+const ToastBox = ({ type, message, onClose, duration = 4000 }: ToastBoxProps) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

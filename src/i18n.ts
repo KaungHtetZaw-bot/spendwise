@@ -57,6 +57,9 @@ const resources = {
       "sync": "Sync with device",
       "appearance": "Appearance",
       "control_center": "Control Center",
+      "set_new_password": "Set New Password",
+      "enter_secure_password": "Enter your secure new password",
+      "security": "Security",
       "nav": {
         "home": "Home",
         "history": "History",
@@ -152,7 +155,14 @@ const resources = {
         "verify_prompt": "Please verify your email to complete registration",
         "verify_button": "Verify Email",
         "already_verified": "Already verified? Login here",
-        'verifying':"Verifying..."
+        'verifying':"Verifying...",
+        "forgot_password_link": "Forgot Password?",
+        "confirm_password": "Confirm Password",
+        "new_password": "New Password",
+        "password_mismatch": "Passwords do not match",
+        "reset_success": "Password reset successfully",
+        "change_password": "Change Password",
+        "updating": "Updating..."
       },
       "budgetPage": {
         "settings_title": "Financial Settings",
@@ -277,6 +287,9 @@ const resources = {
       "sync": "ဖုန်း၏ သတ်မှတ်ချက်အတိုင်း",
       "appearance": "အသွင်အပြင်",
       "control_center": "ထိန်းချုပ်မှု ဗဟို",
+      "security": "လုံခြုံရေး",
+      "set_new_password": "စကားဝှက်အသစ် သတ်မှတ်ရန်",
+      "enter_secure_password": "လုံခြုံစိတ်ချရသော စကားဝှက်အသစ်ကို ရိုက်ထည့်ပါ",
       "nav": {
         "home": "ပင်မ",
         "history": "မှတ်တမ်း",
@@ -373,7 +386,14 @@ const resources = {
         "verify_prompt": "အကောင့်ဖွင့်ခြင်း ပြီးဆုံးရန် အီးမေးလ်ကို အတည်ပြုပေးပါ",
         "verify_button": "အီးမေးလ် အတည်ပြုမည်",
         "already_verified": "အတည်ပြုပြီးပြီလား? ဤနေရာတွင် Login ဝင်ပါ",
-        'verifying':"အတည်ပြုနေသည်..."
+        'verifying':"အတည်ပြုနေသည်...",
+        "forgot_password_link": "စကားဝှက် မေ့သွားပါသလား?",
+        "confirm_password": "စကားဝှက်ကို အတည်ပြုပါ",
+        "new_password": "စကားဝှက် အသစ်",
+        "password_mismatch": "စကားဝှက်များ တူညီမှုမရှိပါ",
+        "reset_success": "စကားဝှက်ကို အောင်မြင်စွာ ပြောင်းလဲပြီးပါပြီ",
+        "change_password": "စကားဝှက် ပြောင်းလဲမည်",
+        "updating": "ခေတ္တစောင့်ဆိုင်းပါ..."
       },
       "budgetPage": {
         "settings_title": "ငွေကြေးဆိုင်ရာ သတ်မှတ်ချက်များ",
