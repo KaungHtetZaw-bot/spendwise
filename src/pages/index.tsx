@@ -22,7 +22,7 @@ const Index = () => {
             <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
                 <PieChart size={18} />
             </div>
-            <h1 className="text-lg font-black tracking-tighter text-slate-900 dark:text-white uppercase italic">
+            <h1 className="md:block hidden text-lg font-black tracking-tighter text-slate-900 dark:text-white uppercase italic">
                 Spend<span className="text-indigo-600">Wise</span>
             </h1>
           </div>
