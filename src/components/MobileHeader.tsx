@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useUserStore } from "../store/useUserStore";
-import { Moon, Sun, Languages, EllipsisVertical, LogOut,Bell, BellOff } from "lucide-react";
+import { Moon, Sun, Languages, EllipsisVertical, LogOut,Bell, BellOff,PieChart } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { logout } from "../lib/helper";
 import { useConfirmationStore } from "../store/useConfirmationStore";
 import { useTransactions } from "../hooks/useTransactions"
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const MobileHeader = () => {
   const { profile, setTheme, theme, language,setLanguage, isNotifyEnabled } = useUserStore();
@@ -14,6 +15,7 @@ const MobileHeader = () => {
   const { openConfirm } = useConfirmationStore()
   const { data: transactions = [] } = useTransactions();
   const navigate = useNavigate()
+  const loacation = useLocation()
 
   const totalSpent = transactions
   .filter(t => t.type === 'expense')
@@ -79,23 +81,36 @@ const MobileHeader = () => {
   return (
     <div className="relative">
       <div className="flex items-center justify-between px-4 md:py-4 py-2 md:hidden backdrop-blur-sm sticky top-0 z-30">
-        <div className="flex items-center gap-3">
-          {
-            profile?.avatar_url ? (
-              <img src={`${profile.avatar_url}?t=${Date.now()}`} alt="Avatar" className="w-10 h-10 rounded-full object-cover" />
-            ) : (
-              <img 
-                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.name || 'Felix'}`} 
-                alt="avatar" 
-                className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 object-cover"
-              />
-            )
-          }
-          <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{ t('greeting') }</p>
-            <h2 className="text-sm font-black text-slate-900 dark:text-slate-100 mt-1">{profile?.name || "User"}</h2>
+        {
+          loacation.pathname === "/settings" ? (
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+                <PieChart size={18} />
+            </div>
+            <h1 className="text-lg font-black tracking-tighter text-slate-900 dark:text-white uppercase italic">
+                Spend<span className="text-indigo-600">Wise</span>
+            </h1>
           </div>
-        </div>
+          ) : (
+            <div className="flex items-center gap-3">
+            { 
+                profile?.avatar_url ? (
+                  <img src={`${profile.avatar_url}?t=${Date.now()}`} alt="Avatar" className="w-10 h-10 rounded-full object-cover" />
+                ) : (
+                  <img 
+                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.name || 'Felix'}`} 
+                    alt="avatar" 
+                    className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 object-cover"
+                  />
+                )
+              }
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{ t('greeting') }</p>
+                <h2 className="text-sm font-black text-slate-900 dark:text-slate-100 mt-1">{profile?.name || "User"}</h2>
+              </div>
+            </div>
+          )
+        }
 
         <div className="flex items-center gap-2">
           {/* Notification Button */}
