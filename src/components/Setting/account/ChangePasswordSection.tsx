@@ -56,13 +56,13 @@ const ChangePasswordSection = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-50 dark:border-slate-800 pb-4">
         <div>
           <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 dark:text-white">{t('security')}</h3>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Change your account password</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{t('change_password_sub')}</p>
         </div>
       </div>
 
       <form onSubmit={handleUpdatePassword} className="space-y-4">
         <PasswordField 
-          label="Old Password" 
+          label={t('auth.old_password')} 
           value={oldPassword} 
           onChange={setOldPassword} 
         />

@@ -60,6 +60,8 @@ const resources = {
       "set_new_password": "Set New Password",
       "enter_secure_password": "Enter your secure new password",
       "security": "Security",
+      "reset_instruction": "We will send a secure password reset link to",
+      "change_password_sub": "Change your account password",
       "nav": {
         "home": "Home",
         "history": "History",
@@ -162,7 +164,8 @@ const resources = {
         "password_mismatch": "Passwords do not match",
         "reset_success": "Password reset successfully",
         "change_password": "Change Password",
-        "updating": "Updating..."
+        "updating": "Updating...",
+        "old_password": "Old Password",
       },
       "budgetPage": {
         "settings_title": "Financial Settings",
@@ -204,7 +207,8 @@ const resources = {
         "updated": "Profile updated!",
         "transaction_updated": "Transaction updated!",
         "deleted": "Deleted successfully",
-        "saved": "Saved!"
+        "saved": "Saved!",
+        "reset_link_sent": "Reset link sent to your email!"
       },
       "errors": {
         "invalid_credentials": "Invalid email or password.",
@@ -290,6 +294,8 @@ const resources = {
       "security": "လုံခြုံရေး",
       "set_new_password": "စကားဝှက်အသစ် သတ်မှတ်ရန်",
       "enter_secure_password": "လုံခြုံစိတ်ချရသော စကားဝှက်အသစ်ကို ရိုက်ထည့်ပါ",
+      "reset_instruction": "စကားဝှက်အသစ်သတ်မှတ်ရန် လုံခြုံရေးလင့်ခ်ကို ပေးပို့မည့် အီးမေးလ်မှာ -",
+      "change_password_sub": "သင့်အကောင့်၏ စကားဝှက်ကို ပြောင်းလဲပါ",
       "nav": {
         "home": "ပင်မ",
         "history": "မှတ်တမ်း",
@@ -393,7 +399,8 @@ const resources = {
         "password_mismatch": "စကားဝှက်များ တူညီမှုမရှိပါ",
         "reset_success": "စကားဝှက်ကို အောင်မြင်စွာ ပြောင်းလဲပြီးပါပြီ",
         "change_password": "စကားဝှက် ပြောင်းလဲမည်",
-        "updating": "ခေတ္တစောင့်ဆိုင်းပါ..."
+        "updating": "ခေတ္တစောင့်ဆိုင်းပါ...",
+        "old_password": "စကားဝှက်အဟောင်း",
       },
       "budgetPage": {
         "settings_title": "ငွေကြေးဆိုင်ရာ သတ်မှတ်ချက်များ",
@@ -425,8 +432,8 @@ const resources = {
         "cancel": "မလုပ်တော့ပါ",
         "confirm": "သေချာသည်",
         "transaction_actions": "လုပ်ဆောင်ချက်များ"
-
       },
+      
       "success": {
         "login_success": "ဝင်ရောက်မှု အောင်မြင်ပါသည်။",
         "register_success": "အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်။",
@@ -434,7 +441,8 @@ const resources = {
         "updated": "ပရိုဖိုင် ပြင်ဆင်ပြီးပါပြီ။",
         "transaction_updated": "စာရင်းပြင်ဆင်မှု အောင်မြင်ပါသည်။",
         "deleted": "ဖျက်သိမ်းမှု အောင်မြင်ပါသည်။",
-        "saved": "သိမ်းဆည်းပြီးပါပြီ။"
+        "saved": "သိမ်းဆည်းပြီးပါပြီ။",
+        "reset_link_sent": "စကားဝှက်အသစ်သတ်မှတ်ရန် လင့်ခ်ကို အီးမေးလ်သို့ ပို့လိုက်ပါပြီ!"
       },
       "errors": {
         "invalid_credentials": "အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားယွင်းနေပါသည်။",

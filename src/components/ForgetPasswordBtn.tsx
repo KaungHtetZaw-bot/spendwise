@@ -46,7 +46,7 @@ const ForgetPasswordBtn = ({ onClick, email }: ForgetPasswordBtnProps) => {
 
             if (error) throw error;
             
-            showToast(t('success.reset_link_sent') || 'Reset link sent to your email!', 'success');
+            showToast(t('success.reset_link_sent'), 'success');
             setShowResetModal(false);
         } catch (error: any) {
             showToast(error.message, 'danger');
@@ -73,7 +73,7 @@ const ForgetPasswordBtn = ({ onClick, email }: ForgetPasswordBtnProps) => {
                     onConfirm={handlePasswordResetRequest}
                     type="warning"
                     title="Reset Password?"
-                    description={`We will send a secure password reset link to \n ${email || 'your email address'}`}
+                    description={`${t('reset_instruction')} \n ${email || 'your email address'}`}
                     confirmText="Send Link"
                     isLoading={isSendingLink}
                 />
