@@ -110,7 +110,7 @@ const Index = () => {
             <div className="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center mx-auto">
               <BarChart3 size={24} />
             </div>
-            <h3 className="font-black text-xl">{ t('landing.budget_title') }</h3>budget_desc
+            <h3 className="font-black text-xl">{ t('landing.budget_title') }</h3>
             <p className="text-slate-500 text-sm">{ t('landing.budget_desc') }</p>
           </div>
         </div>
