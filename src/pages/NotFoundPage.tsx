@@ -31,7 +31,7 @@ const NotFoundPage = () => {
 
       <div className="mt-10 flex flex-col w-full max-w-xs gap-4">
         <Link 
-          to="/" 
+          to="/home" 
           className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.3em] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
         >
           <Home size={16} />
