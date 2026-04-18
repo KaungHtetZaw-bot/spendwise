@@ -8,7 +8,6 @@ import MainLayout from '../components/layouts/MainLayout';
 import NotFoundPage from '../pages/NotFoundPage';
 import AuthPage from '../pages/AuthPage';
 import ProtectedRoute from './ProtectedRoute';
-import Index from '../pages/index';
 import AccountPage from '../pages/AccountPage';
 
 const AppRoute = () => {
@@ -26,7 +25,6 @@ const AppRoute = () => {
           </Route>
         </Route>
         <Route path="/auth" element={<AuthPage/>} />
-        <Route index element={<Index />} />
       </Routes>
     </Router>
   );
