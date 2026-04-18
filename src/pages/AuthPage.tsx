@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, User, ArrowRight } from 'lucide-react';
 import { supabase } from '../lib/supabase.ts';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -121,21 +122,41 @@ const AuthPage = () => {
           <ResetPasswordForm />
         ) :(
         <>
-          <div className="text-center md:space-y-2 space-y-1">
-            <h1 className="md:text-3xl text-xl font-black text-slate-900 dark:text-white tracking-tighter">
-              {step === 3 ? "Verify Email" : (isLogin ? t('auth.welcome_back') : step === 1 ? t('auth.create_account') : t('auth.final_steps'))}
-            </h1>
-            <p className="text-sm font-medium text-slate-400">
-              {step === 3 ? "Almost there! Confirm your account" : (isLogin ? t('auth.login_desc') : step === 1 ? t('auth.register_desc') : t('auth.final_desc'))}
-            </p>
-          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={isLogin ? 'login' : 'register'}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.1 }}
+              className="text-center md:space-y-2 space-y-1"
+            >
+              <h1 className="md:text-3xl text-xl font-black text-slate-900 dark:text-white tracking-tighter">
+                {step === 3 ? "Verify Email" : (isLogin ? t('auth.welcome_back') : step === 1 ? t('auth.create_account') : t('auth.final_steps'))}
+              </h1>
+              <p className="text-sm font-medium text-slate-400">
+                {step === 3 ? "Almost there! Confirm your account" : (isLogin ? t('auth.login_desc') : step === 1 ? t('auth.register_desc') : t('auth.final_desc'))}
+              </p>
+            </motion.div>
+          </AnimatePresence>
 
           {step === 1 && (
-            <div className="flex p-1 bg-slate-100 dark:bg-slate-900 rounded-[2rem] border border-slate-200/50 dark:border-slate-800/50">
-              <button onClick={goToLogin} className={`flex-1 md:py-3 py-1.5 rounded-[1.8rem] text-xs font-black uppercase tracking-widest transition-all ${isLogin ? 'bg-white dark:bg-slate-800 text-indigo-600 shadow-sm' : 'text-slate-400'}`}>
+            <div className="relative flex p-1 bg-slate-100 dark:bg-slate-900 rounded-[2rem] border border-slate-200/50 dark:border-slate-800/50">
+              <motion.div 
+                className="absolute top-1 bottom-1 bg-white dark:bg-slate-800 rounded-[1.8rem] shadow-sm z-0"
+                initial={false}
+                animate={{ 
+                  x: isLogin ? '0%' : '100%',
+                  width: '50%'
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              />
+              
+              <button onClick={goToLogin} className={`relative z-10 flex-1 md:py-3 py-1.5 text-xs font-black uppercase tracking-widest transition-colors ${isLogin ? 'text-indigo-600' : 'text-slate-400'}`}>
                 {t('auth.login_tab')}
               </button>
-              <button onClick={goToRegister} className={`flex-1 md:py-3 py-1.5 rounded-[1.8rem] text-xs font-black uppercase tracking-widest transition-all ${!isLogin ? 'bg-white dark:bg-slate-800 text-indigo-600 shadow-sm' : 'text-slate-400'}`}>
+              <button onClick={goToRegister} className={`relative z-10 flex-1 md:py-3 py-1.5 text-xs font-black uppercase tracking-widest transition-colors ${!isLogin ? 'text-indigo-600' : 'text-slate-400'}`}>
                 {t('auth.register_tab')}
               </button>
             </div>
@@ -157,9 +178,19 @@ const AuthPage = () => {
               />
             ) : (
               /* --- STEP 1 & 2: Login/Register UI --- */
-              <form className="md:space-y-5 space-y-3" onSubmit={handleAuth}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={isLogin ? 'login' : `register-step-${step}`}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.1, ease: "easeInOut" }}
+                  // layout prop က form အမြင့်ပြောင်းရင် ချောချောမွေ့မွေ့ ဖြစ်စေတယ်
+                  layout
+                >
+              <form className="md:space-y-5 space-y-3 flex flex-col justify-between min-h-[400px]" onSubmit={handleAuth}>
                 {(isLogin || step === 1) && (
-                  <div className="animate-in slide-in-from-right duration-500">
+                  <div className="flex-1 animate-in slide-in-from-right duration-500">
                     {!isLogin && (
                     <FormInput 
                       label={t('auth.full_name')} 
@@ -186,6 +217,12 @@ const AuthPage = () => {
                     onChange={setConfirmPassword} 
                     label={t('auth.confirm_password')} 
                     />}
+
+                    {isLogin && step === 1 && (
+                      <div className="flex justify-end mt-4">
+                        <ForgetPasswordBtn onClick={() => setShowForgotModal(true)}/>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -203,15 +240,19 @@ const AuthPage = () => {
                   />
                 )}
 
-                {isLogin && step === 1 && (
-                  <ForgetPasswordBtn onClick={() => setShowForgotModal(true)}/>
-                )}
+                
 
-                <button type="submit" disabled={loading} className="w-full md:py-5 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white md:rounded-2xl rounded-xl font-black text-[11px] uppercase tracking-[0.3em] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4 disabled:opacity-50">
+                <button 
+                  type="submit" 
+                  disabled={loading} 
+                  className="pt-6 mt-auto w-full md:py-5 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white md:rounded-2xl rounded-xl font-black text-[11px] uppercase tracking-[0.3em] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+                >
                   {loading ? t('auth.processing') : (isLogin ? t('auth.sign_in') : step === 1 ? t('auth.continue') : t('auth.complete_setup'))}
                   <ArrowRight size={16} />
                 </button>
               </form>
+              </motion.div>
+              </AnimatePresence>
             )}
           </div>
         </>
