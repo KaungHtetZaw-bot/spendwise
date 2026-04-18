@@ -11,7 +11,7 @@ interface BudgetModalProps {
 
 const BudgetModal = ({ isOpen, onClose }: BudgetModalProps) => {
   const { profile, updateProfile } = useUserStore();
-  const { currency, rate } = useCurrency();
+  const { currency, rate,format } = useCurrency();
   const { t } = useTranslation();
   const [ isUpdating, setIsUpdating ] = useState<boolean>(false)
   
@@ -21,15 +21,19 @@ const BudgetModal = ({ isOpen, onClose }: BudgetModalProps) => {
 
   useEffect(() => {
     if (profile && isOpen) {
-      const currentIncome = currency === "USD" 
+      const rawIncome = currency === "USD" 
         ? profile.monthly_income / rate 
         : profile.monthly_income;
+
+      const currentIncome = currency === "USD" 
+      ? Number(rawIncome.toFixed(2)) 
+      : Math.round(rawIncome);
 
       let currentBudget: number;
       if (profile.monthly_budget) {
         currentBudget = currency === "USD" 
-          ? profile.monthly_budget / rate 
-          : profile.monthly_budget;
+        ? Number((currentIncome * percentage / 100).toFixed(2)) 
+        : Math.round(currentIncome * percentage / 100);
       } else {
         currentBudget = currentIncome * 0.8;
       }
@@ -44,11 +48,22 @@ const BudgetModal = ({ isOpen, onClose }: BudgetModalProps) => {
     }
   }, [profile, isOpen, rate, currency]);
 
-  const handleIncomeChange = (val: number) => {
-    setDisplayIncome(val);
-    const newBudget = (val * percentage) / 100;
-    setDisplayBudget(newBudget);
-  };
+  const handleIncomeChange = (val: string) => {
+  if (val === "") {
+    setDisplayIncome(0);
+    return;
+  }
+  const numVal = parseFloat(val);
+  
+  const formattedVal = currency === "USD" 
+    ? Math.round(numVal * 100) / 100 
+    : Math.round(numVal);
+
+  setDisplayIncome(formattedVal);
+
+  const newBudget = (formattedVal * percentage) / 100;
+  setDisplayBudget(currency === "USD" ? Number(newBudget.toFixed(2)) : Math.round(newBudget));
+};
 
   const handleSliderChange = (newPercent: number) => {
     setPercentage(newPercent);
@@ -104,8 +119,10 @@ const BudgetModal = ({ isOpen, onClose }: BudgetModalProps) => {
             <div className="relative">
               <input
                 type="text"
+                step='0.001'
                 value={displayIncome}
-                onChange={(e) => handleIncomeChange(Number(e.target.value))}
+                placeholder='0.00'
+                onChange={(e) => handleIncomeChange((e.target.value))}
                 className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-slate-100 dark:border-slate-800 rounded-2xl p-4 font-black text-2xl text-indigo-600 outline-none focus:border-indigo-400 transition-all shadow-inner"
               />
             </div>

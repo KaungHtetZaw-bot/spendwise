@@ -55,7 +55,7 @@ const BudgetCard = ({onOpenModal}:BudgetCardProps) => {
       <div className="relative z-10">
         <div className="flex justify-between items-start">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-70">
-            {isEditing ? t('adjust_limit') : t('monthly_income')}
+            { t('monthly_income')}
           </p>
           {isWarning && <AlertTriangle size={18} className="animate-pulse text-white" />}
         </div>
