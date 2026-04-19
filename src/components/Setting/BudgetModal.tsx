@@ -11,7 +11,7 @@ interface BudgetModalProps {
 
 const BudgetModal = ({ isOpen, onClose }: BudgetModalProps) => {
   const { profile, updateProfile } = useUserStore();
-  const { currency, rate,format } = useCurrency();
+  const { currency, rate } = useCurrency();
   const { t } = useTranslation();
   const [ isUpdating, setIsUpdating ] = useState<boolean>(false)
   
