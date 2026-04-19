@@ -233,10 +233,9 @@ const MockTransaction = ({ title, date, amount, isIncome }: any) => (
 // Reusable Feature Card Component
 const FeatureCard = ({ icon, title, desc, color }: any) => (
   <motion.div 
-    whileHover={{ y: -10 }}
     className=" space-y-6 p-8 rounded-[2.5rem] bg-white dark:bg-slate-900 border border-transparent transition-all duration-500"
   >
-    <div className={`w-16 h-16 rounded-3xl flex items-center justify-center mx-auto transition-transform duration-500
+    <div className={`w-16 h-16 rounded-3xl flex items-center justify-center mx-auto duration-500
       ${color === 'indigo' ? 'bg-indigo-500/10 text-indigo-600' : 
         color === 'emerald' ? 'bg-emerald-500/10 text-emerald-600' : 
         'bg-amber-500/10 text-amber-600'}`}
