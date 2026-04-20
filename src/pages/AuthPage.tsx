@@ -32,7 +32,7 @@ const AuthPage = () => {
   const [fullName, setFullName] = useState('');
   const [currency, setCurrency] = useState<'MMK' | 'USD'>('MMK');
   const [career, setCareer] = useState('');
-  const [income, setIncome] = useState(0);
+  const [income, setIncome] = useState<number| "">("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const { showToast,message, type, isOpen, hideToast } = useToastStore();

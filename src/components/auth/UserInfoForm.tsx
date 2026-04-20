@@ -8,8 +8,8 @@ interface UserInfoFormProps {
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   career: string;
   setCareer: (val: string) => void;
-  income: number;
-  setIncome: (val: number) => void;
+  income: number | "";
+  setIncome: (val: number | "") => void;
   currency: 'MMK' | 'USD';
   setCurrency: (val: 'MMK' | 'USD') => void;
 }
@@ -54,7 +54,7 @@ const UserInfoForm = ({
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">{t('auth.income')}</label>
             <div className="relative group">
             <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
-            <input type="number" placeholder="3000" value={income} required onChange={(e) => setIncome(Number(e.target.value))} className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-transparent focus:border-indigo-500/20 rounded-2xl py-3.5 pl-12 pr-24 font-bold text-slate-700 dark:text-white outline-none transition-all" />
+            <input type="number" placeholder="3000" value={income} required onChange={(e) => {const val = e.target.value;setIncome(val===""? "" : Number(val))}} className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-transparent focus:border-indigo-500/20 rounded-2xl py-3.5 pl-12 pr-24 font-bold text-slate-700 dark:text-white outline-none transition-all" />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex bg-white dark:bg-slate-900 p-1 rounded-xl border border-slate-100 dark:border-slate-800">
                 <button type="button" onClick={() => setCurrency('MMK')} className={`px-3 py-1.5 rounded-lg text-[10px] font-black transition-all ${currency === 'MMK' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400'}`}>Ks</button>
                 <button type="button" onClick={() => setCurrency('USD')} className={`px-3 py-1.5 rounded-lg text-[10px] font-black transition-all ${currency === 'USD' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400'}`}>$</button>
