@@ -10,7 +10,7 @@ function App() {
     await StatusBar.setOverlaysWebView({ overlay: false });
     // Status Bar ကို အနက်ရောင် (Dark) ပုံစံ ပြောင်းမယ်
     await StatusBar.setStyle({ style: Style.Dark });
-
+    
     // Status Bar ရဲ့ Background color ကို မင်း app ရဲ့ dark color အတိုင်း ထည့်မယ်
     // ဥပမာ - Slate 900 (#0f172a)
     await StatusBar.setBackgroundColor({ color: '#0f172a' });
@@ -32,9 +32,9 @@ function App() {
     }
   }, [theme, useSystemTheme]);
   return (
-    <>
+    <div className='main-app-container'> 
       <AppRoute/>
-    </>
+    </div>
   )
 }
 

@@ -29,6 +29,16 @@
               color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  .main-app-container {
+    /* Safe Area Top အတွက် Padding ပေးတာပါ (Status Bar အမြင့်ကို အလိုအလျောက် တွက်ပေးတယ်) */
+    padding-top: env(safe-area-inset-top);
+    
+    /* တကယ်လို့ Notch ပါတဲ့ ဖုန်းတွေမှာ ဘေးတိုက်ကြည့်ရင်လည်း မကပ်အောင် ဒါတွေပါ ထည့်ထားသင့်တယ် */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
   .dark body {
     background-color: var(--color-bg-dark);
     color: var(--spacing-slate-100);

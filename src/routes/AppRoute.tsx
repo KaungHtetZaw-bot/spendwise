@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route,Navigate } from 'react-router-dom';
 
 import MainPage from '../pages/MainPage';
 import SettingPage from '../pages/SettingPage';
@@ -16,7 +16,8 @@ const AppRoute = () => {
       <Routes>
         <Route element={ <ProtectedRoute/> }>
           <Route element={<MainLayout />}>
-            <Route path='/home' element={<MainPage />} />
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route index path='/home' element={<MainPage />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/stats" element={<StatsPage />} />
             <Route path="/settings" element={<SettingPage />} />
