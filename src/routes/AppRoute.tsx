@@ -21,9 +21,9 @@ const AppRoute = () => {
             <Route path="/stats" element={<StatsPage />} />
             <Route path="/settings" element={<SettingPage />} />
             <Route path="/settings/account" element={<AccountPage />} />
-            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
         <Route path="/auth" element={<AuthPage/>} />
       </Routes>
     </Router>
