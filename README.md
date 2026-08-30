@@ -1,75 +1,60 @@
-# React + TypeScript + Vite
+# Spendwise
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[Live demo](https://spend-wise-six-zeta-37.vercel.app) · [Source repository](https://github.com/KaungHtetZaw-bot/spendwise)
 
-Currently, two official plugins are available:
+Spendwise is a personal-finance application for recording income and expenses, understanding spending patterns, and staying aware of a monthly budget. It is built for the web and includes a Capacitor Android target.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Supabase authentication, email verification, password reset, profile settings, and protected routes
+- Income and expense transactions with categories, editing, deletion, and transaction history
+- Dashboard balance summaries, time-range filtering, category breakdowns, and responsive charts
+- Monthly budget tracking with alerts at 80% and 100% of the configured limit
+- Persisted theme, language, currency, and notification preferences
+- Capacitor Android configuration with native launcher, splash assets, and status-bar behavior
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Stack
 
-Note: This will impact Vite dev & build performances.
+- React 19 and TypeScript
+- Vite, Tailwind CSS, Mantine, and Framer Motion
+- Supabase for authentication and data
+- TanStack Query, Zustand, React Router, Recharts, and i18next
+- Capacitor for the Android build target
 
-## Expanding the ESLint configuration
+## Run locally
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Prerequisites: Node.js and a Supabase project with the required schema and authentication configuration.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Create a `.env.local` file:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_publishable_anon_key
 ```
+
+Start the application:
+
+```bash
+npm run dev
+```
+
+## Available scripts
+
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run preview
+```
+
+## Android target
+
+After configuring Capacitor and an Android development environment, use the Capacitor workflow to sync and run the app in Android Studio. The repository contains the Android target configuration; do not commit service-role or other private Supabase credentials.
+
+## Project status
+
+Spendwise is a featured portfolio project. It demonstrates a complete personal-finance workflow but does not provide financial advice or bank-account integrations.
